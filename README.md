@@ -2,8 +2,11 @@
 
 ### Brainless shared app state management for LitElement
 
-LitState is like MobX or Redux, but then for LitElement. Like LitElement and
-lit-html, it's tiny, simple, and powerful.
+LitState is like [MobX](https://mobx.js.org/) or
+[Redux](https://redux.js.org/), but then for
+[LitElement](https://lit-element.polymer-project.org/). Like LitElement and
+[lit-html](https://lit-html.polymer-project.org/), it's tiny, simple, and
+powerful.
 
 
 ## Minimal example
@@ -14,7 +17,7 @@ lit-html, it's tiny, simple, and powerful.
 
         myCounter = stateVar('defaultValue');
 
-        increaseCounter = () => {
+        increase = () => {
             myCounter++;
         }
 
@@ -28,7 +31,7 @@ lit-html, it's tiny, simple, and powerful.
         render() {
             return html`
                 <h1>Counter: ${myState.myCounter}</h1>
-                <button @click=${myState.increaseCounter}></button>
+                <button @click=${myState.increase}></button>
             `;
         }
 
@@ -39,7 +42,7 @@ lit-html, it's tiny, simple, and powerful.
         render() {
             return html`
                 <h1>Counter: ${myState.myCounter}</h1>
-                <button @click=${myState.increaseCounter}></button>
+                <button @click=${myState.increase}></button>
             `;
         }
 
@@ -51,7 +54,7 @@ whenever `myCounter` increases.
 
 In more technical words:
 
-A `LitStateElement` will rerender when any `stateVar`s - which it accessed in
+A `LitStateElement` will rerender when any `stateVar` - which it accessed in
 the previous render cycle - changes.
 
 
@@ -59,9 +62,9 @@ the previous render cycle - changes.
 
 We use [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 objects to detect whenever a `stateVar` is get or set. During the render of a
-`LitStateElement`, there is a recorder active that records which `stateVar`s
-are accessed. Then the element observes those variables and rerenders itself
-whenever one of them changes. The next rerender again records which `stateVar`s
+`LitStateElement`, there is a recorder active that records any `stateVar` that
+is accessed. Then the element observes those variables and rerenders itself
+whenever one of them changes. The next render again records which `stateVar`s
 are being used and observes them.
 
 
