@@ -70,7 +70,7 @@ are being used and observes them.
 
 ## Notes
 
-- You always need to use `stateVar`s inside a `LitState` derived class.
+- You always need to use `stateVar` inside a `LitState` derived class.
 
     The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
     object to track sets and gets of the class variables. The `stateVar()`
