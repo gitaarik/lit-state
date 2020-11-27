@@ -11,42 +11,45 @@ powerful.
 
 ## Minimal example
 
-    import { LitState, stateVar, LitStateElement } from 'lit-element';
 
-    class MyState extends LitState {
+```javascript
+import { LitState, stateVar, LitStateElement } from 'lit-element';
 
-        myCounter = stateVar('defaultValue');
+class MyState extends LitState {
 
-        increase = () => {
-            myCounter++;
-        }
+    myCounter = stateVar('defaultValue');
 
+    increase = () => {
+        myCounter++;
     }
 
-    const myState = new MyState();
+}
+
+const myState = new MyState();
 
 
-    class MyElement extends LitStateElement {
+class MyElement extends LitStateElement {
 
-        render() {
-            return html`
-                <h1>Counter: ${myState.myCounter}</h1>
-                <button @click=${myState.increase}></button>
-            `;
-        }
-
+    render() {
+        return html`
+            <h1>Counter: ${myState.myCounter}</h1>
+            <button @click=${myState.increase}></button>
+        `;
     }
 
-    class MyOtherElement extends LitStateElement {
+}
 
-        render() {
-            return html`
-                <h1>Counter: ${myState.myCounter}</h1>
-                <button @click=${myState.increase}></button>
-            `;
-        }
+class MyOtherElement extends LitStateElement {
 
+    render() {
+        return html`
+            <h1>Counter: ${myState.myCounter}</h1>
+            <button @click=${myState.increase}></button>
+        `;
     }
+
+}
+```
 
 
 Both components `MyElement` and `MyOtherElement` will automatically re-render
@@ -93,20 +96,24 @@ are being used and observes them.
     only a new assign of the property triggers a rerender. Doing something like
     this won't:
 
-        MyState extends LitState {
-            myObj = stateVar({myKey: 'myValue'});
-            myArray = stateVar(['one', 'two', 'three']);
-        }
+    ```javascript
+    MyState extends LitState {
+        myObj = stateVar({myKey: 'myValue'});
+        myArray = stateVar(['one', 'two', 'three']);
+    }
 
-        myState = new MyState();
-        myState.myObj.mykey = 'newValue';
-        myState.myArray.push('four');
+    myState = new MyState();
+    myState.myObj.mykey = 'newValue';
+    myState.myArray.push('four');
+    ```
 
     Above code won't notify the observers of `MyState`. You'll instead need to
     assign a new object to the `stateVar`:
 
-        myState.myObj = {...myState.myObj, myKey: 'newValue'};
-        myState.myArray = [...myState.myArray, 'four'];
+    ```javascript
+    myState.myObj = {...myState.myObj, myKey: 'newValue'};
+    myState.myArray = [...myState.myArray, 'four'];
+    ```
 
     Watching for changes inside objects is very complex matter and would make
     LitState way more complicated than desirable. If you are interested in this
