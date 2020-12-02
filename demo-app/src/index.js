@@ -1,5 +1,5 @@
 import { customElement, property, html, css } from 'lit-element';
-import { LitStateElement } from './lit-state.js';
+import { LitStateElement } from 'lit-element-state';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import xml from 'highlight.js/lib/languages/xml';
@@ -132,7 +132,7 @@ export class LitStateDemo extends LitStateElement {
 
     get demoStateCode() {
 
-        return `import { LitState, stateVar, asyncStateVar } from './lit-state.js';
+        return `import { LitState, stateVar, asyncStateVar } from 'lit-element-state';
 
 
 class DemoState extends LitState {

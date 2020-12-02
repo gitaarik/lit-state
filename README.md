@@ -17,11 +17,20 @@ extend from `LitStateElement`. This makes your component automatically
 re-render whenever a `stateVar` they use changes.
 
 
+## Installation
+
+```
+npm install lit-element-state
+```
+
+*The name `lit-state` is already taken on NPM, so therefore the slightly awkward package name.*
+
+
 ## Minimal example
 
 
 ```javascript
-import { LitState, stateVar, LitStateElement } from 'litstate';
+import { LitState, stateVar, LitStateElement } from 'lit-element-state';
 
 class MyState extends LitState {
 
@@ -159,7 +168,7 @@ automatically be executed. When it is resolved or rejected, the template that
 uses the variable will automatically re-render.
 
 ```javascript
-import { LitState, asyncStateVar, LitStateElement } from 'litstate';
+import { LitState, asyncStateVar, LitStateElement } from 'lit-element-state';
 
 class MyState extends LitState {
 

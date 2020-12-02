@@ -1,5 +1,5 @@
 import { customElement, property, html, css } from 'lit-element';
-import { LitStateElement } from './lit-state.js';
+import { LitStateElement } from 'lit-element-state';
 import { demoState } from './demo-state';
 
 
