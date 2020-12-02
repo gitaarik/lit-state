@@ -4,6 +4,7 @@ import { LitElement } from 'lit-element';
 export class LitStateElement extends LitElement {
 
     constructor() {
+        super();
         this._observers = [];
     }
 
@@ -66,6 +67,8 @@ export class LitStateElement extends LitElement {
 export class LitState {
 
     constructor() {
+
+        super();
 
         this._stateVars = [];
         this._asyncStateVars = [];
@@ -154,6 +157,7 @@ export class LitState {
 
 class StateVar {
     constructor(initialValue) {
+        super();
         this.initialValue = initialValue;
     }
 }
@@ -167,6 +171,9 @@ export function stateVar(defaultValue) {
 class AsyncStateVar {
 
     constructor(promise, defaultValue) {
+
+        super();
+
         this.promise = promise;
         this.defaultValue = defaultValue;
         this.initiated = false;
@@ -177,6 +184,7 @@ class AsyncStateVar {
         this.error = null;
         this.logStateVar = null;
         this.onChange = null;
+
     }
 
     initiate() {
@@ -268,6 +276,7 @@ export function asyncStateVar(promise, defaultValue) {
 class StateRecorder {
 
     constructor() {
+        super();
         this._log = null;
     }
 
