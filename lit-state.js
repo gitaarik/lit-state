@@ -68,8 +68,6 @@ export class LitState {
 
     constructor() {
 
-        super();
-
         this._stateVars = [];
         this._asyncStateVars = [];
         this._observers = [];
@@ -157,7 +155,6 @@ export class LitState {
 
 class StateVar {
     constructor(initialValue) {
-        super();
         this.initialValue = initialValue;
     }
 }
@@ -171,8 +168,6 @@ export function stateVar(defaultValue) {
 class AsyncStateVar {
 
     constructor(promise, defaultValue) {
-
-        super();
 
         this.promise = promise;
         this.defaultValue = defaultValue;
@@ -276,7 +271,6 @@ export function asyncStateVar(promise, defaultValue) {
 class StateRecorder {
 
     constructor() {
-        super();
         this._log = null;
     }
 
