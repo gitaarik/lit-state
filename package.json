@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Simple shared app state management for LitElement",
   "main": "lit-state.js",
+  "files": ["lit-state.js"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

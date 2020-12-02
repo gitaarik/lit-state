@@ -11,12 +11,17 @@ LitState is like [MobX](https://mobx.js.org/) or
 [lit-html](https://lit-html.polymer-project.org/), it's tiny, simple, and
 powerful.
 
+You keep your shared state in a `LitState` derived class. This class contains
+`stateVar` variables. Instead of extending your component from `LitElement` you
+extend from `LitStateElement`. This makes your component automatically
+re-render whenever a `stateVar` they use changes.
+
 
 ## Minimal example
 
 
 ```javascript
-import { LitState, stateVar, LitStateElement } from 'lit-element';
+import { LitState, stateVar, LitStateElement } from 'litstate';
 
 class MyState extends LitState {
 
@@ -154,7 +159,7 @@ automatically be executed. When it is resolved or rejected, the template that
 uses the variable will automatically re-render.
 
 ```javascript
-import { LitState, asyncStateVar, LitStateElement } from 'lit-element';
+import { LitState, asyncStateVar, LitStateElement } from 'litstate';
 
 class MyState extends LitState {
 
