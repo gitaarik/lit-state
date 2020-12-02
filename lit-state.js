@@ -3,7 +3,9 @@ import { LitElement } from 'lit-element';
 
 export class LitStateElement extends LitElement {
 
-    _observers = [];
+    constructor() {
+        this._observers = [];
+    }
 
     update(changedProperties) {
         stateRecorder.start();
@@ -63,11 +65,11 @@ export class LitStateElement extends LitElement {
 
 export class LitState {
 
-    _stateVars = [];
-    _asyncStateVars = [];
-    _observers = [];
-
     constructor() {
+
+        this._stateVars = [];
+        this._asyncStateVars = [];
+        this._observers = [];
 
         return new Proxy(this, {
 
@@ -164,20 +166,17 @@ export function stateVar(defaultValue) {
 
 class AsyncStateVar {
 
-    promise = null;
-    defaultValue = null;
-    initiated = false;
-    pending = true;
-    fulfilled = false;
-    result = null;
-    rejected = false;
-    error = null;
-    logStateVar = null;
-    onChange = null;
-
     constructor(promise, defaultValue) {
         this.promise = promise;
         this.defaultValue = defaultValue;
+        this.initiated = false;
+        this.pending = true;
+        this.fulfilled = false;
+        this.result = null;
+        this.rejected = false;
+        this.error = null;
+        this.logStateVar = null;
+        this.onChange = null;
     }
 
     initiate() {
@@ -268,7 +267,9 @@ export function asyncStateVar(promise, defaultValue) {
 
 class StateRecorder {
 
-    _log = null;
+    constructor() {
+        this._log = null;
+    }
 
     start() {
         this._log = new Map();
