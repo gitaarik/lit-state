@@ -1,5 +1,5 @@
 {
-  "name": "lit-state",
+  "name": "lit-element-state",
   "version": "1.0.0",
   "description": "Simple shared app state management for LitElement",
   "main": "lit-state.js",
