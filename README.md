@@ -1,6 +1,6 @@
 # LitState
 
-### Brainless shared app state management for LitElement
+### Simple shared app state management for LitElement
 
 LitState is like [MobX](https://mobx.js.org/) or
 [Redux](https://redux.js.org/), but then for
@@ -144,3 +144,31 @@ is used in multiple components; a shared state.
 
 Therefore `LitState` has a convenient way of dealing with asynchronous
 functions. It's a special kind of `stateVar` called `asyncStateVar`.
+
+It is used like this:
+
+```javascript
+import { LitState, asyncStateVar, LitStateElement } from 'lit-element';
+
+class MyState extends LitState {
+
+    myData = asyncStateVar(this.getData);
+
+    getData() {
+        //
+    }
+
+}
+
+const myState = new MyState();
+
+
+class MyElement extends LitStateElement {
+
+    render() {
+        return html`
+        `;
+    }
+
+}
+```

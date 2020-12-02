@@ -58,14 +58,6 @@ export class LitStateElement extends LitElement {
 
     }
 
-    el(querySelector) {
-        return this.shadowRoot.querySelector(querySelector);
-    }
-
-    els(querySelector) {
-        return this.shadowRoot.querySelectorAll(querySelector);
-    }
-
 }
 
 
@@ -92,13 +84,13 @@ export class LitState {
                 } else if (this._isAsyncStateVar(key)) {
                     null;
                 } else if (value instanceof AsyncStateVar) {
-                    this._asyncStateVars.push(key);
                     value.logStateVar = () => {
                         stateRecorder.logStateVar(obj, key);
                     };
                     value.onChange = () => {
                         this._notifyObservers(key);
                     };
+                    this._asyncStateVars.push(key);
                     obj[key] = value;
                 } else {
                     obj[key] = value;
@@ -235,19 +227,25 @@ class AsyncStateVar {
         return this.fulfilled;
     }
 
+    getResult() {
+        return this.result;
+    }
+
     getValue() {
 
         this.logStateVar();
 
         if (this.isFulfilled()) {
-            return this.result;
+            return this.getResult();
+        } else if (this.isRejected()) {
+            return this.getError();
         } else {
             return this.defaultValue;
         }
 
     }
 
-    reload(reset = true) {
+    reload = (reset = true) => {
 
         this.logStateVar();
 

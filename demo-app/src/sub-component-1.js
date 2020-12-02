@@ -1,17 +1,38 @@
 import { customElement, property, html, css } from 'lit-element';
 import { LitStateElement } from './lit-state.js';
-import { counterState } from './counter-state';
+import { demoState } from './demo-state';
 
 
 @customElement('sub-component-1')
 export class SubComponent1 extends LitStateElement {
 
     render() {
+
         return html`
+
             <h2>&lt;sub-component-1&gt;</h2>
-            <h3>Counter: ${counterState.counter}</h3>
-            <button @click=${counterState.increase}>increase</button>
+
+            <div id="items">
+
+                <div>
+                    <h3>Counter: ${demoState.counter}</h3>
+                    <button @click=${demoState.increase}>increase counter</button>
+                </div>
+
+                <div>
+
+                    <h3>Async Data: ${demoState.data.getValue()}</h3>
+
+                    <button @click=${demoState.data.reload} ?disabled=${demoState.data.isPending()}>
+                        reload data
+                    </button>
+
+                </div>
+
+            </div>
+
         `;
+
     }
 
     static get styles() {
@@ -28,6 +49,11 @@ export class SubComponent1 extends LitStateElement {
             h2 {
                 margin-top: 0;
                 font-size: 20px;
+            }
+
+            #items {
+                display: flex;
+                justify-content: space-between;
             }
 
         `;

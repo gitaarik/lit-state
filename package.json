@@ -1,0 +1,30 @@
+{
+  "name": "lit-state",
+  "version": "1.0.0",
+  "description": "Simple shared app state management for LitElement",
+  "main": "lit-state.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitaarik/lit-state.git"
+  },
+  "keywords": [
+    "state",
+    "management",
+    "lit-element",
+    "LitElement",
+    "app",
+    "shared",
+    "global",
+    "observer",
+    "observable"
+  ],
+  "author": "gitaarik",
+  "license": "LGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/gitaarik/lit-state/issues"
+  },
+  "homepage": "https://github.com/gitaarik/lit-state#readme"
+}
