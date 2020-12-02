@@ -47,14 +47,14 @@ export class LitStateDemo extends LitStateElement {
 
                 <div>
                     <h3>Counter: ${demoState.counter}</h3>
-                    <button @click=${demoState.increase}>increase counter</button>
+                    <button @click=${() => demoState.increaseCounter()}>increase counter</button>
                 </div>
 
                 <div>
 
                     <h3>Async Data: ${demoState.data.getValue()}</h3>
 
-                    <button @click=${demoState.data.reload} ?disabled=${demoState.data.isPending()}>
+                    <button @click=${() => demoState.data.reload()} ?disabled=${demoState.data.isPending()}>
                         reload data
                     </button>
 
@@ -138,9 +138,9 @@ export class LitStateDemo extends LitStateElement {
 class DemoState extends LitState {
 
     counter = stateVar(0);
-    data = asyncStateVar(this.getData, 'loading...');
+    data = asyncStateVar(() => this.getData(), 'loading...');
 
-    increase = () => {
+    increaseCounter() {
         this.counter++;
     }
 
@@ -167,14 +167,14 @@ export const demoState = new DemoState();`;
 
     <div>
         <h3>Counter: \${demoState.counter}</h3>
-        <button @click=\${demoState.increase}>increase counter</button>
+        <button @click=\${() => demoState.increaseCounter()}>increase counter</button>
     </div>
 
     <div>
 
         <h3>Async Data: \${demoState.data.getValue()}</h3>
 
-        <button @click=\${demoState.data.reload} ?disabled=\${demoState.data.isPending()}>
+        <button @click=\${() => demoState.data.reload()} ?disabled=\${demoState.data.isPending()}>
             reload data
         </button>
 

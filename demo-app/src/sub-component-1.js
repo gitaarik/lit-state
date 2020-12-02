@@ -16,14 +16,14 @@ export class SubComponent1 extends LitStateElement {
 
                 <div>
                     <h3>Counter: ${demoState.counter}</h3>
-                    <button @click=${demoState.increase}>increase counter</button>
+                    <button @click=${() => demoState.increaseCounter()}>increase counter</button>
                 </div>
 
                 <div>
 
                     <h3>Async Data: ${demoState.data.getValue()}</h3>
 
-                    <button @click=${demoState.data.reload} ?disabled=${demoState.data.isPending()}>
+                    <button @click=${() => demoState.data.reload()} ?disabled=${demoState.data.isPending()}>
                         reload data
                     </button>
 

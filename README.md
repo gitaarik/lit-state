@@ -139,13 +139,16 @@ LitState is created for these use cases.
 ## `asyncStateVar`
 
 It's not uncommon for a modern web-app to have asynchronous functions. For
-example, fetch some data from a REST API. It's also not uncommon that this data
-is used in multiple components; a shared state.
+example, to fetch some data from a REST API. It's also not uncommon that this
+data is used in multiple components; a shared state.
 
 Therefore `LitState` has a convenient way of dealing with asynchronous
 functions. It's a special kind of `stateVar` called `asyncStateVar`.
 
-It is used like this:
+The `asyncStateVar()` function takes as first argument a function that returns
+a promise. When the variable is used in a template, the promise will
+automatically be executed. When it is resolved or rejected, the template that
+uses the variable will automatically re-render.
 
 ```javascript
 import { LitState, asyncStateVar, LitStateElement } from 'lit-element';
@@ -155,19 +158,41 @@ class MyState extends LitState {
     myData = asyncStateVar(this.getData);
 
     getData() {
-        //
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(Math.random().toString().substr(2));
+            }, 3000);
+        });
     }
 
 }
 
 const myState = new MyState();
+```
+
+In the template, you can check the status of the promise with the functions
+`isPending()`, `isRejected()` and `isFulfilled()` on the `asyncStateVar`. In
+this example `myData`, so you would for example do:
+`myState.myData.isPending()`. Based on the status of the promise you can then
+either call `getResult()` or `getError()`. There's also a convenient function
+`getValue()` that returns `getResult()` when the promise is fulfilled,
+`getError()` when the promise is rejected, or the default value when the
+promise is still pending. The default value can optionally be set with the
+second argument to the `asyncStateVar()` function (the first argument is the
+promise). You can also reload the promise by calling `reload()`.
 
 
+```javascript
 class MyElement extends LitStateElement {
 
     render() {
-        return html`
-        `;
+        if (myState.myData.isPending()) {
+            return html`loading data...`;
+        } else if (myState.myData.isRejected()) {
+            return html`loading data failed with reason: ${myState.myData.getError()}`;
+        } else {
+            return myState.myData.getResult();
+        }
     }
 
 }

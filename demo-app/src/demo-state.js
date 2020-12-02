@@ -4,9 +4,9 @@ import { LitState, stateVar, asyncStateVar } from './lit-state.js';
 class DemoState extends LitState {
 
     counter = stateVar(0);
-    data = asyncStateVar(this.getData, 'loading...');
+    data = asyncStateVar(() => this.getData(), 'loading...');
 
-    increase = () => {
+    increaseCounter = () => {
         this.counter++;
     }
 
