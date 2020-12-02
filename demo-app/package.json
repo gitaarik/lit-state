@@ -9,7 +9,7 @@
   "dependencies": {
     "highlight.js": "^10.4.0",
     "lit-element": "^2.3.1",
-    "lit-element-state": "^1.0.5",
+    "lit-element-state": "^1.0.6",
     "lit-html": "^1.2.1"
   },
   "devDependencies": {
