@@ -3,7 +3,7 @@
 ### Simple shared app state management for LitElement.
 
 LitState automatically re-renders your LitElement components, when a shared app
-state variable they use, changes.
+state variable they use changes.
 
 LitState is like [MobX](https://mobx.js.org/) or
 [Redux](https://redux.js.org/), but then for
@@ -12,9 +12,10 @@ LitState is like [MobX](https://mobx.js.org/) or
 powerful.
 
 You keep your shared state in a `LitState` derived class. This class contains
-`stateVar` variables. Instead of extending your component from `LitElement` you
-extend from `LitStateElement`. This makes your component automatically
-re-render whenever a `stateVar` they use changes.
+`stateVar` variables that contain the state. This class can also contain helper
+functions that modify the state. Instead of extending your component from
+`LitElement` you extend from `LitStateElement`. This makes your component
+automatically re-render whenever a `stateVar` they use changes.
 
 
 ## Installation
@@ -23,7 +24,8 @@ re-render whenever a `stateVar` they use changes.
 npm install lit-element-state
 ```
 
-*The name `lit-state` is already taken on NPM, so therefore the slightly awkward package name.*
+*The name `lit-state` is unfortunately already taken on npm, so therefore the
+slightly awkward package name.*
 
 
 ## Minimal example
@@ -94,9 +96,10 @@ are being used and observes them.
 
     The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
     object to track sets and gets of the class variables. The `stateVar()`
-    function just makes it clear to `LitState` that this is a observable
-    variable. That when it changes, the components that are observing these
-    variables will get notified, so that they re-render themselves.
+    function makes it clear to `LitState` that this is a state containing
+    variable, and it makes it observable. When it changes, the components that
+    are observing these variables will get notified, so that they can re-render
+    themselves.
 
 - You can create and use multiple `LitState` classes at the same time.
 
