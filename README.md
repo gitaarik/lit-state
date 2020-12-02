@@ -1,6 +1,9 @@
 # LitState
 
-### Simple shared app state management for LitElement
+### Simple shared app state management for LitElement.
+
+LitState automatically re-renders your LitElement components, when a shared app
+state variable they use, changes.
 
 LitState is like [MobX](https://mobx.js.org/) or
 [Redux](https://redux.js.org/), but then for
