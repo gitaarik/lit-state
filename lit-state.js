@@ -247,7 +247,7 @@ class AsyncStateVar {
 
     }
 
-    reload = (reset = true) => {
+    reload(reset = true) {
 
         this.logStateVar();
 
