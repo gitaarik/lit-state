@@ -36,13 +36,13 @@ export class LitStateElement extends LitElement {
 
     _addStateObservers(stateVars) {
         for (let [state, keys] of stateVars) {
-            const observer = this._stateChangeCallback;
+            const observer = () => this._stateChangeCallback();
             this._observers.push([state, observer]);
             state.addObserver(observer, keys);
         }
     }
 
-    _stateChangeCallback = () => {
+    _stateChangeCallback() {
         this.requestUpdate();
     }
 
