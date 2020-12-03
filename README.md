@@ -103,18 +103,19 @@ are being used and observes them.
 
 - You can create and use multiple `LitState` classes at the same time.
 
-    It is even encouraged to keep things separate. You can of course have a big
-    `LitState` class which contains all global app state variables. But it is
-    probably cleaner if you categorize it into multiple smaller `LitState`
-    classes. For example, you can put each one if a separate file, collected in
-    a `state/` folder, and import them at the places you need.
+    It is even encouraged to keep things separate. You can of course have one
+    big `LitState` derived class which contains all global app state variables.
+    But it is probably cleaner if you categorize it into multiple smaller
+    `LitState` derived classes. For example, you can put each state class in a
+    separate file, collected in a `state/` folder, and import them at the
+    places you need.
 
 - Only new assigns trigger a rerender. Updating a object/array won't trigger a rerender.
 
-    Just like `LitElement`s
+    Just like LitElement's
     [properties](https://lit-element.polymer-project.org/guide/properties),
-    only a new assign of the property triggers a rerender. Doing something like
-    this won't:
+    only a new assign of the `stateVar` triggers a rerender. Doing something
+    like this won't:
 
     ```javascript
     MyState extends LitState {
@@ -153,35 +154,37 @@ use this global app state are synchronized with it.
 And you can also have a re-usable component that has several internal
 sub-components. They all might need to share some common internal state.
 
-LitState is created for these use cases.
+LitState is created for these use cases, and is meant to make it as simple as
+possible for the developer.
 
 
 ## `asyncStateVar`
 
 It's not uncommon for a modern web-app to have asynchronous functions. For
-example, to fetch some data from a REST API. It's also not uncommon that this
-data is used in multiple components; a shared state.
+example: fetch some data from a REST API. It's also not uncommon that this data
+is used in multiple components; a shared state.
 
 Therefore `LitState` has a convenient way of dealing with asynchronous
 functions. It's a special kind of `stateVar` called `asyncStateVar`.
 
-The `asyncStateVar()` function takes as first argument a function that returns
-a promise. When the variable is used in a template, the promise will
+The `asyncStateVar()` function takes as its first argument a function that
+returns a promise. When the variable is used in a template, the promise will
 automatically be executed. When it is resolved or rejected, the template that
 uses the variable will automatically re-render.
 
+Here is a state class with an `asyncStateVar`:
+
 ```javascript
-import { LitState, asyncStateVar, LitStateElement } from 'lit-element-state';
+import { LitState, asyncStateVar } from 'lit-element-state';
 
 class MyState extends LitState {
 
-    myData = asyncStateVar(this.getData);
+    myData = asyncStateVar(() => this.getData());
 
     getData() {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(Math.random().toString().substr(2));
-            }, 3000);
+            // Resolve the promise after 3 seconds with a random number
+            setTimeout(() => resolve(Math.random()), 3000);
         });
     }
 
@@ -192,7 +195,7 @@ const myState = new MyState();
 
 In the template, you can check the status of the promise with the functions
 `isPending()`, `isRejected()` and `isFulfilled()` on the `asyncStateVar`. In
-this example `myData`, so you would for example do:
+this example: `myData`. So you would for example do:
 `myState.myData.isPending()`. Based on the status of the promise you can then
 either call `getResult()` or `getError()`. There's also a convenient function
 `getValue()` that returns `getResult()` when the promise is fulfilled,
@@ -201,8 +204,11 @@ promise is still pending. The default value can optionally be set with the
 second argument to the `asyncStateVar()` function (the first argument is the
 promise). You can also reload the promise by calling `reload()`.
 
+Here is an example of how the template could handle the `asyncStateVar`:
 
 ```javascript
+import { LitStateElement } from 'lit-element-state';
+
 class MyElement extends LitStateElement {
 
     render() {
@@ -217,3 +223,20 @@ class MyElement extends LitStateElement {
 
 }
 ```
+
+## Development
+
+LitState is brand-new. I created it because I wanted an easy way to deal with
+shared app state in LitElement, for my own projects. I hope it can make the
+lives of other developers easier too.
+
+I want to keep LitState small and simple, just like LitElement. So I don't
+expect to add a lot of features. Only things that are a very common patterns
+for shared app state management would be suitable to include.
+
+One thing that I still want to add though is unit tests, to automatically test
+the library. I don't have much experience with unit testing in JavaScript, so
+will have to dive into that.
+
+If you have comments, suggestions, questions, any kind of feedback, or you want
+to contribute, I would be pleased to hear from you. Feel free to open an issue.

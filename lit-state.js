@@ -168,7 +168,6 @@ export function stateVar(defaultValue) {
 class AsyncStateVar {
 
     constructor(promise, defaultValue) {
-
         this.promise = promise;
         this.defaultValue = defaultValue;
         this.initiated = false;
@@ -179,7 +178,6 @@ class AsyncStateVar {
         this.error = null;
         this.logStateVar = null;
         this.onChange = null;
-
     }
 
     initiate() {
