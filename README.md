@@ -229,14 +229,14 @@ const myState = new MyState();
 
 In the template, you can check the status of the promise with the functions
 `isPending()`, `isRejected()` and `isFulfilled()` on the `asyncStateVar`. In
-this example: `myData`. So you would for example do:
-`myState.myData.isPending()`. Based on the status of the promise you can then
-either call `getResult()` or `getError()`. There's also a convenient function
-`getValue()` that returns `getResult()` when the promise is fulfilled,
-`getError()` when the promise is rejected, or the default value when the
-promise is still pending. The default value can optionally be set with the
-second argument to the `asyncStateVar()` function (the first argument is the
-promise). You can also reload the promise by calling `reload()`.
+this example you would do: `myState.myData.isPending()`. Based on the status of
+the promise you can then either call `getResult()` or `getError()`. There's
+also a convenient function `getValue()` that returns `getResult()` when the
+promise is fulfilled, `getError()` when the promise is rejected, or the default
+value when the promise is still pending. The default value can optionally be
+set with the second argument to the `asyncStateVar()` function (the first
+argument is the promise). You can also reload the promise by calling
+`reload()`.
 
 Here is an example of how the template could handle the `asyncStateVar`:
 
