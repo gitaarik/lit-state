@@ -224,6 +224,55 @@ class MyElement extends LitStateElement {
 }
 ```
 
+## FAQ
+
+### Why not use MobX or Redux in the first place? Any benefits by using this?
+
+MobX is quite a large library with a lot of whistles and bells. LitState is
+about 300 lines at the moment, and I'm planning on keeping it tiny, just like
+LitElement and lit-html.
+
+To use Redux you need a lot of of boiler plate code: *Actions*, *Action
+Creators* and *Reducers*. You do have helper libraries that can generate these
+things for you, to make it slightly easier, but I still think it is
+unnecessarily complicated.
+
+I think MobX is much easier to use, because you don't need to write any
+boilerplate. However, MobX is a quite large library, and for more advanced
+use-cases it can become relatively complicated to use.
+
+I think a lot of features from MobX are not really necessary when you use
+LitElement. MobX is mainly created for React. Therefore MobX has optimizations
+aimed at how React works. LitState is specifically aimed at LitElement. And
+most of the optimizations MobX created aimed at React are not required for
+LitElement.
+
+When a `stateVar` in LitState is updated, the `LitStateElement` components that
+observe that `stateVar` call LitElement's `this.requestUpdate()` (with no
+arguments). This will enqueue an update request for the component. The
+component will re-render at the end of the execution queue.
+`this.requestUpdate()` can be called multiple times during a particular
+JavaScript event (like a click), and it will only update the component once, at
+the end of the execution queue. So it doesn't matter that it is called multiple
+times when multiple `stateVar`s change during a JavaScript event. This is
+basically an optimization feature built-in in LitElement, which is part of the
+reason why LitElement is so cool.
+
+Also, LitElement uses lit-html, which sees which parts of the template are
+changed or not. And it will only re-render the HTML elements that have changes.
+
+LitState is built with this in mind, so doesn't need the optimizations that
+MobX created for React. Also LitState doesn't try to track changes inside
+objects, like MobX does. That is also a reason MobX becomes complicated. It's
+nice that you can modify objects and MobX detects that, but it's not very hard
+to just set a new object. That makes the source code of LitState a lot smaller
+and simpler, and therefore also easier to understand what is happening.
+
+Basically it comes down to the fact that LitState is written for, and with the
+same philosophy as, LitElement and lit-html. Which makes it more suitable for
+developers that like this philosophy.
+
+
 ## Development
 
 LitState is brand-new. I created it because I wanted an easy way to deal with
