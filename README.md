@@ -101,9 +101,9 @@ to detect whenever a `stateVar` is get or set. During the render of a
 `LitStateElement`, there is a recorder active that records any `stateVar` that
 is accessed during the render of that component. At the end of the render, the
 `LitStateElement` collects the recorded `stateVar` variables, observes them,
-and re-renders itself whenever one the `stateVar` variables changes. The next
-render it again records which `stateVar` variables are being used and observes
-them. So if the next render uses new `stateVars`, they will be observed.
+and re-renders itself whenever one of them changes. The next render it again
+records which `stateVar` variables are being used and observes them. So if the
+next render uses new `stateVars`, they will be observed.
 
 
 ### Implementation details
