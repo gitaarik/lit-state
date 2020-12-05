@@ -42,7 +42,7 @@ class MyState extends LitState {
     myCounter = stateVar(0); // `0` is the default value
 
     increase() {
-        myCounter++;
+        this.myCounter++;
     }
 
 }
