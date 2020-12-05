@@ -1,5 +1,5 @@
 import { customElement, property, html, css } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
+import { LitStateElement } from './lit-state.js';
 import { demoState } from './demo-state';
 
 
@@ -19,7 +19,7 @@ export class SubComponent1 extends LitStateElement {
                     <button @click=${() => demoState.increaseCounter()}>increase counter</button>
                 </div>
 
-                <div>
+                <div id="asyncData">
 
                     <h3>Async Data: ${demoState.data.getValue()}</h3>
 
@@ -49,11 +49,21 @@ export class SubComponent1 extends LitStateElement {
             h2 {
                 margin-top: 0;
                 font-size: 20px;
+                color: palegreen;
+            }
+
+            h3 {
+                font-size: 18px;
+                color: red;
             }
 
             #items {
                 display: flex;
                 justify-content: space-between;
+            }
+
+            #asyncData {
+                text-align: right;
             }
 
         `;

@@ -1,5 +1,5 @@
 import { customElement, property, html, css } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
+import { LitStateElement } from './lit-state.js';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import xml from 'highlight.js/lib/languages/xml';
@@ -50,7 +50,7 @@ export class LitStateDemo extends LitStateElement {
                     <button @click=${() => demoState.increaseCounter()}>increase counter</button>
                 </div>
 
-                <div>
+                <div id="asyncData">
 
                     <h3>Async Data: ${demoState.data.getValue()}</h3>
 
@@ -203,11 +203,17 @@ export const demoState = new DemoState();`;
             h1 {
                 margin: 0;
                 font-size: 25px;
+                color: palegreen;
             }
 
             h2 {
                 margin: 30px 0 0;
                 font-size: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+                color: red;
             }
 
             code {
@@ -227,6 +233,10 @@ export const demoState = new DemoState();`;
             #items {
                 display: flex;
                 justify-content: space-between;
+            }
+
+            #asyncData {
+                text-align: right;
             }
 
         `;
