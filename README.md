@@ -97,9 +97,10 @@ the previous render cycle - changes.
 We use [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 objects to detect whenever a `stateVar` is get or set. During the render of a
 `LitStateElement`, there is a recorder active that records any `stateVar` that
-is accessed. Then the `LitStateElement` collects the recorded `stateVar`s,
-observes them, and rerenders itself whenever one of them changes. The next
-render again records which `stateVar`s are being used and observes them.
+is accessed. Then the `LitStateElement` collects the recorded `stateVar`
+variables, observes them, and rerenders itself whenever one of them changes.
+The next render again records which `stateVar` variables are being used and
+observes them.
 
 To re-render itself, a `LitStateElement` component calls LitElement's
 `this.requestUpdate()` (with no arguments). This will enqueue an update request
@@ -107,11 +108,11 @@ for the component. The component will re-render at the end of the execution
 queue. `this.requestUpdate()` can be called multiple times during a particular
 JavaScript event (like a click), and it will only update the component once, at
 the end of the execution queue. So it doesn't matter when it is called multiple
-times when multiple `stateVar`s are changed during a JavaScript event. This is
-an optimization feature built-in in LitElement. LitElement uses this
+times when multiple `stateVar` variables are changed during a JavaScript event.
+This is an optimization feature built-in in LitElement. LitElement uses this
 optimization for it's own
 [properties](https://lit-element.polymer-project.org/guide/properties). This
-optimization works in the same way for LitState's `stateVar`s.
+optimization works in the same way for LitState's `stateVar` variables.
 
 Also, LitElement uses lit-html, which sees which parts of the template are
 changed or not. And it will only re-render the HTML elements that have changes.
