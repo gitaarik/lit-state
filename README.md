@@ -110,9 +110,10 @@ next render uses new `stateVars`, they will be observed.
 ### Implementation details
 
 To re-render itself, a `LitStateElement` component calls LitElement's
-`this.requestUpdate()` (with no arguments). This will enqueue an update request
-for the component. The component will re-render at the end of the execution
-queue. `this.requestUpdate()` can be called multiple times during a particular
+[`this.requestUpdate()`](https://lit-element.polymer-project.org/api/classes/_lit_element_.litelement.html#requestupdate)
+(with no arguments). This will enqueue an update request for the component. The
+component will re-render at the end of the execution queue.
+`this.requestUpdate()` can be called multiple times during a particular
 JavaScript event (like a click), and it will only update the component once, at
 the end of the execution queue. So it doesn't matter when it is called multiple
 times when multiple `stateVar` variables are changed during a JavaScript event.
