@@ -126,6 +126,22 @@ Also, LitElement uses lit-html, which sees which parts of the template are
 changed or not. And it will only re-render the HTML elements that have changes.
 
 
+## Why anyway?
+
+Re-usable components are great and we should use them a lot. When you're
+building a complex application however, it is also desirable to have
+application-specific components that might have application-specific
+side-effects, like changing the global app state for example. And it is of
+course desirable, that when this global app state changes, the components that
+use this global app state are synchronized with it.
+
+And you can also have a re-usable component that has several internal
+sub-components. They all might need to share some common internal state.
+
+LitState is created for these use cases, and is meant to make it as simple as
+possible for the developer.
+
+
 ## Notes
 
 ### You always need to use `stateVar` inside a `LitState` derived class.
@@ -174,22 +190,6 @@ Watching for changes inside objects is very complex matter and would make
 LitState way more complicated than desirable. If you are interested in this
 kind of thing, check out
 [observable-slim](https://github.com/ElliotNB/observable-slim).
-
-
-## Why anyway?
-
-Re-usable components are great and we should use them a lot. When you're
-building a complex application however, it is also desirable to have
-application-specific components that might have application-specific
-side-effects, like changing the global app state for example. And it is of
-course desirable, that when this global app state changes, the components that
-use this global app state are synchronized with it.
-
-And you can also have a re-usable component that has several internal
-sub-components. They all might need to share some common internal state.
-
-LitState is created for these use cases, and is meant to make it as simple as
-possible for the developer.
 
 
 ## `asyncStateVar`
