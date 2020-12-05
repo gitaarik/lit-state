@@ -286,10 +286,10 @@ See the section [How does this work?](#how-does-this-work) to see how LitState
 works together with LitElement.
 
 Also LitState doesn't try to track changes inside objects, like MobX does. That
-is also a reason why MobX becomes complicated. It's nice that you can modify
-objects and MobX detects that, but it's not very hard to just set a new object.
-That makes the source code of LitState a lot smaller and simpler, and therefore
-also easier to understand what is happening.
+is also a reason why MobX is complicated. It's nice that you can modify objects
+and MobX detects that, but it's not very hard to just set a new object. That
+makes the source code of LitState a lot smaller and simpler, and therefore also
+easier to understand what is happening.
 [Look here](#only-new-assigns-trigger-a-rerender-updating-a-objectarray-wont-trigger-a-rerender)
 for more details on this.
 
