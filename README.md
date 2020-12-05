@@ -299,9 +299,10 @@ I want to keep LitState small and simple, just like LitElement. So I don't
 expect to add a lot of features. Only things that are a very common patterns
 for shared app state management would be suitable to include.
 
-One thing that I still want to add though is unit tests, to automatically test
-the library. I don't have much experience with unit testing in JavaScript, so
-will have to dive into that.
+In any case, I will add more documentation and update the demo app to make the
+library more accessible. Also I would like to add unit tests, to automatically
+test the library. I don't have much experience with unit testing in JavaScript,
+so I need to dive into that.
 
 If you have comments, suggestions, questions, any kind of feedback, or you want
 to contribute, I would be pleased to hear from you. Feel free to open an issue.
