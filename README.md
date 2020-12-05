@@ -199,69 +199,9 @@ kind of thing, check out
 
 ## Easy handling of asynchronous data with `asyncStateVar`
 
-It's not uncommon for a modern web-app to have asynchronous functions. For
-example: fetch some data from a REST API. It's also not uncommon that this data
-is used in multiple components; a shared state.
+LitState also has a convenient way of dealing with asynchronous data in your
+app. See the [asyncStateVar](docs/asyncStateVar.md).
 
-Therefore `LitState` has a convenient way of dealing with asynchronous
-functions. It's a special kind of `stateVar` called `asyncStateVar`.
-
-The `asyncStateVar()` function takes as its first argument a function that
-returns a promise. When the variable is used in a component, the promise will
-automatically be executed. When it is resolved or rejected, the component that
-uses the variable will automatically re-render.
-
-Here is a state class with an `asyncStateVar`:
-
-```javascript
-import { LitState, asyncStateVar } from 'lit-element-state';
-
-class MyState extends LitState {
-
-    myData = asyncStateVar(() => this.getData());
-
-    getData() {
-        return new Promise((resolve, reject) => {
-            // Resolve the promise after 3 seconds with a random number
-            setTimeout(() => resolve(Math.random()), 3000);
-        });
-    }
-
-}
-
-export const myState = new MyState();
-```
-
-In the component, you can check the status of the promise with the functions
-`isPending()`, `isRejected()` and `isFulfilled()` on the `asyncStateVar`. For
-example: `myState.myData.isPending()`. Based on the status of the promise you
-can then either call `getResult()` or `getError()`. There's also a convenient
-function `getValue()` that returns `getResult()` when the promise is fulfilled,
-`getError()` when the promise is rejected, or the default value when the
-promise is still pending. The default value can optionally be set with the
-second argument to the `asyncStateVar()` function (the first argument is the
-promise). You can also reload the promise by calling `reload()`.
-
-Here is an example of how the component could handle the `asyncStateVar`:
-
-```javascript
-import { LitStateElement } from 'lit-element-state';
-import { myState } from './my-state.js';
-
-class MyElement extends LitStateElement {
-
-    render() {
-        if (myState.myData.isPending()) {
-            return html`loading data...`;
-        } else if (myState.myData.isRejected()) {
-            return html`loading data failed with reason: ${myState.myData.getError()}`;
-        } else {
-            return myState.myData.getResult();
-        }
-    }
-
-}
-```
 
 ## FAQ
 

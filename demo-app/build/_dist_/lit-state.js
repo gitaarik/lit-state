@@ -77,15 +77,14 @@ export class LitState {
 
           obj[key] = value.initialValue;
         } else if (this._isAsyncStateVar(key)) {
-          null;
+          obj[key].setValue(value);
         } else if (value instanceof AsyncStateVar) {
-          value.logStateVar = () => {
+          value.setLogStateVarCallback(() => {
             stateRecorder.logStateVar(obj, key);
-          };
-
-          value.onChange = () => {
+          });
+          value.setOnChangeCallback(() => {
             this._notifyObservers(key);
-          };
+          });
 
           this._asyncStateVars.push(key);
 
@@ -99,7 +98,7 @@ export class LitState {
       get: (obj, key) => {
         if (obj._isStateVar(key)) {
           stateRecorder.logStateVar(obj, key);
-        } else if (obj._isAsyncStateVar(key) && !obj[key].initiated) {
+        } else if (obj._isAsyncStateVar(key) && !obj[key].isInitiated()) {
           stateRecorder.logStateVar(obj, key);
           obj[key].initiate();
         }
@@ -155,90 +154,195 @@ export function stateVar(defaultValue) {
 
 class AsyncStateVar {
   constructor(promise, defaultValue) {
-    this.promise = promise;
-    this.defaultValue = defaultValue;
-    this.initiated = false;
-    this.pending = true;
-    this.fulfilled = false;
-    this.result = null;
-    this.rejected = false;
-    this.error = null;
-    this.logStateVar = null;
-    this.onChange = null;
+    this._promise = promise;
+    this._defaultValue = defaultValue;
+    this.init();
+  }
+
+  init() {
+    this._initiated = false;
+    this._pendingGet = false;
+    this._pendingSet = false;
+    this._fulfilledGet = false;
+    this._fulfilledSet = false;
+    this._rejectedGet = false;
+    this._rejectedSet = false;
+    this._errorGet = null;
+    this._errorSet = null;
+    this._value = this._getDefaultValue();
+    this._logStateVarCallback = null;
+    this._onChangeCallback = null;
+  }
+
+  _getDefaultValue() {
+    if (typeof this._promise && 'default' in this._promise) {
+      return this._promise.default;
+    } else {
+      return this._defaultValue;
+    }
+  }
+
+  setLogStateVarCallback(callback) {
+    this._logStateVarCallback = callback;
+  }
+
+  setOnChangeCallback(callback) {
+    this._onChangeCallback = callback;
+  }
+
+  isInitiated() {
+    return this._initiated;
   }
 
   initiate() {
-    this.reset();
-    this.settle();
+    this._initiated = true;
+
+    this._loadValue();
   }
 
-  reset() {
-    this.initiated = true;
-    this.pending = true;
-    this.fulfilled = false;
-    this.result = null;
-    this.rejected = false;
-    this.error = null;
-  }
+  _loadValue() {
+    this._logStateVarCallback();
 
-  settle() {
-    this.promise().then(result => {
-      this.fulfilled = true;
-      this.result = result;
+    this._pendingGet = true;
+    this._rejectedGet = false;
+    this._fulfilledGet = false;
+    this._fulfilledGet = false;
+
+    this._onChangeCallback();
+
+    this._getPromise().then(value => {
+      this._fulfilledGet = true;
+      this._rejectedSet = false;
+      this._value = value;
+      this._errorGet = null;
     }).catch(error => {
-      this.rejected = true;
-      this.error = error;
+      this._rejectedGet = true;
+      this._errorGet = error;
     }).finally(() => {
-      this.pending = false;
-      this.onChange();
+      this._pendingGet = false;
+
+      this._onChangeCallback();
     });
   }
 
   isPending() {
-    this.logStateVar();
-    return this.pending;
+    return this.isPendingGet() || this.isPendingSet();
+  }
+
+  isPendingGet() {
+    this._logStateVarCallback();
+
+    return this._pendingGet;
+  }
+
+  isPendingSet() {
+    this._logStateVarCallback();
+
+    return this._pendingSet;
   }
 
   isRejected() {
-    this.logStateVar();
-    return this.rejected;
+    return this.isRejectedGet() || this.isRejectedSet();
+  }
+
+  isRejectedGet() {
+    this._logStateVarCallback();
+
+    return this._rejectedGet;
+  }
+
+  isRejectedSet() {
+    this._logStateVarCallback();
+
+    return this._rejectedSet;
   }
 
   getError() {
-    this.logStateVar();
-    return this.error;
+    return this.getErrorGet() || this.getErrorSet();
+  }
+
+  getErrorGet() {
+    this._logStateVarCallback();
+
+    return this._errorGet;
+  }
+
+  getErrorSet() {
+    this._logStateVarCallback();
+
+    return this._errorSet;
   }
 
   isFulfilled() {
-    this.logStateVar();
-    return this.fulfilled;
+    return this.isFulfilledGet() || this.isFulfilledSet();
   }
 
-  getResult() {
-    return this.result;
+  isFulfilledGet() {
+    this._logStateVarCallback();
+
+    return this._fulfilledGet;
+  }
+
+  isFulfilledSet() {
+    this._logStateVarCallback();
+
+    return this._fulfilledSet;
   }
 
   getValue() {
-    this.logStateVar();
+    this._logStateVarCallback();
 
-    if (this.isFulfilled()) {
-      return this.getResult();
-    } else if (this.isRejected()) {
-      return this.getError();
+    return this._value;
+  }
+
+  setValue(value) {
+    this._pendingSet = true;
+    this._fulfilledSet = false;
+    this._fulfilledGet = false;
+    this._rejectedSet = false;
+
+    this._onChangeCallback();
+
+    this._setPromise(value).then(value => {
+      this._fulfilledSet = true;
+      this._rejectedGet = false;
+      this._value = value;
+    }).catch(error => {
+      this._rejectedSet = true;
+      this._errorSet = error;
+    }).finally(() => {
+      this._pendingSet = false;
+
+      this._onChangeCallback();
+    });
+  }
+
+  reload() {
+    this._loadValue();
+  }
+
+  get _getPromise() {
+    if (typeof this._promise === 'object') {
+      if ('get' in this._promise) {
+        return this._promise.get;
+      } else {
+        throw "asyncStateVar is an object, but has no `get` key. " + "So can't handle a get on this asyncStateVar.";
+      }
     } else {
-      return this.defaultValue;
+      return this._promise;
     }
   }
 
-  reload(reset = true) {
-    this.logStateVar();
-
-    if (reset) {
-      this.reset();
-      this.onChange();
+  get _setPromise() {
+    if (typeof this._promise === 'object') {
+      if ('set' in this._promise) {
+        return this._promise.set;
+      } else {
+        throw "asyncStateVar is an object, but has no `set` key. " + "So can't handle a set on this asyncStateVar.";
+      }
+    } else {
+      return this._promise;
     }
-
-    this.settle();
   }
 
 }

@@ -1,6 +1,6 @@
 {
   "name": "lit-element-state",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Simple shared app state management for LitElement",
   "main": "lit-state.js",
   "files": ["lit-state.js"],

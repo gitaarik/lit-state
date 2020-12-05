@@ -30,12 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, property, html, css } from '../web_modules/lit-element.js';
-import { LitStateElement } from './lit-state.js';
-import './state-var/index.js';
-import './async-state-var/index.js';
-export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitStateElement) {
-  class LitStateDemo extends _LitStateElement {
+import { customElement, html, css } from '../../web_modules/lit-element.js';
+import { LitStateElement } from '../lit-state.js';
+import { demoState } from './state.js';
+export let StateVarComponent1 = _decorate([customElement('state-var-component-1')], function (_initialize, _LitStateElement) {
+  class StateVarComponent1 extends _LitStateElement {
     constructor(...args) {
       super(...args);
 
@@ -45,68 +44,16 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
   }
 
   return {
-    F: LitStateDemo,
+    F: StateVarComponent1,
     d: [{
-      kind: "field",
-      decorators: [property()],
-      key: "activeTab",
-
-      value() {
-        return 'demo1';
-      }
-
-    }, {
       kind: "method",
       key: "render",
       value: function render() {
         return html`
-
-            <nav>
-
-                <button
-                    @click=${this.handleDemo1TabClick}
-                    ?active=${this.activeTab == 'demo1'}
-                >
-                    stateVar
-                </button>
-
-                <button
-                    @click=${this.handleAsyncStateVarTabClick}
-                    ?active=${this.activeTab == 'async-state-var'}
-                >
-                    asyncStateVar
-                </button>
-
-            </nav>
-
-            ${this.tabContents}
-
+            <h2>&lt;component-1&gt;</h2>
+            <h3>Counter: ${demoState.counter}</h3>
+            <button @click=${() => demoState.counter++}>increase counter</button>
         `;
-      }
-    }, {
-      kind: "method",
-      key: "handleDemo1TabClick",
-      value: function handleDemo1TabClick() {
-        this.activeTab = 'demo1';
-      }
-    }, {
-      kind: "method",
-      key: "handleAsyncStateVarTabClick",
-      value: function handleAsyncStateVarTabClick() {
-        this.activeTab = 'async-state-var';
-      }
-    }, {
-      kind: "get",
-      key: "tabContents",
-      value: function tabContents() {
-        switch (this.activeTab) {
-          default:
-          case 'demo1':
-            return html`<state-var></state-var>`;
-
-          case 'async-state-var':
-            return html`<async-state-var></async-state-var>`;
-        }
       }
     }, {
       kind: "get",
@@ -117,34 +64,19 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
 
             :host {
                 display: block;
-                margin: 0 auto;
-                max-width: 720px;
+                padding: 15px;
+                background: lightgrey;
             }
 
-            nav {
-                display: flex;
+            h2 {
+                margin-top: 0;
+                font-size: 20px;
+                color: green;
             }
 
-            nav button {
-                margin: 0;
-                padding: 10px;
-                border: 1px #999 solid;
-                border-left-width: 0;
-                background: #DDD;
-                color: #000;
-                cursor: pointer;
-            }
-
-            nav button:first-child {
-                border-left-width: 1px;
-            }
-
-            nav button:hover {
-                background: #EEE;
-            }
-
-            nav button[active] {
-                background: #FFF;
+            h3 {
+                font-size: 16px;
+                color: red;
             }
 
         `;

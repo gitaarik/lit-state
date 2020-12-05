@@ -30,12 +30,26 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, property, html, css } from '../web_modules/lit-element.js';
-import { LitStateElement } from './lit-state.js';
-import './state-var/index.js';
-import './async-state-var/index.js';
-export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitStateElement) {
-  class LitStateDemo extends _LitStateElement {
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+import { customElement, property, html, css } from '../../web_modules/lit-element.js';
+import hljs from '../../web_modules/highlightjs/lib/core.js';
+import { hljsStyles } from '../hljs-styles.js';
+import javascript from '../../web_modules/highlightjs/lib/languages/javascript.js';
+import xml from '../../web_modules/highlightjs/lib/languages/xml.js';
+import '../../web_modules/highlightjs/styles/github.css.proxy.js';
+import { LitStateElement } from '../lit-state.js';
+import { demoState } from './state.js';
+import './state-var-component-1.js';
+import './state-var-component-2.js';
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('xml', xml);
+export let StateVar = _decorate([customElement('state-var')], function (_initialize, _LitStateElement) {
+  class StateVar extends _LitStateElement {
     constructor(...args) {
       super(...args);
 
@@ -45,109 +59,189 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
   }
 
   return {
-    F: LitStateDemo,
+    F: StateVar,
     d: [{
-      kind: "field",
-      decorators: [property()],
-      key: "activeTab",
+      kind: "method",
+      key: "firstUpdated",
+      value: function firstUpdated() {
+        _get(_getPrototypeOf(StateVar.prototype), "firstUpdated", this).call(this);
 
-      value() {
-        return 'demo1';
+        this.initHighlightJs();
       }
-
+    }, {
+      kind: "method",
+      key: "initHighlightJs",
+      value: function initHighlightJs() {
+        this.shadowRoot.querySelectorAll('.bigCode').forEach(block => {
+          hljs.highlightBlock(block);
+        });
+      }
     }, {
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <nav>
+            <div>
 
-                <button
-                    @click=${this.handleDemo1TabClick}
-                    ?active=${this.activeTab == 'demo1'}
-                >
-                    stateVar
-                </button>
+                <h1>LitState <code>stateVar</code> demo</h1>
 
-                <button
-                    @click=${this.handleAsyncStateVarTabClick}
-                    ?active=${this.activeTab == 'async-state-var'}
-                >
-                    asyncStateVar
-                </button>
+                <p>
+                    Below you see 2 components. They both use a shared state
+                    <code>demoState</code>. When you change the state from one
+                    component, the other component automatically synchronizes:
+                </p>
 
-            </nav>
+                <div id="demoComponents">
+                    <state-var-component-1></state-var-component-1>
+                    <state-var-component-2></state-var-component-2>
+                </div>
 
-            ${this.tabContents}
+                <p>
+                    The shared state <code>demoState</code> contains a
+                    <code>stateVar</code> called <code>counter</code>. It holds an
+                    integer that has an initial value of <code>0</code>:
+                </p>
+
+                <p>
+                    <code class="fileName">demo-state.js</code>
+                    <code class="bigCode">${this.demoStateCode}</code>
+                </p>
+
+                <p>
+                    The components that use the state extend from
+                    <code>LitStateElement</code> instead of
+                    <code>LitElement</code>. This makes them automatically
+                    re-render when a <code>stateVar</code> they use changes:
+                </p>
+
+                <p>
+                    <code class="fileName">component-1.js</code>
+                    <code class="bigCode">${this.componentCode}</code>
+                </p>
+
+                <p>
+                    That's all. How simple do you want to have it?
+                </p>
+
+            </div>
 
         `;
       }
     }, {
-      kind: "method",
-      key: "handleDemo1TabClick",
-      value: function handleDemo1TabClick() {
-        this.activeTab = 'demo1';
-      }
-    }, {
-      kind: "method",
-      key: "handleAsyncStateVarTabClick",
-      value: function handleAsyncStateVarTabClick() {
-        this.activeTab = 'async-state-var';
+      kind: "get",
+      key: "dataStatus",
+      value: function dataStatus() {
+        if (demoState.data.isPendingGet()) {
+          return 'getting value...';
+        } else if (demoState.data.isPendingSet()) {
+          return 'setting value...';
+        } else {
+          return 'done';
+        }
       }
     }, {
       kind: "get",
-      key: "tabContents",
-      value: function tabContents() {
-        switch (this.activeTab) {
-          default:
-          case 'demo1':
-            return html`<state-var></state-var>`;
+      key: "demoStateCode",
+      value: function demoStateCode() {
+        return `import { LitState, stateVar } from 'lit-element-state';
 
-          case 'async-state-var':
-            return html`<async-state-var></async-state-var>`;
-        }
+class DemoState extends LitState {
+    counter = stateVar(0);
+}
+
+export const demoState = new DemoState();`;
+      }
+    }, {
+      kind: "get",
+      key: "componentCode",
+      value: function componentCode() {
+        return `import { customElement, html } from 'lit-element';
+import { LitStateElement } from 'lit-element-state';
+import { demoState } from './demo-state.js';
+
+@customElement('component-1')
+export class Component1 extends LitStateElement {
+
+    render() {
+        return html\`
+            <h2>&lt;component-1&gt;</h2>
+            <h3>Counter: \${demoState.counter}</h3>
+            <button @click=\${() => demoState.counter++}>
+                increase counter
+            </button>
+        \`;
+    }
+
+}`;
       }
     }, {
       kind: "get",
       static: true,
       key: "styles",
       value: function styles() {
-        return css`
+        return [hljsStyles, css`
 
-            :host {
-                display: block;
-                margin: 0 auto;
-                max-width: 720px;
-            }
+                :host {
+                    display: block;
+                    margin-top: 25px;
+                }
 
-            nav {
-                display: flex;
-            }
+                * {
+                    box-sizing: border-box;
+                }
 
-            nav button {
-                margin: 0;
-                padding: 10px;
-                border: 1px #999 solid;
-                border-left-width: 0;
-                background: #DDD;
-                color: #000;
-                cursor: pointer;
-            }
+                h1 {
+                    margin: 0;
+                    font-size: 25px;
+                }
 
-            nav button:first-child {
-                border-left-width: 1px;
-            }
+                h2 {
+                    margin: 30px 0 0;
+                    font-size: 20px;
+                }
 
-            nav button:hover {
-                background: #EEE;
-            }
+                h3 {
+                    font-size: 18px;
+                    color: red;
+                }
 
-            nav button[active] {
-                background: #FFF;
-            }
+                code {
+                    display: inline-block;
+                    padding: 2px;
+                    margin: 1px;
+                    background: #555;
+                    color: white;
+                    white-space: pre;
+                }
 
-        `;
+                .fileName {
+                    display: block;
+                    margin: 0;
+                    padding: 7px 10px;
+                    background: #555;
+                    font-weight: bold;
+                }
+
+                .bigCode {
+                    display: block;
+                    margin: 0;
+                    padding: 10px;
+                    width: 100%;
+                }
+
+                #demoComponents {
+                    display: flex;
+					flex-wrap: wrap;
+                    margin: -15px 0 0 -15px;
+                }
+
+                #demoComponents > * {
+                    border: 1px #666 solid;
+                    margin: 15px 0 0 15px;
+                }
+
+            `];
       }
     }]
   };

@@ -15,6 +15,8 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
+    // The build is meant for GitHub pages, so we need to set the path to the
+    // GitHub pages URL as `baseUrl`
     baseUrl: "/lit-state/demo-app/build/"
   },
   proxy: {

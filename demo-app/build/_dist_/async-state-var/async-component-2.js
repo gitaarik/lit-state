@@ -30,12 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, property, html, css } from '../web_modules/lit-element.js';
-import { LitStateElement } from './lit-state.js';
-import './state-var/index.js';
-import './async-state-var/index.js';
-export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitStateElement) {
-  class LitStateDemo extends _LitStateElement {
+import { customElement, html, css } from '../../web_modules/lit-element.js';
+import { LitStateElement } from '../lit-state.js';
+import { demoState } from './state.js';
+export let AsyncComponent2 = _decorate([customElement('async-component-2')], function (_initialize, _LitStateElement) {
+  class AsyncComponent2 extends _LitStateElement {
     constructor(...args) {
       super(...args);
 
@@ -45,67 +44,70 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
   }
 
   return {
-    F: LitStateDemo,
+    F: AsyncComponent2,
     d: [{
-      kind: "field",
-      decorators: [property()],
-      key: "activeTab",
-
-      value() {
-        return 'demo1';
-      }
-
-    }, {
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <nav>
+            <h2>&lt;component-2&gt;</h2>
+
+            <h3>Status: ${this.dataStatus}</h3>
+            <h3>Value: ${demoState.data.getValue()}</h3>
+
+            <div id="buttons">
 
                 <button
-                    @click=${this.handleDemo1TabClick}
-                    ?active=${this.activeTab == 'demo1'}
+                    @click=${() => demoState.data.reload()}
+                    ?disabled=${demoState.data.isPending()}
                 >
-                    stateVar
+                    reload data
                 </button>
 
                 <button
-                    @click=${this.handleAsyncStateVarTabClick}
-                    ?active=${this.activeTab == 'async-state-var'}
+                    @click=${() => demoState.data.setValue('<component-2> updated the data!')}
+                    ?disabled=${demoState.data.isPending()}
                 >
-                    asyncStateVar
+                    update data
                 </button>
 
-            </nav>
+                <button
+                    @click=${() => demoState.simulateErrorReload()}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    reload error
+                </button>
 
-            ${this.tabContents}
+                <button
+                    @click=${() => demoState.simulateErrorUpdate()}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    update error
+                </button>
+
+            </div>
 
         `;
       }
     }, {
-      kind: "method",
-      key: "handleDemo1TabClick",
-      value: function handleDemo1TabClick() {
-        this.activeTab = 'demo1';
-      }
-    }, {
-      kind: "method",
-      key: "handleAsyncStateVarTabClick",
-      value: function handleAsyncStateVarTabClick() {
-        this.activeTab = 'async-state-var';
-      }
-    }, {
       kind: "get",
-      key: "tabContents",
-      value: function tabContents() {
-        switch (this.activeTab) {
-          default:
-          case 'demo1':
-            return html`<state-var></state-var>`;
-
-          case 'async-state-var':
-            return html`<async-state-var></async-state-var>`;
+      key: "dataStatus",
+      value: function dataStatus() {
+        if (demoState.data.isPendingGet()) {
+          return 'loading value...';
+        } else if (demoState.data.isPendingSet()) {
+          return 'updating value...';
+        } else if (demoState.data.isRejectedGet()) {
+          return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
+        } else if (demoState.data.isRejectedSet()) {
+          return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
+        } else if (demoState.data.isFulfilledGet()) {
+          return 'value loaded';
+        } else if (demoState.data.isFulfilledSet()) {
+          return 'value updated';
+        } else {
+          return 'unknown';
         }
       }
     }, {
@@ -117,34 +119,29 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
 
             :host {
                 display: block;
-                margin: 0 auto;
-                max-width: 720px;
+                padding: 15px;
+                background: lightgrey;
             }
 
-            nav {
+            h2 {
+                margin-top: 0;
+                font-size: 20px;
+                color: green;
+            }
+
+            h3 {
+                font-size: 16px;
+                color: red;
+            }
+
+            #buttons {
                 display: flex;
+                flex-wrap: wrap;
+                margin: -5px 0 0 -5px;
             }
 
-            nav button {
-                margin: 0;
-                padding: 10px;
-                border: 1px #999 solid;
-                border-left-width: 0;
-                background: #DDD;
-                color: #000;
-                cursor: pointer;
-            }
-
-            nav button:first-child {
-                border-left-width: 1px;
-            }
-
-            nav button:hover {
-                background: #EEE;
-            }
-
-            nav button[active] {
-                background: #FFF;
+            #buttons > * {
+                margin: 5px 0 0 5px;
             }
 
         `;

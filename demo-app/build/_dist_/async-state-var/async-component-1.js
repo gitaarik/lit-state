@@ -30,11 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, property, html, css } from '../web_modules/lit-element.js';
-import { LitStateElement } from './lit-state.js';
-import { demoState } from './demo-state.js';
-export let SubComponent2 = _decorate([customElement('sub-component-2')], function (_initialize, _LitStateElement) {
-  class SubComponent2 extends _LitStateElement {
+import { customElement, html, css } from '../../web_modules/lit-element.js';
+import { LitStateElement } from '../lit-state.js';
+import { demoState } from './state.js';
+export let AsyncComponent1 = _decorate([customElement('async-component-1')], function (_initialize, _LitStateElement) {
+  class AsyncComponent1 extends _LitStateElement {
     constructor(...args) {
       super(...args);
 
@@ -44,35 +44,71 @@ export let SubComponent2 = _decorate([customElement('sub-component-2')], functio
   }
 
   return {
-    F: SubComponent2,
+    F: AsyncComponent1,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h2>&lt;sub-component-2&gt;</h2>
+            <h2>&lt;component-1&gt;</h2>
 
-            <div id="items">
+            <h3>Status: ${this.dataStatus}</h3>
+            <h3>Value: ${demoState.data.getValue()}</h3>
 
-                <div>
-                    <h3>Counter: ${demoState.counter}</h3>
-                    <button @click=${() => demoState.increaseCounter()}>increase counter</button>
-                </div>
+            <div id="buttons">
 
-                <div id="asyncData">
+                <button
+                    @click=${() => demoState.data.reload()}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    reload data
+                </button>
 
-                    <h3>Async Data: ${demoState.data.getValue()}</h3>
+                <button
+                    @click=${() => demoState.data.setValue('<component-1> updated the data!')}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    update data
+                </button>
 
-                    <button @click=${() => demoState.data.reload()} ?disabled=${demoState.data.isPending()}>
-                        reload data
-                    </button>
+                <button
+                    @click=${() => demoState.simulateErrorReload()}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    reload error
+                </button>
 
-                </div>
+                <button
+                    @click=${() => demoState.simulateErrorUpdate()}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    update error
+                </button>
 
             </div>
 
         `;
+      }
+    }, {
+      kind: "get",
+      key: "dataStatus",
+      value: function dataStatus() {
+        if (demoState.data.isPendingGet()) {
+          return 'loading value...';
+        } else if (demoState.data.isPendingSet()) {
+          return 'updating value...';
+        } else if (demoState.data.isRejectedGet()) {
+          return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
+        } else if (demoState.data.isRejectedSet()) {
+          return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
+        } else if (demoState.data.isFulfilledGet()) {
+          return 'value loaded';
+        } else if (demoState.data.isFulfilledSet()) {
+          return 'value updated';
+        } else {
+          return 'unknown';
+        }
       }
     }, {
       kind: "get",
@@ -83,29 +119,29 @@ export let SubComponent2 = _decorate([customElement('sub-component-2')], functio
 
             :host {
                 display: block;
-                margin-top: 15px;
                 padding: 15px;
-                background: #BBB;
+                background: lightgrey;
             }
 
             h2 {
                 margin-top: 0;
                 font-size: 20px;
-                color: palegreen;
+                color: green;
             }
 
             h3 {
-                font-size: 18px;
+                font-size: 16px;
                 color: red;
             }
 
-            #items {
+            #buttons {
                 display: flex;
-                justify-content: space-between;
+                flex-wrap: wrap;
+                margin: -5px 0 0 -5px;
             }
 
-            #asyncData {
-                text-align: right;
+            #buttons > * {
+                margin: 5px 0 0 5px;
             }
 
         `;
