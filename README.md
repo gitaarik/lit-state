@@ -94,6 +94,9 @@ the previous render cycle - changes.
 
 ## How does this work?
 
+
+### Basics
+
 The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 to detect whenever a `stateVar` is get or set. During the render of a
 `LitStateElement`, there is a recorder active that records any `stateVar` that
@@ -102,6 +105,9 @@ is accessed during the render of that component. At the end of the render, the
 and rerenders itself whenever one of them changes. The next render it again
 records which `stateVar` variables are being used and observes them. So if the
 next render uses new `stateVars`, they will be observed.
+
+
+### Implementation details
 
 To re-render itself, a `LitStateElement` component calls LitElement's
 `this.requestUpdate()` (with no arguments). This will enqueue an update request
