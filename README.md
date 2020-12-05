@@ -192,7 +192,7 @@ kind of thing, check out
 [observable-slim](https://github.com/ElliotNB/observable-slim).
 
 
-## `asyncStateVar`
+## Easy handling of asynchronous data with `asyncStateVar`
 
 It's not uncommon for a modern web-app to have asynchronous functions. For
 example: fetch some data from a REST API. It's also not uncommon that this data
