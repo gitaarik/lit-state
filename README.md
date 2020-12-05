@@ -297,6 +297,9 @@ Basically it comes down to the fact that LitState is written for, and with the
 same philosophy as, LitElement and lit-html. Which makes it more suitable for
 developers that like this philosophy.
 
+If you however do want to use MobX with LitElement for some reason, check out
+[lit-mobx](https://github.com/adobe/lit-mobx).
+
 
 ## Development
 
