@@ -202,8 +202,8 @@ Therefore `LitState` has a convenient way of dealing with asynchronous
 functions. It's a special kind of `stateVar` called `asyncStateVar`.
 
 The `asyncStateVar()` function takes as its first argument a function that
-returns a promise. When the variable is used in a template, the promise will
-automatically be executed. When it is resolved or rejected, the template that
+returns a promise. When the variable is used in a component, the promise will
+automatically be executed. When it is resolved or rejected, the component that
 uses the variable will automatically re-render.
 
 Here is a state class with an `asyncStateVar`:
@@ -224,10 +224,10 @@ class MyState extends LitState {
 
 }
 
-const myState = new MyState();
+export const myState = new MyState();
 ```
 
-In the template, you can check the status of the promise with the functions
+In the component, you can check the status of the promise with the functions
 `isPending()`, `isRejected()` and `isFulfilled()` on the `asyncStateVar`. For
 example: `myState.myData.isPending()`. Based on the status of the promise you
 can then either call `getResult()` or `getError()`. There's also a convenient
@@ -237,10 +237,11 @@ promise is still pending. The default value can optionally be set with the
 second argument to the `asyncStateVar()` function (the first argument is the
 promise). You can also reload the promise by calling `reload()`.
 
-Here is an example of how the template could handle the `asyncStateVar`:
+Here is an example of how the component could handle the `asyncStateVar`:
 
 ```javascript
 import { LitStateElement } from 'lit-element-state';
+import { myState } from './my-state.js';
 
 class MyElement extends LitStateElement {
 
