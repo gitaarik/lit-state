@@ -87,7 +87,7 @@ whenever `myCounter` gets increases by one of the components.
 
 In more technical words:
 
-A `LitStateElement` will rerender when any `stateVar` - which it accessed in
+A `LitStateElement` will re-render when any `stateVar` - which it accessed in
 the last render cycle - changes.
 
 
@@ -101,7 +101,7 @@ to detect whenever a `stateVar` is get or set. During the render of a
 `LitStateElement`, there is a recorder active that records any `stateVar` that
 is accessed during the render of that component. At the end of the render, the
 `LitStateElement` collects the recorded `stateVar` variables, observes them,
-and rerenders itself whenever one of them changes. The next render it again
+and re-renders itself whenever one of them changes. The next render it again
 records which `stateVar` variables are being used and observes them. So if the
 next render uses new `stateVars`, they will be observed.
 
@@ -159,11 +159,11 @@ is probably cleaner if you categorize it into multiple smaller `LitState`
 derived classes. For example, you can put each state class in a separate file,
 collected in a `state/` folder, and import them at the places you need.
 
-### Only new assigns trigger a rerender. Updating a object/array won't trigger a rerender.
+### Only new assigns trigger a re-render. Updating a object/array won't trigger a re-render.
 
 Just like LitElement's
 [properties](https://lit-element.polymer-project.org/guide/properties),
-only a new assign of the `stateVar` triggers a rerender. Doing something like
+only a new assign of the `stateVar` triggers a re-render. Doing something like
 this won't:
 
 ```javascript
@@ -289,7 +289,7 @@ is also a reason why MobX is complicated. It's nice that you can modify objects
 and MobX detects that, but it's not very hard to just set a new object. That
 makes the source code of LitState a lot smaller and simpler, and therefore also
 easier to understand what is happening.
-[Look here](#only-new-assigns-trigger-a-rerender-updating-a-objectarray-wont-trigger-a-rerender)
+[Look here](#only-new-assigns-trigger-a-re-render-updating-a-objectarray-wont-trigger-a-re-render)
 for more details on this.
 
 Basically it comes down to the fact that LitState is written for, and with the
