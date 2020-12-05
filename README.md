@@ -88,7 +88,7 @@ whenever `myCounter` gets increases by one of the components.
 In more technical words:
 
 A `LitStateElement` will rerender when any `stateVar` - which it accessed in
-the previous render cycle - changes.
+the last render cycle - changes.
 
 
 ## How does this work?
