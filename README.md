@@ -26,8 +26,8 @@ slightly awkward package name.*
 
 You keep your shared state in a `LitState` derived class. This class contains
 `stateVar` variables that contain the state. This class can also contain helper
-functions that modify the state. Instead of extending your component from
-`LitElement` you extend from `LitStateElement`. This makes your component
+functions that modify the state. Instead of extending your components from
+`LitElement` you extend from `LitStateElement`. This makes your components
 automatically re-render whenever a `stateVar` they use changes.
 
 
