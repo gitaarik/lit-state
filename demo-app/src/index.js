@@ -108,11 +108,11 @@ export class LitStateDemo extends LitStateElement {
             </p>
 
             <p>
-                The components that use the state simply
+                The components that use the state simply do
                 <code>import { demoState } from './demo-state.js</code> and
-                then use <code>demoState.counter</code> (for
+                then use <code>demoState.counter</code> (the
                 <code>stateVar</code>) and
-                <code>demoState.data.getValue()</code> (for
+                <code>demoState.data.getValue()</code> (the
                 <code>asyncStateVar</code>) in the template to get the values
                 from the state.
             </p>

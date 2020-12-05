@@ -15,7 +15,7 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
-    /* ... */
+    baseUrl: "/lit-state/demo-app/build/"
   },
   proxy: {
     /* ... */

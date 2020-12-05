@@ -91,6 +91,12 @@ A `LitStateElement` will re-render when any `stateVar` - which it accessed in
 the last render cycle - changes.
 
 
+## Demo app
+
+To see it working, check out the
+[demo app](https://gitaarik.github.io/lit-state/demo-app/build/).
+
+
 ## How does this work?
 
 
