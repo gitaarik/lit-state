@@ -94,8 +94,8 @@ the previous render cycle - changes.
 
 ## How does this work?
 
-We use [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-objects to detect whenever a `stateVar` is get or set. During the render of a
+The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+to detect whenever a `stateVar` is get or set. During the render of a
 `LitStateElement`, there is a recorder active that records any `stateVar` that
 is accessed. Then the `LitStateElement` collects the recorded `stateVar`
 variables, observes them, and rerenders itself whenever one of them changes.
