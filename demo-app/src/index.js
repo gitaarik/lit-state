@@ -72,18 +72,18 @@ export class LitStateDemo extends LitStateElement {
                 <code>counter</code>. It holds an integer that has an initial
                 value of <code>0</code>. The button increases the value by
                 <code>1</code>. The value can be simply read with
-                <code>demoState.counter</code> and set by
-                <code>demoState.counter = 5;</code> for example. When it is set,
-                the components that use the <code>stateVar</code> automatically
+                <code>demoState.counter</code> and for example set with
+                <code>demoState.counter = 5;</code>. When it is set, the
+                components that use the <code>stateVar</code> automatically
                 re-render to show the new value.
             </p>
 
             <p>
                 On the right side you see an <code>asyncStateVar</code> called
                 <code>data</code>. An <code>asyncStateVar</code> is a special
-                variable that contains a promise. The promise is automatically
-                executed when the variable is being used. You can check the
-                status of the promise with the functions
+                type of stateVar that contains a promise. The promise is
+                automatically executed when the variable is being used. You can
+                check the status of the promise with the functions
                 <code>isPending()</code>, <code>isRejected()</code> and
                 <code>isFulfilled()</code> on <code>demoState.data</code>.
                 Based on the status of the promise you can then either call
