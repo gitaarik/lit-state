@@ -262,14 +262,15 @@ class MyElement extends LitStateElement {
 
 ### Why not use MobX or Redux in the first place? Any benefits by using this?
 
-MobX is quite a large library with a lot of whistles and bells. LitState is
-about 300 lines at the moment, and I'm planning on keeping it tiny, just like
-LitElement and lit-html.
+[MobX](https://github.com/mobxjs/mobx) is quite a large library with a lot of
+whistles and bells. LitState is about 300 lines at the moment, and I'm planning
+on keeping it tiny, just like LitElement and lit-html.
 
-To use Redux you need a lot of of boiler plate code: *Actions*, *Action
-Creators* and *Reducers*. You do have helper libraries that can generate these
-things for you, to make it slightly easier, but I still think it is
-unnecessarily complicated.
+To use [Redux](https://github.com/reduxjs/redux) (or something similar, like
+[unistore](https://github.com/developit/unistore)) you need a lot of of boiler
+plate code: *Actions*, *Action Creators* and *Reducers*. You do have helper
+libraries that can generate these things for you, to make it slightly easier,
+but I still think it is unnecessarily complicated.
 
 I think MobX is much easier to use, because you don't need to write any
 boilerplate. However, MobX is a quite large library, and for more advanced
