@@ -7,15 +7,9 @@ state variable they use changes.
 
 LitState is like [MobX](https://mobx.js.org/) or
 [Redux](https://redux.js.org/), but then for
-[LitElement](https://lit-element.polymer-project.org/). Like LitElement and
-[lit-html](https://lit-html.polymer-project.org/), it's tiny, simple, and
-powerful.
-
-You keep your shared state in a `LitState` derived class. This class contains
-`stateVar` variables that contain the state. This class can also contain helper
-functions that modify the state. Instead of extending your component from
-`LitElement` you extend from `LitStateElement`. This makes your component
-automatically re-render whenever a `stateVar` they use changes.
+[LitElement](https://lit-element.polymer-project.org/). The difference is that
+it is tiny, simple but still powerful, like LitElement and
+[lit-html](https://lit-html.polymer-project.org/).
 
 
 ## Installation
@@ -28,6 +22,15 @@ npm install lit-element-state
 slightly awkward package name.*
 
 
+## Basic idea
+
+You keep your shared state in a `LitState` derived class. This class contains
+`stateVar` variables that contain the state. This class can also contain helper
+functions that modify the state. Instead of extending your component from
+`LitElement` you extend from `LitStateElement`. This makes your component
+automatically re-render whenever a `stateVar` they use changes.
+
+
 ## Minimal example
 
 
@@ -36,9 +39,9 @@ import { LitState, stateVar, LitStateElement } from 'lit-element-state';
 
 class MyState extends LitState {
 
-    myCounter = stateVar('defaultValue');
+    myCounter = stateVar(0); // `0` is the default value
 
-    increase = () => {
+    increase() {
         myCounter++;
     }
 
@@ -52,8 +55,12 @@ class MyElement extends LitStateElement {
     render() {
         return html`
             <h1>Counter: ${myState.myCounter}</h1>
-            <button @click=${myState.increase}></button>
+            <button @click=${this._handleClick}></button>
         `;
+    }
+
+    _handleClick() {
+        myState.increase();
     }
 
 }
@@ -63,8 +70,12 @@ class MyOtherElement extends LitStateElement {
     render() {
         return html`
             <h1>Counter: ${myState.myCounter}</h1>
-            <button @click=${myState.increase}></button>
+            <button @click=${this._handleClick}></button>
         `;
+    }
+
+    _handleClick() {
+        myState.increase();
     }
 
 }
@@ -72,7 +83,8 @@ class MyOtherElement extends LitStateElement {
 
 
 Both components `MyElement` and `MyOtherElement` will automatically re-render
-whenever `myCounter` increases.
+whenever `myCounter` increases. It doesn't matter from which component you
+modify `myState`.
 
 In more technical words:
 
@@ -85,61 +97,74 @@ the previous render cycle - changes.
 We use [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 objects to detect whenever a `stateVar` is get or set. During the render of a
 `LitStateElement`, there is a recorder active that records any `stateVar` that
-is accessed. Then the element observes those variables and rerenders itself
-whenever one of them changes. The next render again records which `stateVar`s
-are being used and observes them.
+is accessed. Then the `LitStateElement` collects the recorded `stateVar`s,
+observes them, and rerenders itself whenever one of them changes. The next
+render again records which `stateVar`s are being used and observes them.
+
+To re-render itself, a `LitStateElement` component calls LitElement's
+`this.requestUpdate()` (with no arguments). This will enqueue an update request
+for the component. The component will re-render at the end of the execution
+queue. `this.requestUpdate()` can be called multiple times during a particular
+JavaScript event (like a click), and it will only update the component once, at
+the end of the execution queue. So it doesn't matter when it is called multiple
+times when multiple `stateVar`s are changed during a JavaScript event. This is
+an optimization feature built-in in LitElement. LitElement uses this
+optimization for it's own
+[properties](https://lit-element.polymer-project.org/guide/properties). This
+optimization works in the same way for LitState's `stateVar`s.
+
+Also, LitElement uses lit-html, which sees which parts of the template are
+changed or not. And it will only re-render the HTML elements that have changes.
 
 
 ## Notes
 
-- You always need to use `stateVar` inside a `LitState` derived class.
+### You always need to use `stateVar` inside a `LitState` derived class.
 
-    The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-    object to track sets and gets of the class variables. The `stateVar()`
-    function makes it clear to `LitState` that this is a state containing
-    variable, and it makes it observable. When it changes, the components that
-    are observing these variables will get notified, so that they can re-render
-    themselves.
+The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+object to track sets and gets of the class variables. The `stateVar()` function
+makes it clear to `LitState` that this is a state containing variable, and it
+makes it observable. When it changes, the components that are observing these
+variables will get notified, so that they can re-render themselves.
 
-- You can create and use multiple `LitState` classes at the same time.
+### You can create and use multiple `LitState` classes at the same time.
 
-    It is even encouraged to keep things separate. You can of course have one
-    big `LitState` derived class which contains all global app state variables.
-    But it is probably cleaner if you categorize it into multiple smaller
-    `LitState` derived classes. For example, you can put each state class in a
-    separate file, collected in a `state/` folder, and import them at the
-    places you need.
+It is even encouraged to keep things separate. You can of course have one big
+`LitState` derived class which contains all global app state variables. But it
+is probably cleaner if you categorize it into multiple smaller `LitState`
+derived classes. For example, you can put each state class in a separate file,
+collected in a `state/` folder, and import them at the places you need.
 
-- Only new assigns trigger a rerender. Updating a object/array won't trigger a rerender.
+### Only new assigns trigger a rerender. Updating a object/array won't trigger a rerender.
 
-    Just like LitElement's
-    [properties](https://lit-element.polymer-project.org/guide/properties),
-    only a new assign of the `stateVar` triggers a rerender. Doing something
-    like this won't:
+Just like LitElement's
+[properties](https://lit-element.polymer-project.org/guide/properties),
+only a new assign of the `stateVar` triggers a rerender. Doing something like
+this won't:
 
-    ```javascript
-    MyState extends LitState {
-        myObj = stateVar({myKey: 'myValue'});
-        myArray = stateVar(['one', 'two', 'three']);
-    }
+```javascript
+MyState extends LitState {
+    myObj = stateVar({myKey: 'myValue'});
+    myArray = stateVar(['one', 'two', 'three']);
+}
 
-    myState = new MyState();
-    myState.myObj.mykey = 'newValue';
-    myState.myArray.push('four');
-    ```
+myState = new MyState();
+myState.myObj.mykey = 'newValue';
+myState.myArray.push('four');
+```
 
-    Above code won't notify the observers of `MyState`. You'll instead need to
-    assign a new object to the `stateVar`:
+Above code won't notify the observers of `MyState`. You'll instead need to
+assign a new object to the `stateVar`:
 
-    ```javascript
-    myState.myObj = {...myState.myObj, myKey: 'newValue'};
-    myState.myArray = [...myState.myArray, 'four'];
-    ```
+```javascript
+myState.myObj = {...myState.myObj, myKey: 'newValue'};
+myState.myArray = [...myState.myArray, 'four'];
+```
 
-    Watching for changes inside objects is very complex matter and would make
-    LitState way more complicated than desirable. If you are interested in this
-    kind of thing, check out
-    [observable-slim](https://github.com/ElliotNB/observable-slim).
+Watching for changes inside objects is very complex matter and would make
+LitState way more complicated than desirable. If you are interested in this
+kind of thing, check out
+[observable-slim](https://github.com/ElliotNB/observable-slim).
 
 
 ## Why anyway?
@@ -244,29 +269,19 @@ use-cases it can become relatively complicated to use.
 I think a lot of features from MobX are not really necessary when you use
 LitElement. MobX is mainly created for React. Therefore MobX has optimizations
 aimed at how React works. LitState is specifically aimed at LitElement. And
-most of the optimizations MobX created aimed at React are not required for
+most of the optimizations MobX created for React are not required for
 LitElement.
 
-When a `stateVar` in LitState is updated, the `LitStateElement` components that
-observe that `stateVar` call LitElement's `this.requestUpdate()` (with no
-arguments). This will enqueue an update request for the component. The
-component will re-render at the end of the execution queue.
-`this.requestUpdate()` can be called multiple times during a particular
-JavaScript event (like a click), and it will only update the component once, at
-the end of the execution queue. So it doesn't matter that it is called multiple
-times when multiple `stateVar`s change during a JavaScript event. This is
-basically an optimization feature built-in in LitElement, which is part of the
-reason why LitElement is so cool.
+See the section [How does this work?](#how-does-this-work) to see how LitState
+works together with LitElement.
 
-Also, LitElement uses lit-html, which sees which parts of the template are
-changed or not. And it will only re-render the HTML elements that have changes.
-
-LitState is built with this in mind, so doesn't need the optimizations that
-MobX created for React. Also LitState doesn't try to track changes inside
-objects, like MobX does. That is also a reason MobX becomes complicated. It's
-nice that you can modify objects and MobX detects that, but it's not very hard
-to just set a new object. That makes the source code of LitState a lot smaller
-and simpler, and therefore also easier to understand what is happening.
+Also LitState doesn't try to track changes inside objects, like MobX does. That
+is also a reason why MobX becomes complicated. It's nice that you can modify
+objects and MobX detects that, but it's not very hard to just set a new object.
+That makes the source code of LitState a lot smaller and simpler, and therefore
+also easier to understand what is happening.
+[Look here](#only-new-assigns-trigger-a-rerender-updating-a-objectarray-wont-trigger-a-rerender)
+for more details on this.
 
 Basically it comes down to the fact that LitState is written for, and with the
 same philosophy as, LitElement and lit-html. Which makes it more suitable for
