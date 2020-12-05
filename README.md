@@ -83,8 +83,7 @@ class MyOtherElement extends LitStateElement {
 
 
 Both components `MyElement` and `MyOtherElement` will automatically re-render
-whenever `myCounter` increases. It doesn't matter from which component you
-modify `myState`.
+whenever `myCounter` gets increases by one of the components.
 
 In more technical words:
 
