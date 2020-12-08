@@ -67,6 +67,9 @@ class MyElement extends LitStateElement {
 
 This makes it very easy to handle asynchronous data in your UI.
 
+Also check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var)
+to see how `asyncStateVar` works.
+
 
 ## Asynchronous updates
 
@@ -137,5 +140,5 @@ isFulfilledGet()    // 'get' is fulfilled
 isFulfilledSet()    // 'set' is fulfilled
 ```
 
-Also check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/)
-to see how `asyncStateVar` works.
+Also check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var-update)
+to see how `asyncStateVar` with updates works.
