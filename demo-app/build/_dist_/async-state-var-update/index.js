@@ -44,12 +44,12 @@ import xml from '../../web_modules/highlightjs/lib/languages/xml.js';
 import '../../web_modules/highlightjs/styles/github.css.proxy.js';
 import { LitStateElement } from '../lit-state.js';
 import { demoState } from './state.js';
-import './async-component-1.js';
-import './async-component-2.js';
+import './async-update-component-1.js';
+import './async-update-component-2.js';
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('xml', xml);
-export let AsyncStateVar = _decorate([customElement('async-state-var')], function (_initialize, _LitStateElement) {
-  class AsyncStateVar extends _LitStateElement {
+export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-update')], function (_initialize, _LitStateElement) {
+  class AsyncStateVarUpdate extends _LitStateElement {
     constructor(...args) {
       super(...args);
 
@@ -59,12 +59,12 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
   }
 
   return {
-    F: AsyncStateVar,
+    F: AsyncStateVarUpdate,
     d: [{
       kind: "method",
       key: "firstUpdated",
       value: function firstUpdated() {
-        _get(_getPrototypeOf(AsyncStateVar.prototype), "firstUpdated", this).call(this);
+        _get(_getPrototypeOf(AsyncStateVarUpdate.prototype), "firstUpdated", this).call(this);
 
         this.initHighlightJs();
       }
@@ -84,7 +84,7 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
 
             <div>
 
-                <h1>LitState <code>asyncStateVar</code> demo</h1>
+                <h1>LitState <code>asyncStateVar</code> update demo</h1>
 
                 <p>
                     Below you see 2 components. They both use a shared state
@@ -96,20 +96,24 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
                 </p>
 
                 <div id="demoComponents">
-                    <async-component-1></async-component-1>
-                    <async-component-2></async-component-2>
+                    <async-update-component-1></async-update-component-1>
+                    <async-update-component-2></async-update-component-2>
                 </div>
 
                 <p>
-                    With the buttons, you can <strong>reload</strong> the data,
-                    or <strong>simulate an API error</strong>. Our fake API
-                    adds the current time to every response.
+                    With the buttons you can <strong>reload</strong> and
+                    <strong>update</strong> the data, or <strong>simulate an
+                    API error</strong>. The update button will also
+                    <strong>asynchronously</strong> update the value. Our fake
+                    API adds the current time to every response.
                 </p>
 
                 <p>
                     The shared state <code>demoState</code> contains a
                     <code>asyncStateVar</code> called <code>data</code>. On it,
-                    we define the function to <strong>get</strong> the data:
+                    we define the functions to <strong>get</strong> and
+                    <strong>set</strong> the data, and a <strong>default
+                    value</strong>:
                 </p>
 
                 <p>
@@ -118,10 +122,11 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
                 </p>
 
                 <p>
-                    The methods <code>_getData()</code> returns a
-                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">JavaScript Promise</a>.
-                    This is what makes it <strong>asynchronous</strong>. When
-                    the promise calls the <code>resolve()</code> callback, it
+                    The methods <code>_getData()</code> and
+                    <code>_setData(value)</code> both return
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">promises</a>.
+                    This is what makes them <strong>asynchronous</strong>. When
+                    the promises call the <code>resolve()</code> callback, it
                     <strong>sets the value</strong> of the
                     <code>asyncStateVar</code> to the response of the method
                     <code>_fakeApiResponse()</code>.
@@ -132,7 +137,8 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
                     <code>LitStateElement</code> instead of
                     <code>LitElement</code>. This makes them automatically
                     re-render when a <code>asyncStateVar</code> they use
-                    changes. They also show the status of the promises from the
+                    changes. They also show the status of the
+                    <code>get</code> or <code>set</code> promises from the
                     <code>asyncStateVar</code>:
                 </p>
 
@@ -146,11 +152,6 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
                     state of your asynchronous data on your page. You don't
                     have to create additional state variables yourself to do
                     this. LitState's got your back.
-                </p>
-
-                <p>
-                    <code>asyncStateVar</code> can also handle updates. See
-                    <a href="#async-state-var-update">asyncStateVar update</a>.
                 </p>
 
             </div>
@@ -167,7 +168,11 @@ import { currentTime } from './utils.js';
 
 class DemoState extends LitState {
 
-    data = asyncStateVar(() => this._getData());
+    data = asyncStateVar({
+        get: () => this._getData(),
+        set: value => this._setData(value),
+        default: "[default value]"
+    });
 
     _simulateError = false;
 
@@ -190,15 +195,40 @@ class DemoState extends LitState {
 
     }
 
+    _setData(value) {
+
+        return new Promise((resolve, reject) => {
+
+            setTimeout(() => {
+
+                if (this._simulateError) {
+                    reject("fake update data error");
+                    this._simulateError = false;
+                } else {
+                    this._fakeApiResponseText = value;
+                    resolve(this._fakeApiResponse());
+                }
+
+            }, 3000);
+
+        });
+
+    }
+
     _fakeApiResponseText = "Hello world";
 
     _fakeApiResponse() {
         return this._fakeApiResponseText + " (" + currentTime() + ")";
     }
 
-    simulateError() {
+    simulateErrorReload() {
         this._simulateError = true;
         this.data.reload();
+    }
+
+    simulateErrorUpdate() {
+        this._simulateError = true;
+        this.data.setValue("This value won't be set, because our fake API will fail");
     }
 
 }
@@ -235,10 +265,24 @@ export class AsyncComponent1 extends LitStateElement {
             </button>
 
             <button
-                @click=\${() => demoState.simulateError()}
+                @click=\${() => demoState.data.setValue('<component-1> updated the data!')}
                 ?disabled=\${demoState.data.isPending()}
             >
-                simulate error
+                update data
+            </button>
+
+            <button
+                @click=\${() => demoState.simulateErrorReload()}
+                ?disabled=\${demoState.data.isPending()}
+            >
+                reload error
+            </button>
+
+            <button
+                @click=\${() => demoState.simulateErrorUpdate()}
+                ?disabled=\${demoState.data.isPending()}
+            >
+                update error
             </button>
 
         \`;
@@ -246,12 +290,18 @@ export class AsyncComponent1 extends LitStateElement {
     }
 
     get dataStatus() {
-        if (demoState.data.isPending()) {
+        if (demoState.data.isPendingGet()) {
             return 'loading value...';
-        } else if (demoState.data.isRejected()) {
-            return 'loading failed with error: "' + demoState.data.getError() + '"';
-        } else if (demoState.data.isFulfilled()) {
+        } else if (demoState.data.isPendingSet()) {
+            return 'updating value...'
+        } else if (demoState.data.isRejectedGet()) {
+            return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
+        } else if (demoState.data.isRejectedSet()) {
+            return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
+        } else if (demoState.data.isFulfilledGet()) {
             return 'value loaded';
+        } else if (demoState.data.isFulfilledSet()) {
+            return 'value updated';
         } else {
             return 'unknown';
         }

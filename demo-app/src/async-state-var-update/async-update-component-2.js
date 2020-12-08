@@ -3,8 +3,8 @@ import { LitStateElement } from '../lit-state.js';
 import { demoState } from './state';
 
 
-@customElement('async-component-2')
-export class AsyncComponent2 extends LitStateElement {
+@customElement('async-update-component-2')
+export class AsyncUpdateComponent2 extends LitStateElement {
 
     render() {
 
@@ -25,10 +25,24 @@ export class AsyncComponent2 extends LitStateElement {
                 </button>
 
                 <button
+                    @click=${() => demoState.data.setValue('<component-2> updated the data!')}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    update data
+                </button>
+
+                <button
                     @click=${() => demoState.simulateErrorReload()}
                     ?disabled=${demoState.data.isPending()}
                 >
-                    simulate error
+                    reload error
+                </button>
+
+                <button
+                    @click=${() => demoState.simulateErrorUpdate()}
+                    ?disabled=${demoState.data.isPending()}
+                >
+                    update error
                 </button>
 
             </div>

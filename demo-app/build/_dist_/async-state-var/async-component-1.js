@@ -66,24 +66,10 @@ export let AsyncComponent1 = _decorate([customElement('async-component-1')], fun
                 </button>
 
                 <button
-                    @click=${() => demoState.data.setValue('<component-1> updated the data!')}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update data
-                </button>
-
-                <button
                     @click=${() => demoState.simulateErrorReload()}
                     ?disabled=${demoState.data.isPending()}
                 >
-                    reload error
-                </button>
-
-                <button
-                    @click=${() => demoState.simulateErrorUpdate()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update error
+                    simulate error
                 </button>
 
             </div>
@@ -94,18 +80,12 @@ export let AsyncComponent1 = _decorate([customElement('async-component-1')], fun
       kind: "get",
       key: "dataStatus",
       value: function dataStatus() {
-        if (demoState.data.isPendingGet()) {
+        if (demoState.data.isPending()) {
           return 'loading value...';
-        } else if (demoState.data.isPendingSet()) {
-          return 'updating value...';
-        } else if (demoState.data.isRejectedGet()) {
-          return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
-        } else if (demoState.data.isRejectedSet()) {
-          return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
-        } else if (demoState.data.isFulfilledGet()) {
+        } else if (demoState.data.isRejected()) {
+          return 'loading failed with error: "' + demoState.data.getError() + '"';
+        } else if (demoState.data.isFulfilled()) {
           return 'value loaded';
-        } else if (demoState.data.isFulfilledSet()) {
-          return 'value updated';
         } else {
           return 'unknown';
         }

@@ -30,10 +30,17 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 import { customElement, property, html, css } from '../web_modules/lit-element.js';
 import { LitStateElement } from './lit-state.js';
 import './state-var/index.js';
 import './async-state-var/index.js';
+import './async-state-var-update/index.js';
 export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitStateElement) {
   class LitStateDemo extends _LitStateElement {
     constructor(...args) {
@@ -48,13 +55,40 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
     F: LitStateDemo,
     d: [{
       kind: "field",
+      key: "_hashChangeCallback",
+
+      value() {
+        return null;
+      }
+
+    }, {
+      kind: "field",
       decorators: [property()],
       key: "activeTab",
 
       value() {
-        return 'demo1';
+        return location.hash.substr(1) || 'state-var';
       }
 
+    }, {
+      kind: "method",
+      key: "connectedCallback",
+      value: function connectedCallback() {
+        _get(_getPrototypeOf(LitStateDemo.prototype), "connectedCallback", this).call(this);
+
+        this.addHashChangeCallback();
+      }
+    }, {
+      kind: "method",
+      key: "addHashChangeCallback",
+      value: function addHashChangeCallback() {
+        this._hashChangeCallback = window.addEventListener('hashchange', () => {
+          this.activeTab = location.hash.substr(1);
+          window.scrollTo({
+            top: 0
+          });
+        });
+      }
     }, {
       kind: "method",
       key: "render",
@@ -64,8 +98,8 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
             <nav>
 
                 <button
-                    @click=${this.handleDemo1TabClick}
-                    ?active=${this.activeTab == 'demo1'}
+                    @click=${this.handleStateVarTabClick}
+                    ?active=${this.activeTab == 'state-var'}
                 >
                     stateVar
                 </button>
@@ -77,6 +111,13 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
                     asyncStateVar
                 </button>
 
+                <button
+                    @click=${this.handleAsyncStateVarUpdateTabClick}
+                    ?active=${this.activeTab == 'async-state-var-update'}
+                >
+                    asyncStateVar update
+                </button>
+
             </nav>
 
             ${this.tabContents}
@@ -85,15 +126,21 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
       }
     }, {
       kind: "method",
-      key: "handleDemo1TabClick",
-      value: function handleDemo1TabClick() {
-        this.activeTab = 'demo1';
+      key: "handleStateVarTabClick",
+      value: function handleStateVarTabClick() {
+        location.hash = 'state-var';
       }
     }, {
       kind: "method",
       key: "handleAsyncStateVarTabClick",
       value: function handleAsyncStateVarTabClick() {
-        this.activeTab = 'async-state-var';
+        location.hash = 'async-state-var';
+      }
+    }, {
+      kind: "method",
+      key: "handleAsyncStateVarUpdateTabClick",
+      value: function handleAsyncStateVarUpdateTabClick() {
+        location.hash = 'async-state-var-update';
       }
     }, {
       kind: "get",
@@ -101,11 +148,14 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
       value: function tabContents() {
         switch (this.activeTab) {
           default:
-          case 'demo1':
+          case 'state-var':
             return html`<state-var></state-var>`;
 
           case 'async-state-var':
             return html`<async-state-var></async-state-var>`;
+
+          case 'async-state-var-update':
+            return html`<async-state-var-update></async-state-var-update>`;
         }
       }
     }, {

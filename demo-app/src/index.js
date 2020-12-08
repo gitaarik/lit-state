@@ -2,12 +2,28 @@ import { customElement, property, html, css } from 'lit-element';
 import { LitStateElement } from './lit-state.js';
 import './state-var/index';
 import './async-state-var/index';
+import './async-state-var-update/index';
 
 
 @customElement('lit-state-demo')
 export class LitStateDemo extends LitStateElement {
 
-    @property() activeTab = 'demo1';
+    _hashChangeCallback = null;
+
+    @property() activeTab = location.hash.substr(1) || 'state-var';
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.addHashChangeCallback();
+    }
+
+    addHashChangeCallback() {
+        this._hashChangeCallback = window.addEventListener('hashchange', () => {
+            this.activeTab = location.hash.substr(1);
+            window.scrollTo({ top: 0 });
+
+        });
+    }
 
     render() {
 
@@ -16,8 +32,8 @@ export class LitStateDemo extends LitStateElement {
             <nav>
 
                 <button
-                    @click=${this.handleDemo1TabClick}
-                    ?active=${this.activeTab == 'demo1'}
+                    @click=${this.handleStateVarTabClick}
+                    ?active=${this.activeTab == 'state-var'}
                 >
                     stateVar
                 </button>
@@ -29,6 +45,13 @@ export class LitStateDemo extends LitStateElement {
                     asyncStateVar
                 </button>
 
+                <button
+                    @click=${this.handleAsyncStateVarUpdateTabClick}
+                    ?active=${this.activeTab == 'async-state-var-update'}
+                >
+                    asyncStateVar update
+                </button>
+
             </nav>
 
             ${this.tabContents}
@@ -37,12 +60,16 @@ export class LitStateDemo extends LitStateElement {
 
     }
 
-    handleDemo1TabClick() {
-        this.activeTab = 'demo1';
+    handleStateVarTabClick() {
+        location.hash = 'state-var';
     }
 
     handleAsyncStateVarTabClick() {
-        this.activeTab = 'async-state-var';
+        location.hash = 'async-state-var';
+    }
+
+    handleAsyncStateVarUpdateTabClick() {
+        location.hash = 'async-state-var-update';
     }
 
     get tabContents() {
@@ -50,11 +77,14 @@ export class LitStateDemo extends LitStateElement {
         switch (this.activeTab) {
 
             default:
-            case 'demo1':
+            case 'state-var':
                 return html`<state-var></state-var>`;
 
             case 'async-state-var':
                 return html`<async-state-var></async-state-var>`;
+
+            case 'async-state-var-update':
+                return html`<async-state-var-update></async-state-var-update>`;
 
         }
 

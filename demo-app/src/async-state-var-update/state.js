@@ -4,7 +4,11 @@ import { currentTime } from './utils.js'
 
 class DemoState extends LitState {
 
-    data = asyncStateVar(() => this._getData());
+    data = asyncStateVar({
+        get: () => this._getData(),
+        set: value => this._setData(value),
+        default: "[default value]"
+    });
 
     _simulateError = false;
 
@@ -27,6 +31,26 @@ class DemoState extends LitState {
 
     }
 
+    _setData(value) {
+
+        return new Promise((resolve, reject) => {
+
+            setTimeout(() => {
+
+                if (this._simulateError) {
+                    reject("fake update data error");
+                    this._simulateError = false;
+                } else {
+                    this._fakeApiResponseText = value;
+                    resolve(this._fakeApiResponse());
+                }
+
+            }, 3000);
+
+        });
+
+    }
+
     _fakeApiResponseText = "Hello world";
 
     _fakeApiResponse() {
@@ -36,6 +60,11 @@ class DemoState extends LitState {
     simulateErrorReload() {
         this._simulateError = true;
         this.data.reload();
+    }
+
+    simulateErrorUpdate() {
+        this._simulateError = true;
+        this.data.setValue("This value won't be set, because our fake API will fail");
     }
 
 }

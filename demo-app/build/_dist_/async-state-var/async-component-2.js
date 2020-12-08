@@ -66,24 +66,10 @@ export let AsyncComponent2 = _decorate([customElement('async-component-2')], fun
                 </button>
 
                 <button
-                    @click=${() => demoState.data.setValue('<component-2> updated the data!')}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update data
-                </button>
-
-                <button
                     @click=${() => demoState.simulateErrorReload()}
                     ?disabled=${demoState.data.isPending()}
                 >
-                    reload error
-                </button>
-
-                <button
-                    @click=${() => demoState.simulateErrorUpdate()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update error
+                    simulate error
                 </button>
 
             </div>

@@ -74,6 +74,11 @@ export class StateVar extends LitStateElement {
                     That's all. How simple do you want to have it?
                 </p>
 
+                <p>
+                    LitState also has a convenient way of dealing with
+                    asynchronous data. See <a href="#async-state-var">asyncStateVar</a>.
+                </p>
+
             </div>
 
         `;
@@ -153,6 +158,10 @@ export class Component1 extends LitStateElement {
                 h3 {
                     font-size: 18px;
                     color: red;
+                }
+
+                a {
+                    color: #000;
                 }
 
                 code {
