@@ -208,7 +208,7 @@ app. See the [asyncStateVar](docs/asyncStateVar.md).
 ### Why not use MobX or Redux in the first place? Any benefits by using this?
 
 [MobX](https://github.com/mobxjs/mobx) is quite a large library with a lot of
-whistles and bells. LitState is about 300 lines at the moment, and I'm planning
+whistles and bells. LitState is about 400 lines at the moment, and I'm planning
 on keeping it tiny, just like LitElement and lit-html.
 
 To use [Redux](https://github.com/reduxjs/redux) (or something similar, like
