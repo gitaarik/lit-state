@@ -197,13 +197,16 @@ kind of thing, check out
 [observable-slim](https://github.com/ElliotNB/observable-slim).
 
 
-## Easy handling of asynchronous data with `asyncStateVar`
+## Extra features
+
+
+### Easy handling of asynchronous data with `asyncStateVar`
 
 LitState also has a convenient way of dealing with asynchronous data in your
 app. See the [asyncStateVar](docs/asyncStateVar.md).
 
 
-## You can also use a mixin class `LitStateElementMixin`
+### Mixin class `LitStateElementMixin`
 
 If you don't want to directly extend from `LitStateElement`, you can use the
 mixin `LitStateElementMixin`:
