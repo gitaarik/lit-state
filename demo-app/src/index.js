@@ -3,12 +3,19 @@ import { LitStateElement } from './lit-state.js';
 import './state-var/index';
 import './async-state-var/index';
 import './async-state-var-update/index';
+import './mixin-usage/index';
 
 
 @customElement('lit-state-demo')
 export class LitStateDemo extends LitStateElement {
 
     _hashChangeCallback = null;
+    _navItems = [
+        ['state-var', 'stateVar'],
+        ['async-state-var', 'asyncStateVar'],
+        ['async-state-var-update', 'asyncStateVar update'],
+        ['mixin-usage', 'Mixin'],
+    ];
 
     @property() activeTab = location.hash.substr(1) || 'state-var';
 
@@ -30,28 +37,7 @@ export class LitStateDemo extends LitStateElement {
         return html`
 
             <nav>
-
-                <button
-                    @click=${this.handleStateVarTabClick}
-                    ?active=${this.activeTab == 'state-var'}
-                >
-                    stateVar
-                </button>
-
-                <button
-                    @click=${this.handleAsyncStateVarTabClick}
-                    ?active=${this.activeTab == 'async-state-var'}
-                >
-                    asyncStateVar
-                </button>
-
-                <button
-                    @click=${this.handleAsyncStateVarUpdateTabClick}
-                    ?active=${this.activeTab == 'async-state-var-update'}
-                >
-                    asyncStateVar update
-                </button>
-
+                ${this.navButtons}
             </nav>
 
             ${this.tabContents}
@@ -60,16 +46,21 @@ export class LitStateDemo extends LitStateElement {
 
     }
 
-    handleStateVarTabClick() {
-        location.hash = 'state-var';
-    }
+    get navButtons() {
 
-    handleAsyncStateVarTabClick() {
-        location.hash = 'async-state-var';
-    }
+        return this._navItems.map(item => {
 
-    handleAsyncStateVarUpdateTabClick() {
-        location.hash = 'async-state-var-update';
+            return html`
+                <button
+                    @click=${() => location.hash = item[0]}
+                    ?active=${this.activeTab == item[0]}
+                >
+                    ${item[1]}
+                </button>
+            `;
+
+        });
+
     }
 
     get tabContents() {
@@ -86,6 +77,9 @@ export class LitStateDemo extends LitStateElement {
             case 'async-state-var-update':
                 return html`<async-state-var-update></async-state-var-update>`;
 
+            case 'mixin-usage':
+                return html`<mixin-usage></mixin-usage>`;
+
         }
 
     }
@@ -97,6 +91,7 @@ export class LitStateDemo extends LitStateElement {
             :host {
                 display: block;
                 margin: 0 auto;
+                padding: 15px;
                 max-width: 720px;
             }
 

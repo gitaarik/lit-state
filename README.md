@@ -203,6 +203,25 @@ LitState also has a convenient way of dealing with asynchronous data in your
 app. See the [asyncStateVar](docs/asyncStateVar.md).
 
 
+## You can also use a mixin class `LitStateElementMixin`
+
+If you don't want to directly extend from `LitStateElement`, you can use the
+mixin `LitStateElementMixin`:
+
+```javascript
+import { LitElement } from 'lit-element';
+import { LitStateElementMixin } from 'lit-element-state';
+
+class MyComponent extends LitStateElementMixin(LitElement) {
+
+    render() {
+        // ...
+    }
+
+}
+```
+
+
 ## FAQ
 
 ### Why not use MobX or Redux in the first place? Any benefits by using this?

@@ -1,7 +1,7 @@
 import { LitElement } from 'lit-element';
 
 
-export class LitStateElement extends LitElement {
+export const LitStateElementMixin = superclass => class extends superclass {
 
     constructor() {
         super();
@@ -62,6 +62,9 @@ export class LitStateElement extends LitElement {
     }
 
 }
+
+
+export const LitStateElement = LitStateElementMixin(LitElement);
 
 
 export class LitState {

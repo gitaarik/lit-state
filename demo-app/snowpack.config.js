@@ -23,6 +23,6 @@ module.exports = {
     /* ... */
   },
   alias: {
-    /* ... */
+    "@app": "./src"
   },
 };

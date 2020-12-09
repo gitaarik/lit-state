@@ -1,32 +1,14 @@
 import { customElement, property, html, css } from 'lit-element';
-import hljs from 'highlight.js/lib/core';
-import { hljsStyles } from '../hljs-styles.js';
-import javascript from 'highlight.js/lib/languages/javascript';
-import xml from 'highlight.js/lib/languages/xml';
-import 'highlight.js/styles/github.css';
-import { LitStateElement } from '../lit-state.js';
+import { LitStateElement } from '@app/lit-state.js';
+import '@app/components/code-small';
+import '@app/components/code-big';
 import { demoState } from './state';
 import './async-update-component-1';
 import './async-update-component-2';
 
 
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('xml', xml);
-
-
 @customElement('async-state-var-update')
 export class AsyncStateVarUpdate extends LitStateElement {
-
-    firstUpdated() {
-        super.firstUpdated();
-        this.initHighlightJs();
-    }
-
-    initHighlightJs() {
-        this.shadowRoot.querySelectorAll('.bigCode').forEach(block => {
-            hljs.highlightBlock(block);
-        });
-    }
 
     render() {
 
@@ -34,12 +16,12 @@ export class AsyncStateVarUpdate extends LitStateElement {
 
             <div>
 
-                <h1>LitState <code>asyncStateVar</code> update demo</h1>
+                <h1>LitState <code-small>asyncStateVar</code-small> update demo</h1>
 
                 <p>
                     Below you see 2 components. They both use a shared state
-                    <code>demoState</code>. The <code>demoState</code> contains
-                    a <code>asyncStateVar</code> that
+                    <code-small>demoState</code-small>. The <code-small>demoState</code-small> contains
+                    a <code-small>asyncStateVar</code-small> that
                     <strong>asynchronously</strong> loads data from a fake API.
                     You can see the status of the loading of the data, and the
                     value of the data:
@@ -59,42 +41,40 @@ export class AsyncStateVarUpdate extends LitStateElement {
                 </p>
 
                 <p>
-                    The shared state <code>demoState</code> contains a
-                    <code>asyncStateVar</code> called <code>data</code>. On it,
+                    The shared state <code-small>demoState</code-small> contains a
+                    <code-small>asyncStateVar</code-small> called <code-small>data</code-small>. On it,
                     we define the functions to <strong>get</strong> and
                     <strong>set</strong> the data, and a <strong>default
                     value</strong>:
                 </p>
 
                 <p>
-                    <code class="fileName">demo-state.js</code>
-                    <code class="bigCode">${this.demoStateCode}</code>
+                    <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
                 </p>
 
                 <p>
-                    The methods <code>_getData()</code> and
-                    <code>_setData(value)</code> both return
+                    The methods <code-small>_getData()</code-small> and
+                    <code-small>_setData(value)</code-small> both return
                     <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">promises</a>.
                     This is what makes them <strong>asynchronous</strong>. When
-                    the promises call the <code>resolve()</code> callback, it
+                    the promises call the <code-small>resolve()</code-small> callback, it
                     <strong>sets the value</strong> of the
-                    <code>asyncStateVar</code> to the response of the method
-                    <code>_fakeApiResponse()</code>.
+                    <code-small>asyncStateVar</code-small> to the response of the method
+                    <code-small>_fakeApiResponse()</code-small>.
                 </p>
 
                 <p>
                     The components that use the state extend from
-                    <code>LitStateElement</code> instead of
-                    <code>LitElement</code>. This makes them automatically
-                    re-render when a <code>asyncStateVar</code> they use
+                    <code-small>LitStateElement</code-small> instead of
+                    <code-small>LitElement</code-small>. This makes them automatically
+                    re-render when a <code-small>asyncStateVar</code-small> they use
                     changes. They also show the status of the
-                    <code>get</code> or <code>set</code> promises from the
-                    <code>asyncStateVar</code>:
+                    <code-small>get</code-small> or <code-small>set</code-small> promises from the
+                    <code-small>asyncStateVar</code-small>:
                 </p>
 
                 <p>
-                    <code class="fileName">component-1.js</code>
-                    <code class="bigCode">${this.componentCode}</code>
+                    <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
                 </p>
 
                 <p>
@@ -263,76 +243,73 @@ export class AsyncComponent1 extends LitStateElement {
 
     static get styles() {
 
-        return [
-            hljsStyles,
-            css`
+        return css`
 
-                :host {
-                    display: block;
-                    margin-top: 25px;
-                }
+            :host {
+                display: block;
+                margin-top: 25px;
+            }
 
-                * {
-                    box-sizing: border-box;
-                }
+            * {
+                box-sizing: border-box;
+            }
 
-                h1 {
-                    margin: 0;
-                    font-size: 25px;
-                }
+            h1 {
+                margin: 0;
+                font-size: 25px;
+            }
 
-                h2 {
-                    margin: 30px 0 0;
-                    font-size: 20px;
-                }
+            h2 {
+                margin: 30px 0 0;
+                font-size: 20px;
+            }
 
-                h3 {
-                    font-size: 18px;
-                    color: red;
-                }
+            h3 {
+                font-size: 18px;
+                color: red;
+            }
 
-                a {
-                    color: #000;
-                }
+            a {
+                color: #000;
+            }
 
-                code {
-                    display: inline-block;
-                    padding: 2px;
-                    margin: 1px;
-                    background: #555;
-                    color: white;
-                    white-space: pre;
-                }
+            code {
+                display: inline-block;
+                padding: 2px;
+                margin: 1px;
+                background: #555;
+                color: white;
+                white-space: pre;
+            }
 
-                .fileName {
-                    display: block;
-                    margin: 0;
-                    padding: 7px 10px;
-                    background: #555;
-                    font-weight: bold;
-                }
+            .fileName {
+                display: block;
+                margin: 0;
+                padding: 7px 10px;
+                background: #555;
+                font-weight: bold;
+            }
 
-                .bigCode {
-                    display: block;
-                    margin: 0;
-                    padding: 10px;
-                    width: 100%;
-                }
+            .bigCode {
+                display: block;
+                margin: 0;
+                padding: 10px;
+                width: 100%;
+            }
 
-                #demoComponents {
-                    display: flex;
-                    flex-wrap: wrap;
-                    margin: -15px 0 0 -15px;
-                }
+            #demoComponents {
+                display: flex;
+                flex-wrap: wrap;
+                margin: -15px 0 0 -15px;
+            }
 
-                #demoComponents > * {
-                    border: 1px #666 solid;
-                    margin: 15px 0 0 15px;
-                    max-width: 290px;
-                }
+            #demoComponents > * {
+                border: 1px #666 solid;
+                margin: 15px 0 0 15px;
+                max-width: 290px;
+            }
 
-            `
-        ];
+        `;
 
     }
 

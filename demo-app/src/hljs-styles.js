@@ -13,7 +13,6 @@ export const hljsStyles = css`
     .hljs {
       display: block;
       overflow-x: auto;
-      padding: 0.5em;
       color: #ffffff;
       background: #1c1b1b;
     }

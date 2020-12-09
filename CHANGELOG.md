@@ -1,5 +1,13 @@
 # LitState Changelog
 
+
+### 1.1.1
+
+- Created mixin `LitStateElementMixin`.
+- Added demo page for mixin `LitStateElementMixin`.
+- Updated demo app internals.
+
+
 ### 1.1.0
 
 - Created changelog.
