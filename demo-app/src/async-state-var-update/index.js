@@ -19,12 +19,15 @@ export class AsyncStateVarUpdate extends LitStateElement {
                 <h1>LitState <code-small>asyncStateVar</code-small> update demo</h1>
 
                 <p>
-                    Below you see 2 components. They both use a shared state
-                    <code-small>demoState</code-small>. The <code-small>demoState</code-small> contains
-                    a <code-small>asyncStateVar</code-small> that
-                    <strong>asynchronously</strong> loads data from a fake API.
-                    You can see the status of the loading of the data, and the
-                    value of the data:
+                    The <code-small><a href="#async-state-var">asyncStateVar</a></code-small>
+                    can also be used to asynchronously <strong>update</strong>
+                    data. This is done by defining 2 promises on the
+                    <code-small>asyncStateVar</code-small>: one to
+                    <strong>get</strong> the data, and one to
+                    <strong>set</strong> the data. When the status of any of
+                    the promises changes, it automatically re-renders the
+                    components that use the
+                    <code-small>asyncStateVar</code-small>:
                 </p>
 
                 <div id="demoComponents">
@@ -33,19 +36,9 @@ export class AsyncStateVarUpdate extends LitStateElement {
                 </div>
 
                 <p>
-                    With the buttons you can <strong>reload</strong> and
-                    <strong>update</strong> the data, or <strong>simulate an
-                    API error</strong>. The update button will also
-                    <strong>asynchronously</strong> update the value. Our fake
-                    API adds the current time to every response.
-                </p>
-
-                <p>
-                    The shared state <code-small>demoState</code-small> contains a
-                    <code-small>asyncStateVar</code-small> called <code-small>data</code-small>. On it,
-                    we define the functions to <strong>get</strong> and
-                    <strong>set</strong> the data, and a <strong>default
-                    value</strong>:
+                    Like in the previous example, we have a fake API for
+                    demonstation purposes. This fake API also simulates
+                    updating the value:
                 </p>
 
                 <p>
@@ -53,24 +46,18 @@ export class AsyncStateVarUpdate extends LitStateElement {
                 </p>
 
                 <p>
-                    The methods <code-small>_getData()</code-small> and
-                    <code-small>_setData(value)</code-small> both return
-                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">promises</a>.
-                    This is what makes them <strong>asynchronous</strong>. When
-                    the promises call the <code-small>resolve()</code-small> callback, it
-                    <strong>sets the value</strong> of the
-                    <code-small>asyncStateVar</code-small> to the response of the method
-                    <code-small>_fakeApiResponse()</code-small>.
-                </p>
-
-                <p>
-                    The components that use the state extend from
-                    <code-small>LitStateElement</code-small> instead of
-                    <code-small>LitElement</code-small>. This makes them automatically
-                    re-render when a <code-small>asyncStateVar</code-small> they use
-                    changes. They also show the status of the
-                    <code-small>get</code-small> or <code-small>set</code-small> promises from the
-                    <code-small>asyncStateVar</code-small>:
+                    The components use
+                    <code-small>demoState.data.setValue(value)</code-small> to
+                    initiate the <strong>set</strong> promise. When it resolves
+                    or fails, the components will be re-rendered. The components
+                    use <code-small>isPendingSet()</code-small>,
+                    <code-small>isRejectedSet()</code-small> and
+                    <code-small>isFulfilledSet()</code-small> to check the
+                    status of the <strong>set</strong> promise. For the
+                    <strong>get</strong> promise we use
+                    <code-small>isPendingGet()</code-small>,
+                    <code-small>isRejectedGet()</code-small> and
+                    <code-small>isFulfilledGet()</code-small>:
                 </p>
 
                 <p>
@@ -78,10 +65,14 @@ export class AsyncStateVarUpdate extends LitStateElement {
                 </p>
 
                 <p>
-                    Like this, you can easily synchronize your UI with the
-                    state of your asynchronous data on your page. You don't
-                    have to create additional state variables yourself to do
-                    this. LitState's got your back.
+                    This makes it easy to deal with asynchronous
+                    <strong>gets</strong> and <strong>sets</strong>.
+                </p>
+                
+                <p>
+                    In case you want to set the value in the UI before
+                    executing the <strong>set</strong> promise, check out
+                    <a href="#async-state-var-update-cache">asyncStateVar update with cache</a>.
                 </p>
 
             </div>
@@ -101,7 +92,7 @@ class DemoState extends LitState {
     data = asyncStateVar({
         get: () => this._getData(),
         set: value => this._setData(value),
-        default: "[default value]"
+        default: "[default value]" // optional
     });
 
     _simulateError = false;
@@ -158,7 +149,7 @@ class DemoState extends LitState {
 
     simulateErrorUpdate() {
         this._simulateError = true;
-        this.data.setValue("This value won't be set, because our fake API will fail");
+        this.data.setValue("This value won't be set, because our fake API will fail.");
     }
 
 }

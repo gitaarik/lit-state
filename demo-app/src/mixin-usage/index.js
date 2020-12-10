@@ -18,7 +18,7 @@ export class MixinUsage extends LitStateElement {
                 <h1>LitState <code-small>LitStateElementMixin</code-small> demo</h1>
 
                 <p>
-                    You can also use a mixin
+                    You can also use the mixin
                     <code-small>LitStateElementMixin</code-small> instead of
                     extending from <code-small>LitStateElement</code-small>:
                 </p>

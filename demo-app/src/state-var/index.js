@@ -19,9 +19,10 @@ export class StateVar extends LitStateElement {
                 <h1>LitState <code-small>stateVar</code-small> demo</h1>
 
                 <p>
-                    Below you see 2 components. They both use a shared state
-                    <code-small>demoState</code-small>. When you change the state from one
-                    component, the other component automatically synchronizes:
+                    Below are 2 components with a shared state
+                    <code-small>demoState</code-small>. When you change the
+                    state from one component, the other component automatically
+                    synchronizes:
                 </p>
 
                 <div id="demoComponents">
@@ -30,9 +31,10 @@ export class StateVar extends LitStateElement {
                 </div>
 
                 <p>
-                    The shared state <code-small>demoState</code-small> contains a
-                    <code-small>stateVar</code-small> called <code-small>counter</code-small>. It holds an
-                    integer that has an initial value of <code-small>0</code-small>:
+                    The shared state <code-small>demoState</code-small>
+                    contains a <code-small>stateVar</code-small> called
+                    <code-small>counter</code-small>. It holds an integer that
+                    has an initial value of <code-small>0</code-small>:
                 </p>
 
                 <p>
@@ -42,8 +44,9 @@ export class StateVar extends LitStateElement {
                 <p>
                     The components that use the state extend from
                     <code-small>LitStateElement</code-small> instead of
-                    <code-small>LitElement</code-small>. This makes them automatically
-                    re-render when a <code-small>stateVar</code-small> they use changes:
+                    <code-small>LitElement</code-small>. This makes them
+                    automatically re-render when a
+                    <code-small>stateVar</code-small> they use changes:
                 </p>
 
                 <p>
@@ -56,7 +59,8 @@ export class StateVar extends LitStateElement {
 
                 <p>
                     LitState also has a convenient way of dealing with
-                    asynchronous data. See <a href="#async-state-var">asyncStateVar</a>.
+                    asynchronous data. See
+                    <code-small><a href="#async-state-var">asyncStateVar</a></code-small>.
                 </p>
 
             </div>

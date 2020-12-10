@@ -184,6 +184,7 @@ class AsyncStateVar {
         this._initiated = false;
         this._pendingGet = false;
         this._pendingSet = false;
+        this._pendingCache = false;
         this._fulfilledGet = false;
         this._fulfilledSet = false;
         this._rejectedGet = false;
@@ -222,8 +223,6 @@ class AsyncStateVar {
 
     _loadValue() {
 
-        this._logStateVarCallback();
-
         this._pendingGet = true;
         this._rejectedGet = false;
         this._fulfilledGet = false;
@@ -235,6 +234,7 @@ class AsyncStateVar {
             this._rejectedSet = false;
             this._value = value;
             this._errorGet = null;
+            this._pendingCache = false;
         }).catch(error => {
             this._rejectedGet = true;
             this._errorGet = error;
@@ -257,6 +257,11 @@ class AsyncStateVar {
     isPendingSet() {
         this._logStateVarCallback();
         return this._pendingSet;
+    }
+
+    isPendingCache() {
+        this._logStateVarCallback();
+        return this._pendingCache;
     }
 
     isRejected() {
@@ -312,23 +317,51 @@ class AsyncStateVar {
         this._fulfilledSet = false;
         this._fulfilledGet = false;
         this._rejectedSet = false;
+
         this._onChangeCallback();
 
-        this._setPromise(value).then(value => {
-            this._fulfilledSet = true;
-            this._rejectedGet = false;
-            this._value = value;
-        }).catch(error => {
-            this._rejectedSet = true;
-            this._errorSet = error;
-        }).finally(() => {
-            this._pendingSet = false;
-            this._onChangeCallback();
+        return new Promise((resolve, reject) => {
+
+            this._setPromise(value).then(value => {
+
+                this._fulfilledSet = true;
+                this._rejectedGet = false;
+                this._value = value;
+
+                resolve(value);
+
+            }).catch(error => {
+
+                this._rejectedSet = true;
+                this._errorSet = error;
+
+                reject(error);
+
+            }).finally(() => {
+                this._pendingSet = false;
+                this._onChangeCallback();
+            });
+
         });
 
     }
 
+    setCache(value) {
+        this._logStateVarCallback();
+        this._value = value;
+        this._pendingCache = true;
+        this._onChangeCallback();
+    }
+
+    pushCache() {
+        this._logStateVarCallback();
+        this.setValue(this._value).then(() => {
+            this._pendingCache = false;
+        });
+    }
+
     reload() {
+        this._logStateVarCallback();
         this._loadValue();
     }
 

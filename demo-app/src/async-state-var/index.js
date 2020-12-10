@@ -19,12 +19,16 @@ export class AsyncStateVar extends LitStateElement {
                 <h1>LitState <code-small>asyncStateVar</code-small> demo</h1>
 
                 <p>
-                    Below you see 2 components. They both use a shared state
-                    <code-small>demoState</code-small>. The <code-small>demoState</code-small> contains
-                    a <code-small>asyncStateVar</code-small> that
-                    <strong>asynchronously</strong> loads data from a fake API.
-                    You can see the status of the loading of the data, and the
-                    value of the data:
+                    To make working with asynchronous data easy, LitState has
+                    the <code>asyncStateVar</code>. It's a special kind of
+                    <code><a href="#state-var">stateVar</a></code> which holds a
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">promise</a>.
+                    The promise is automatically executed when the
+                    <code>asyncStateVar</code> is being used in a component.
+                    When the promise settles, it will re-render the component.
+                    The component can check the status of the
+                    <code>asyncStateVar</code>, so it can display the status
+                    and it's value:
                 </p>
 
                 <div id="demoComponents">
@@ -33,15 +37,18 @@ export class AsyncStateVar extends LitStateElement {
                 </div>
 
                 <p>
-                    With the buttons, you can <strong>reload</strong> the data,
-                    or <strong>simulate an API error</strong>. Our fake API
-                    adds the current time to every response.
+                    Our <code-small>demoState</code-small> has a simple fake
+                    API for demonstation purposes. The fake API simulates a
+                    succesful response (which includes the current time), or an
+                    unsuccesful response (with an error message) in case
+                    <code-small>_simulateError</code-small> is
+                    <code-small>true</code-small>.
                 </p>
-
+                    
                 <p>
-                    The shared state <code-small>demoState</code-small> contains a
-                    <code-small>asyncStateVar</code-small> called <code-small>data</code-small>. On it,
-                    we define the function to <strong>get</strong> the data:
+                    On the <code-small>asyncStateVar</code-small> we define the
+                    function that returns the promise for <strong>retrieving
+                    the data</strong>. In this case <code-small>_getData()</code-small>:
                 </p>
 
                 <p>
@@ -49,22 +56,30 @@ export class AsyncStateVar extends LitStateElement {
                 </p>
 
                 <p>
-                    The methods <code>_getData()</code> returns a
-                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">JavaScript Promise</a>.
-                    This is what makes it <strong>asynchronous</strong>. When
-                    the promise calls the <code>resolve()</code> callback, it
-                    <strong>sets the value</strong> of the
-                    <code>asyncStateVar</code> to the response of the method
-                    <code>_fakeApiResponse()</code>.
+                    When the fake API simulates a succesful response, it calls
+                    the promise's <code>resolve()</code> callback, with the
+                    value that needs to be set. When the fake API gets an
+                    error, it calls the promise's <code>reject()</code>
+                    callback, with the error message.
                 </p>
 
                 <p>
-                    The components that use the state extend from
-                    <code>LitStateElement</code> instead of
-                    <code>LitElement</code>. This makes them automatically
-                    re-render when a <code>asyncStateVar</code> they use
-                    changes. They also show the status of the promises from the
-                    <code>asyncStateVar</code>:
+                    The components use
+                    <code-small>demoState.data.getValue()</code-small> to get
+                    the current value. This initially returns the (optional)
+                    default value, or <code-small>undefined</code-small> if
+                    there's no default set. When the promise resolves or fails,
+                    the components will be re-rendered, and
+                    <code-small>getValue()</code-small> will return the new
+                    value.
+                </p>
+                
+                <p>
+                    The components use
+                    <code-small>isPending()</code-small>,
+                    <code-small>isRejected()</code-small> and
+                    <code-small>isFulfilled()</code-small> to check the status
+                    of the promise:
                 </p>
 
                 <p>
@@ -74,8 +89,7 @@ export class AsyncStateVar extends LitStateElement {
                 <p>
                     Like this, you can easily synchronize your UI with the
                     state of your asynchronous data on your page. You don't
-                    have to create additional state variables yourself to do
-                    this. LitState's got your back.
+                    have to create additional state variables to do this.
                 </p>
 
                 <p>
@@ -97,7 +111,10 @@ import { currentTime } from './utils.js';
 
 class DemoState extends LitState {
 
-    data = asyncStateVar(() => this._getData());
+    data = asyncStateVar(
+        () => this._getData(),
+        '[default value]' // optional
+    );
 
     _simulateError = false;
 

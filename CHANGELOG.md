@@ -1,6 +1,13 @@
 # LitState Changelog
 
 
+### 1.1.2
+
+- Added `setCache(value)` and `pushCache()` functionality to `asyncStateVar`.
+- Updated demo app for `setCache(value)` and `pushCache()`.
+- Updated readme.
+
+
 ### 1.1.1
 
 - Created mixin `LitStateElementMixin`.

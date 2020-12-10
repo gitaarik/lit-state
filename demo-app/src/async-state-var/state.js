@@ -4,7 +4,7 @@ import { currentTime } from './utils.js'
 
 class DemoState extends LitState {
 
-    data = asyncStateVar(() => this._getData());
+    data = asyncStateVar(() => this._getData(), '[default value]');
 
     _simulateError = false;
 

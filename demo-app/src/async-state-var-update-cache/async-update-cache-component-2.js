@@ -3,17 +3,25 @@ import { LitStateElement } from '../lit-state.js';
 import { demoState } from './state';
 
 
-@customElement('async-update-component-2')
-export class AsyncUpdateComponent2 extends LitStateElement {
+@customElement('async-update-cache-component-2')
+export class AsyncUpdateCacheComponent2 extends LitStateElement {
 
     render() {
 
         return html`
 
             <h2>&lt;component-2&gt;</h2>
-
             <h3 id="status">Status: ${this.dataStatus}</h3>
-            <h3 id="value">Value: ${demoState.data.getValue()}</h3>
+
+            <h3 id="value">
+                <span>Value:</span>
+                <input
+                    type="text"
+                    .value=${demoState.data.getValue()}
+                    @keyup=${this.handleInputKeyUp}
+                    ?disabled=${demoState.data.isPending()}
+                />
+            </h3>
 
             <div id="buttons">
 
@@ -25,24 +33,10 @@ export class AsyncUpdateComponent2 extends LitStateElement {
                 </button>
 
                 <button
-                    @click=${() => demoState.data.setValue('<component-2> updated the data!')}
-                    ?disabled=${demoState.data.isPending()}
+                    @click=${() => demoState.data.pushCache()}
+                    ?disabled=${demoState.data.isPending() || !demoState.data.isPendingCache()}
                 >
-                    update data
-                </button>
-
-                <button
-                    @click=${() => demoState.simulateErrorReload()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    reload error
-                </button>
-
-                <button
-                    @click=${() => demoState.simulateErrorUpdate()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update error
+                    push cache
                 </button>
 
             </div>
@@ -56,10 +50,8 @@ export class AsyncUpdateComponent2 extends LitStateElement {
             return 'loading value...';
         } else if (demoState.data.isPendingSet()) {
             return 'updating value...'
-        } else if (demoState.data.isRejectedGet()) {
-            return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
-        } else if (demoState.data.isRejectedSet()) {
-            return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
+        } else if (demoState.data.isPendingCache()) {
+            return 'cache pending';
         } else if (demoState.data.isFulfilledGet()) {
             return 'value loaded';
         } else if (demoState.data.isFulfilledSet()) {
@@ -67,6 +59,10 @@ export class AsyncUpdateComponent2 extends LitStateElement {
         } else {
             return 'unknown';
         }
+    }
+
+    handleInputKeyUp(event) {
+        demoState.data.setCache(event.target.value);
     }
 
     static get styles() {
@@ -94,7 +90,13 @@ export class AsyncUpdateComponent2 extends LitStateElement {
             }
 
             #value {
+                display: flex;
                 color: red;
+            }
+
+            #value input {
+                margin-left: 5px;
+                min-width: 0;
             }
 
             #buttons {

@@ -3,6 +3,7 @@ import { LitStateElement } from './lit-state.js';
 import './state-var/index';
 import './async-state-var/index';
 import './async-state-var-update/index';
+import './async-state-var-update-cache/index';
 import './mixin-usage/index';
 
 
@@ -14,6 +15,7 @@ export class LitStateDemo extends LitStateElement {
         ['state-var', 'stateVar'],
         ['async-state-var', 'asyncStateVar'],
         ['async-state-var-update', 'asyncStateVar update'],
+        ['async-state-var-update-cache', 'asyncStateVar update with cache'],
         ['mixin-usage', 'Mixin'],
     ];
 
@@ -76,6 +78,9 @@ export class LitStateDemo extends LitStateElement {
 
             case 'async-state-var-update':
                 return html`<async-state-var-update></async-state-var-update>`;
+
+            case 'async-state-var-update-cache':
+                return html`<async-state-var-update-cache></async-state-var-update-cache>`;
 
             case 'mixin-usage':
                 return html`<mixin-usage></mixin-usage>`;

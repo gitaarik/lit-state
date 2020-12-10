@@ -65,9 +65,9 @@ class MyElement extends LitStateElement {
 }
 ```
 
-This makes it very easy to handle asynchronous data in your UI.
+You can also use `myState.myData.reload()` to re-execute the promise.
 
-Also check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var)
+Check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var)
 to see how `asyncStateVar` works.
 
 
@@ -120,12 +120,48 @@ class MyState extends LitState {
 export const myState = new MyState();
 ```
 
+
+## Update the UI before executing the promise
+
+Sometimes you want to update your UI before you send the update to your API.
+For this you can use the `setCache(value)` method of `asyncStateVar`. This will
+re-render your components with the cached value. When you finally want to push
+the update to your API, you can use `pushCache()`: 
+
+### Set the cache
+
+```
+javascript
+myState.myData.setCache('value');
+```
+
+### Push the cache
+
+```
+javascript
+myState.myData.pushCache();
+```
+
+The `pushCache()` basically does `setValue(cachedValue)` where the
+`cachedValue` is the value that you set with `setCache()`. If you would do a
+`reload()` or a `setValue()` before you push the cache, the cache will be
+discharged.
+
+
+Check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var-update-cache)
+to see how `setCache()` works.
+
+
+## Check `asyncStateVar` status
+
 Use the following methods to check the status of the promise(s):
 
 ```javascript
 isPending()         // 'get' or 'set' is pending
 isPendingGet()      // 'get' is pending
 isPendingSet()      // 'set' is pending
+isPendingCache()    // A cache that has been set with `setCache()` is not yet
+                    // pushed with `pushCache()`
 
 isRejected()        // 'get' or 'set' is rejected
 isRejectedGet()     // 'get' is rejected
@@ -140,5 +176,5 @@ isFulfilledGet()    // 'get' is fulfilled
 isFulfilledSet()    // 'set' is fulfilled
 ```
 
-Also check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var-update)
+Check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var-update)
 to see how `asyncStateVar` with updates works.
