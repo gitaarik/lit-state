@@ -143,7 +143,7 @@ myState.myData.pushCache();
 The `pushCache()` basically does `setValue(cachedValue)` where the
 `cachedValue` is the value that you set with `setCache()`. If you would do a
 `reload()` or a `setValue()` before you push the cache, the cache will be
-discharged.
+dropped.
 
 
 Check the [demo app](https://gitaarik.github.io/lit-state/demo-app/build/#async-state-var-update-cache)
