@@ -53,8 +53,8 @@ export let AsyncComponent2 = _decorate([customElement('async-component-2')], fun
 
             <h2>&lt;component-2&gt;</h2>
 
-            <h3>Status: ${this.dataStatus}</h3>
-            <h3>Value: ${demoState.data.getValue()}</h3>
+            <h3 id="status">Status: ${this.dataStatus}</h3>
+            <h3 id="value">Value: ${demoState.data.getValue()}</h3>
 
             <div id="buttons">
 
@@ -117,6 +117,13 @@ export let AsyncComponent2 = _decorate([customElement('async-component-2')], fun
 
             h3 {
                 font-size: 16px;
+            }
+
+            #status {
+                color: blue;
+            }
+
+            #value {
                 color: red;
             }
 

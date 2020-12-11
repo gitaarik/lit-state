@@ -56,7 +56,7 @@ class DemoState extends LitState {
 
   simulateErrorUpdate() {
     this._simulateError = true;
-    this.data.setValue("This value won't be set, because our fake API will fail");
+    this.data.setValue("This value won't be set, because our fake API will fail.");
   }
 
 }

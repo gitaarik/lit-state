@@ -41,6 +41,8 @@ import { LitStateElement } from './lit-state.js';
 import './state-var/index.js';
 import './async-state-var/index.js';
 import './async-state-var-update/index.js';
+import './async-state-var-update-cache/index.js';
+import './mixin-usage/index.js';
 export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitStateElement) {
   class LitStateDemo extends _LitStateElement {
     constructor(...args) {
@@ -59,6 +61,14 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
 
       value() {
         return null;
+      }
+
+    }, {
+      kind: "field",
+      key: "_navItems",
+
+      value() {
+        return [['state-var', 'stateVar'], ['async-state-var', 'asyncStateVar'], ['async-state-var-update', 'asyncStateVar update'], ['async-state-var-update-cache', 'asyncStateVar update with cache'], ['mixin-usage', 'Mixin']];
       }
 
     }, {
@@ -96,28 +106,7 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
         return html`
 
             <nav>
-
-                <button
-                    @click=${this.handleStateVarTabClick}
-                    ?active=${this.activeTab == 'state-var'}
-                >
-                    stateVar
-                </button>
-
-                <button
-                    @click=${this.handleAsyncStateVarTabClick}
-                    ?active=${this.activeTab == 'async-state-var'}
-                >
-                    asyncStateVar
-                </button>
-
-                <button
-                    @click=${this.handleAsyncStateVarUpdateTabClick}
-                    ?active=${this.activeTab == 'async-state-var-update'}
-                >
-                    asyncStateVar update
-                </button>
-
+                ${this.navButtons}
             </nav>
 
             ${this.tabContents}
@@ -125,22 +114,19 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
         `;
       }
     }, {
-      kind: "method",
-      key: "handleStateVarTabClick",
-      value: function handleStateVarTabClick() {
-        location.hash = 'state-var';
-      }
-    }, {
-      kind: "method",
-      key: "handleAsyncStateVarTabClick",
-      value: function handleAsyncStateVarTabClick() {
-        location.hash = 'async-state-var';
-      }
-    }, {
-      kind: "method",
-      key: "handleAsyncStateVarUpdateTabClick",
-      value: function handleAsyncStateVarUpdateTabClick() {
-        location.hash = 'async-state-var-update';
+      kind: "get",
+      key: "navButtons",
+      value: function navButtons() {
+        return this._navItems.map(item => {
+          return html`
+                <button
+                    @click=${() => location.hash = item[0]}
+                    ?active=${this.activeTab == item[0]}
+                >
+                    ${item[1]}
+                </button>
+            `;
+        });
       }
     }, {
       kind: "get",
@@ -156,6 +142,12 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
 
           case 'async-state-var-update':
             return html`<async-state-var-update></async-state-var-update>`;
+
+          case 'async-state-var-update-cache':
+            return html`<async-state-var-update-cache></async-state-var-update-cache>`;
+
+          case 'mixin-usage':
+            return html`<mixin-usage></mixin-usage>`;
         }
       }
     }, {
@@ -168,6 +160,7 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
             :host {
                 display: block;
                 margin: 0 auto;
+                padding: 15px;
                 max-width: 720px;
             }
 

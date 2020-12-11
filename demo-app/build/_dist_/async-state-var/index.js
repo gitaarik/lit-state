@@ -30,24 +30,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 import { customElement, property, html, css } from '../../web_modules/lit-element.js';
-import hljs from '../../web_modules/highlightjs/lib/core.js';
-import { hljsStyles } from '../hljs-styles.js';
-import javascript from '../../web_modules/highlightjs/lib/languages/javascript.js';
-import xml from '../../web_modules/highlightjs/lib/languages/xml.js';
-import '../../web_modules/highlightjs/styles/github.css.proxy.js';
 import { LitStateElement } from '../lit-state.js';
+import '../components/code-small.js';
+import '../components/code-big.js';
 import { demoState } from './state.js';
 import './async-component-1.js';
 import './async-component-2.js';
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('xml', xml);
 export let AsyncStateVar = _decorate([customElement('async-state-var')], function (_initialize, _LitStateElement) {
   class AsyncStateVar extends _LitStateElement {
     constructor(...args) {
@@ -62,37 +51,25 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
     F: AsyncStateVar,
     d: [{
       kind: "method",
-      key: "firstUpdated",
-      value: function firstUpdated() {
-        _get(_getPrototypeOf(AsyncStateVar.prototype), "firstUpdated", this).call(this);
-
-        this.initHighlightJs();
-      }
-    }, {
-      kind: "method",
-      key: "initHighlightJs",
-      value: function initHighlightJs() {
-        this.shadowRoot.querySelectorAll('.bigCode').forEach(block => {
-          hljs.highlightBlock(block);
-        });
-      }
-    }, {
-      kind: "method",
       key: "render",
       value: function render() {
         return html`
 
             <div>
 
-                <h1>LitState <code>asyncStateVar</code> demo</h1>
+                <h1>LitState <code-small>asyncStateVar</code-small> demo</h1>
 
                 <p>
-                    Below you see 2 components. They both use a shared state
-                    <code>demoState</code>. The <code>demoState</code> contains
-                    a <code>asyncStateVar</code> that
-                    <strong>asynchronously</strong> loads data from a fake API.
-                    You can see the status of the loading of the data, and the
-                    value of the data:
+                    To make working with asynchronous data easy, LitState has
+                    the <code>asyncStateVar</code>. It's a special kind of
+                    <code><a href="#state-var">stateVar</a></code> which holds a
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">promise</a>.
+                    The promise is automatically executed when the
+                    <code>asyncStateVar</code> is being used in a component.
+                    When the promise settles, it will re-render the component.
+                    The component can check the status of the
+                    <code>asyncStateVar</code>, so it can display the status
+                    and it's value:
                 </p>
 
                 <div id="demoComponents">
@@ -101,55 +78,63 @@ export let AsyncStateVar = _decorate([customElement('async-state-var')], functio
                 </div>
 
                 <p>
-                    With the buttons, you can <strong>reload</strong> the data,
-                    or <strong>simulate an API error</strong>. Our fake API
-                    adds the current time to every response.
+                    Our <code-small>demoState</code-small> has a simple fake
+                    API for demonstation purposes. The fake API simulates a
+                    succesful response (which includes the current time), or an
+                    unsuccesful response (with an error message) in case
+                    <code-small>_simulateError</code-small> is
+                    <code-small>true</code-small>.
+                </p>
+                    
+                <p>
+                    On the <code-small>asyncStateVar</code-small> we define the
+                    function that returns the promise for <strong>retrieving
+                    the data</strong>. In this case <code-small>_getData()</code-small>:
                 </p>
 
                 <p>
-                    The shared state <code>demoState</code> contains a
-                    <code>asyncStateVar</code> called <code>data</code>. On it,
-                    we define the function to <strong>get</strong> the data:
+                    <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
                 </p>
 
                 <p>
-                    <code class="fileName">demo-state.js</code>
-                    <code class="bigCode">${this.demoStateCode}</code>
+                    When the fake API simulates a succesful response, it calls
+                    the promise's <code>resolve()</code> callback, with the
+                    value that needs to be set. When the fake API gets an
+                    error, it calls the promise's <code>reject()</code>
+                    callback, with the error message.
                 </p>
 
                 <p>
-                    The methods <code>_getData()</code> returns a
-                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">JavaScript Promise</a>.
-                    This is what makes it <strong>asynchronous</strong>. When
-                    the promise calls the <code>resolve()</code> callback, it
-                    <strong>sets the value</strong> of the
-                    <code>asyncStateVar</code> to the response of the method
-                    <code>_fakeApiResponse()</code>.
+                    The components use
+                    <code-small>demoState.data.getValue()</code-small> to get
+                    the current value. This initially returns the (optional)
+                    default value, or <code-small>undefined</code-small> if
+                    there's no default set. When the promise resolves or fails,
+                    the components will be re-rendered, and
+                    <code-small>getValue()</code-small> will return the new
+                    value.
+                </p>
+                
+                <p>
+                    The components use
+                    <code-small>isPending()</code-small>,
+                    <code-small>isRejected()</code-small> and
+                    <code-small>isFulfilled()</code-small> to check the status
+                    of the promise:
                 </p>
 
                 <p>
-                    The components that use the state extend from
-                    <code>LitStateElement</code> instead of
-                    <code>LitElement</code>. This makes them automatically
-                    re-render when a <code>asyncStateVar</code> they use
-                    changes. They also show the status of the promises from the
-                    <code>asyncStateVar</code>:
-                </p>
-
-                <p>
-                    <code class="fileName">component-1.js</code>
-                    <code class="bigCode">${this.componentCode}</code>
+                    <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
                 </p>
 
                 <p>
                     Like this, you can easily synchronize your UI with the
                     state of your asynchronous data on your page. You don't
-                    have to create additional state variables yourself to do
-                    this. LitState's got your back.
+                    have to create additional state variables to do this.
                 </p>
 
                 <p>
-                    <code>asyncStateVar</code> can also handle updates. See
+                    <code-small>asyncStateVar</code-small> can also handle updates. See
                     <a href="#async-state-var-update">asyncStateVar update</a>.
                 </p>
 
@@ -167,7 +152,10 @@ import { currentTime } from './utils.js';
 
 class DemoState extends LitState {
 
-    data = asyncStateVar(() => this._getData());
+    data = asyncStateVar(
+        () => this._getData(),
+        '[default value]' // optional
+    );
 
     _simulateError = false;
 
@@ -264,73 +252,73 @@ export class AsyncComponent1 extends LitStateElement {
       static: true,
       key: "styles",
       value: function styles() {
-        return [hljsStyles, css`
+        return css`
 
-                :host {
-                    display: block;
-                    margin-top: 25px;
-                }
+            :host {
+                display: block;
+                margin-top: 25px;
+            }
 
-                * {
-                    box-sizing: border-box;
-                }
+            * {
+                box-sizing: border-box;
+            }
 
-                h1 {
-                    margin: 0;
-                    font-size: 25px;
-                }
+            h1 {
+                margin: 0;
+                font-size: 25px;
+            }
 
-                h2 {
-                    margin: 30px 0 0;
-                    font-size: 20px;
-                }
+            h2 {
+                margin: 30px 0 0;
+                font-size: 20px;
+            }
 
-                h3 {
-                    font-size: 18px;
-                    color: red;
-                }
+            h3 {
+                font-size: 18px;
+                color: red;
+            }
 
-                a {
-                    color: #000;
-                }
+            a {
+                color: #000;
+            }
 
-                code {
-                    display: inline-block;
-                    padding: 2px;
-                    margin: 1px;
-                    background: #555;
-                    color: white;
-                    white-space: pre;
-                }
+            code {
+                display: inline-block;
+                padding: 2px;
+                margin: 1px;
+                background: #555;
+                color: white;
+                white-space: pre;
+            }
 
-                .fileName {
-                    display: block;
-                    margin: 0;
-                    padding: 7px 10px;
-                    background: #555;
-                    font-weight: bold;
-                }
+            .fileName {
+                display: block;
+                margin: 0;
+                padding: 7px 10px;
+                background: #555;
+                font-weight: bold;
+            }
 
-                .bigCode {
-                    display: block;
-                    margin: 0;
-                    padding: 10px;
-                    width: 100%;
-                }
+            .bigCode {
+                display: block;
+                margin: 0;
+                padding: 10px;
+                width: 100%;
+            }
 
-                #demoComponents {
-                    display: flex;
-                    flex-wrap: wrap;
-                    margin: -15px 0 0 -15px;
-                }
+            #demoComponents {
+                display: flex;
+                flex-wrap: wrap;
+                margin: -15px 0 0 -15px;
+            }
 
-                #demoComponents > * {
-                    border: 1px #666 solid;
-                    margin: 15px 0 0 15px;
-                    max-width: 290px;
-                }
+            #demoComponents > * {
+                border: 1px #666 solid;
+                margin: 15px 0 0 15px;
+                max-width: 290px;
+            }
 
-            `];
+        `;
       }
     }]
   };

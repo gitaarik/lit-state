@@ -30,15 +30,20 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, property, html, css } from '../../web_modules/lit-element.js';
-import { LitStateElement } from '../lit-state.js';
-import '../components/code-small.js';
-import '../components/code-big.js';
-import { demoState } from './state.js';
-import './async-update-component-1.js';
-import './async-update-component-2.js';
-export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-update')], function (_initialize, _LitStateElement) {
-  class AsyncStateVarUpdate extends _LitStateElement {
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
+import hljs from '../../web_modules/highlightjs/lib/core.js';
+import javascript from '../../web_modules/highlightjs/lib/languages/javascript.js';
+import xml from '../../web_modules/highlightjs/lib/languages/xml.js';
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('xml', xml);
+export let CodeBig = _decorate([customElement('code-big')], function (_initialize, _LitElement) {
+  class CodeBig extends _LitElement {
     constructor(...args) {
       super(...args);
 
@@ -48,228 +53,51 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
   }
 
   return {
-    F: AsyncStateVarUpdate,
+    F: CodeBig,
     d: [{
+      kind: "field",
+      decorators: [property()],
+      key: "fileName",
+      value: void 0
+    }, {
+      kind: "field",
+      decorators: [property()],
+      key: "code",
+      value: void 0
+    }, {
+      kind: "method",
+      key: "firstUpdated",
+      value: function firstUpdated() {
+        _get(_getPrototypeOf(CodeBig.prototype), "firstUpdated", this).call(this);
+
+        this._initHighlightJs();
+      }
+    }, {
+      kind: "method",
+      key: "_initHighlightJs",
+      value: function _initHighlightJs() {
+        this.shadowRoot.querySelectorAll('.hljs').forEach(block => {
+          hljs.highlightBlock(block);
+        });
+      }
+    }, {
       kind: "method",
       key: "render",
       value: function render() {
         return html`
-
-            <div>
-
-                <h1>LitState <code-small>asyncStateVar</code-small> update demo</h1>
-
-                <p>
-                    The <code-small><a href="#async-state-var">asyncStateVar</a></code-small>
-                    can also be used to asynchronously <strong>update</strong>
-                    data. This is done by defining 2 promises on the
-                    <code-small>asyncStateVar</code-small>: one to
-                    <strong>get</strong> the data, and one to
-                    <strong>set</strong> the data. When the status of any of
-                    the promises changes, it automatically re-renders the
-                    components that use the
-                    <code-small>asyncStateVar</code-small>:
-                </p>
-
-                <div id="demoComponents">
-                    <async-update-component-1></async-update-component-1>
-                    <async-update-component-2></async-update-component-2>
-                </div>
-
-                <p>
-                    Like in the previous example, we have a fake API for
-                    demonstation purposes. This fake API also simulates
-                    updating the value:
-                </p>
-
-                <p>
-                    <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
-                </p>
-
-                <p>
-                    The components use
-                    <code-small>demoState.data.setValue(value)</code-small> to
-                    initiate the <strong>set</strong> promise. When it resolves
-                    or fails, the components will be re-rendered. The components
-                    use <code-small>isPendingSet()</code-small>,
-                    <code-small>isRejectedSet()</code-small> and
-                    <code-small>isFulfilledSet()</code-small> to check the
-                    status of the <strong>set</strong> promise. For the
-                    <strong>get</strong> promise we use
-                    <code-small>isPendingGet()</code-small>,
-                    <code-small>isRejectedGet()</code-small> and
-                    <code-small>isFulfilledGet()</code-small>:
-                </p>
-
-                <p>
-                    <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
-                </p>
-
-                <p>
-                    This makes it easy to deal with asynchronous
-                    <strong>gets</strong> and <strong>sets</strong>.
-                </p>
-                
-                <p>
-                    In case you want to set the value in the UI before
-                    executing the <strong>set</strong> promise, check out
-                    <a href="#async-state-var-update-cache">asyncStateVar update with cache</a>.
-                </p>
-
-            </div>
-
+            ${this._fileName}
+            <code class="hljs">${this.code}</code>
         `;
       }
     }, {
       kind: "get",
-      key: "demoStateCode",
-      value: function demoStateCode() {
-        return `import { LitState, asyncStateVar } from 'lit-element-state';
-import { currentTime } from './utils.js';
-
-
-class DemoState extends LitState {
-
-    data = asyncStateVar({
-        get: () => this._getData(),
-        set: value => this._setData(value),
-        default: "[default value]" // optional
-    });
-
-    _simulateError = false;
-
-    _getData() {
-
-        return new Promise((resolve, reject) => {
-
-            setTimeout(() => {
-
-                if (this._simulateError) {
-                    reject("fake load data error");
-                    this._simulateError = false;
-                } else {
-                    resolve(this._fakeApiResponse());
-                }
-
-            }, 3000);
-
-        });
-
-    }
-
-    _setData(value) {
-
-        return new Promise((resolve, reject) => {
-
-            setTimeout(() => {
-
-                if (this._simulateError) {
-                    reject("fake update data error");
-                    this._simulateError = false;
-                } else {
-                    this._fakeApiResponseText = value;
-                    resolve(this._fakeApiResponse());
-                }
-
-            }, 3000);
-
-        });
-
-    }
-
-    _fakeApiResponseText = "Hello world";
-
-    _fakeApiResponse() {
-        return this._fakeApiResponseText + " (" + currentTime() + ")";
-    }
-
-    simulateErrorReload() {
-        this._simulateError = true;
-        this.data.reload();
-    }
-
-    simulateErrorUpdate() {
-        this._simulateError = true;
-        this.data.setValue("This value won't be set, because our fake API will fail.");
-    }
-
-}
-
-
-export const demoState = new DemoState();`;
-      }
-    }, {
-      kind: "get",
-      key: "componentCode",
-      value: function componentCode() {
-        return `import { customElement, html, css } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
-import { demoState } from './demo-state.js';
-
-
-@customElement('async-component-1')
-export class AsyncComponent1 extends LitStateElement {
-
-    render() {
-
-        return html\`
-
-            <h2>&lt;component-1&gt;</h2>
-
-            <h3>Status: \${this.dataStatus}</h3>
-            <h3>Value: \${demoState.data.getValue()}</h3>
-
-            <button
-                @click=\${() => demoState.data.reload()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                reload data
-            </button>
-
-            <button
-                @click=\${() => demoState.data.setValue('<component-1> updated the data!')}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                update data
-            </button>
-
-            <button
-                @click=\${() => demoState.simulateErrorReload()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                reload error
-            </button>
-
-            <button
-                @click=\${() => demoState.simulateErrorUpdate()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                update error
-            </button>
-
-        \`;
-
-    }
-
-    get dataStatus() {
-        if (demoState.data.isPendingGet()) {
-            return 'loading value...';
-        } else if (demoState.data.isPendingSet()) {
-            return 'updating value...'
-        } else if (demoState.data.isRejectedGet()) {
-            return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
-        } else if (demoState.data.isRejectedSet()) {
-            return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
-        } else if (demoState.data.isFulfilledGet()) {
-            return 'value loaded';
-        } else if (demoState.data.isFulfilledSet()) {
-            return 'value updated';
-        } else {
-            return 'unknown';
+      key: "_fileName",
+      value: function _fileName() {
+        if (!this.fileName) {
+          return;
         }
-    }
 
-}`;
+        return html`<code class="fileName">${this.fileName}</code>`;
       }
     }, {
       kind: "get",
@@ -280,39 +108,6 @@ export class AsyncComponent1 extends LitStateElement {
 
             :host {
                 display: block;
-                margin-top: 25px;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            h1 {
-                margin: 0;
-                font-size: 25px;
-            }
-
-            h2 {
-                margin: 30px 0 0;
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-                color: red;
-            }
-
-            a {
-                color: #000;
-            }
-
-            code {
-                display: inline-block;
-                padding: 2px;
-                margin: 1px;
-                background: #555;
-                color: white;
-                white-space: pre;
             }
 
             .fileName {
@@ -320,30 +115,88 @@ export class AsyncComponent1 extends LitStateElement {
                 margin: 0;
                 padding: 7px 10px;
                 background: #555;
+                color: #FFF;
                 font-weight: bold;
             }
 
-            .bigCode {
+            .hljs {
                 display: block;
+                box-sizing: border-box;
                 margin: 0;
                 padding: 10px;
                 width: 100%;
+                white-space: pre;
+                overflow-x: auto;
+                color: #ffffff;
+                background: #1c1b1b;
             }
 
-            #demoComponents {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -15px 0 0 -15px;
+            .hljs-comment {
+                color: #999999;
             }
 
-            #demoComponents > * {
-                border: 1px #666 solid;
-                margin: 15px 0 0 15px;
-                max-width: 290px;
+            .hljs-keyword,
+            .hljs-selector-tag,
+            .hljs-meta-keyword,
+            .hljs-doctag,
+            .hljs-section,
+            .hljs-selector-class,
+            .hljs-meta,
+            .hljs-selector-pseudo,
+            .hljs-attr {
+                color: #88aece;
+            }
+
+            .hljs-attribute {
+                color: v#c59bc1;
+            }
+
+            .hljs-name,
+            .hljs-type,
+            .hljs-number,
+            .hljs-selector-id,
+            .hljs-quote,
+            .hljs-template-tag,
+            .hljs-built_in,
+            .hljs-title,
+            .hljs-literal {
+                color: #f08d49;
+            }
+
+            .hljs-string,
+            .hljs-regexp,
+            .hljs-symbol,
+            .hljs-variable,
+            .hljs-template-variable,
+            .hljs-link,
+            .hljs-selector-attr,
+            .hljs-meta-string {
+                color: #b5bd68;
+            }
+
+            .hljs-bullet,
+            .hljs-code {
+                color: #cccccc;
+            }
+
+            .hljs-deletion {
+                color: #de7176;
+            }
+
+            .hljs-addition {
+                color: #76c490;
+            }
+
+            .hljs-emphasis {
+                font-style: italic;
+            }
+
+            .hljs-strong {
+                font-weight: bold;
             }
 
         `;
       }
     }]
   };
-}, LitStateElement);
+}, LitElement);

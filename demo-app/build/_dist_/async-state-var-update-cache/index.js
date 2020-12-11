@@ -35,10 +35,10 @@ import { LitStateElement } from '../lit-state.js';
 import '../components/code-small.js';
 import '../components/code-big.js';
 import { demoState } from './state.js';
-import './async-update-component-1.js';
-import './async-update-component-2.js';
-export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-update')], function (_initialize, _LitStateElement) {
-  class AsyncStateVarUpdate extends _LitStateElement {
+import './async-update-cache-component-1.js';
+import './async-update-cache-component-2.js';
+export let AsyncStateVarUpdateCache = _decorate([customElement('async-state-var-update-cache')], function (_initialize, _LitStateElement) {
+  class AsyncStateVarUpdateCache extends _LitStateElement {
     constructor(...args) {
       super(...args);
 
@@ -48,7 +48,7 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
   }
 
   return {
-    F: AsyncStateVarUpdate,
+    F: AsyncStateVarUpdateCache,
     d: [{
       kind: "method",
       key: "render",
@@ -57,29 +57,27 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
 
             <div>
 
-                <h1>LitState <code-small>asyncStateVar</code-small> update demo</h1>
+                <h1>LitState <code-small>asyncStateVar</code-small> update with cache demo</h1>
 
                 <p>
-                    The <code-small><a href="#async-state-var">asyncStateVar</a></code-small>
-                    can also be used to asynchronously <strong>update</strong>
-                    data. This is done by defining 2 promises on the
-                    <code-small>asyncStateVar</code-small>: one to
-                    <strong>get</strong> the data, and one to
-                    <strong>set</strong> the data. When the status of any of
-                    the promises changes, it automatically re-renders the
-                    components that use the
-                    <code-small>asyncStateVar</code-small>:
+                    Sometimes you want to update your UI before you send the
+                    update to your API. For this you can use the
+                    <code>setCache(value)</code> method of
+                    <code>asyncStateVar</code>. This will re-render your
+                    components with the cached value. When you finally want to
+                    push the update to your API, you can use
+                    <code>pushCache()</code>:
                 </p>
 
                 <div id="demoComponents">
-                    <async-update-component-1></async-update-component-1>
-                    <async-update-component-2></async-update-component-2>
+                    <async-update-cache-component-1></async-update-cache-component-1>
+                    <async-update-cache-component-2></async-update-cache-component-2>
                 </div>
 
                 <p>
-                    Like in the previous example, we have a fake API for
-                    demonstation purposes. This fake API also simulates
-                    updating the value:
+                    Our <code-small>demoState</code-small> doesn't need extra
+                    functionality to support the cached value. We just have our
+                    fake API for demonstation purposes:
                 </p>
 
                 <p>
@@ -87,18 +85,13 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
                 </p>
 
                 <p>
-                    The components use
-                    <code-small>demoState.data.setValue(value)</code-small> to
-                    initiate the <strong>set</strong> promise. When it resolves
-                    or fails, the components will be re-rendered. The components
-                    use <code-small>isPendingSet()</code-small>,
-                    <code-small>isRejectedSet()</code-small> and
-                    <code-small>isFulfilledSet()</code-small> to check the
-                    status of the <strong>set</strong> promise. For the
-                    <strong>get</strong> promise we use
-                    <code-small>isPendingGet()</code-small>,
-                    <code-small>isRejectedGet()</code-small> and
-                    <code-small>isFulfilledGet()</code-small>:
+                    In our components, we call
+                    <code-small>setCache(value)</code-small> on a
+                    <code-small>keyup</code-small> event of the
+                    <code-small>&lt;input&gt;</code-small> element. We
+                    additionally use the
+                    <code-small>isPendingCache()</code-small> method to check
+                    whether there is a cache pending to be pushed:
                 </p>
 
                 <p>
@@ -106,14 +99,8 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
                 </p>
 
                 <p>
-                    This makes it easy to deal with asynchronous
-                    <strong>gets</strong> and <strong>sets</strong>.
-                </p>
-                
-                <p>
-                    In case you want to set the value in the UI before
-                    executing the <strong>set</strong> promise, check out
-                    <a href="#async-state-var-update-cache">asyncStateVar update with cache</a>.
+                    Like this, it's easy to keep your UI synchronized with the
+                    asynchronous data in your app.
                 </p>
 
             </div>
@@ -125,7 +112,6 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
       key: "demoStateCode",
       value: function demoStateCode() {
         return `import { LitState, asyncStateVar } from 'lit-element-state';
-import { currentTime } from './utils.js';
 
 
 class DemoState extends LitState {
@@ -133,70 +119,33 @@ class DemoState extends LitState {
     data = asyncStateVar({
         get: () => this._getData(),
         set: value => this._setData(value),
-        default: "[default value]" // optional
+        default: "[default value]"
     });
 
-    _simulateError = false;
-
     _getData() {
-
         return new Promise((resolve, reject) => {
-
             setTimeout(() => {
-
-                if (this._simulateError) {
-                    reject("fake load data error");
-                    this._simulateError = false;
-                } else {
-                    resolve(this._fakeApiResponse());
-                }
-
+                resolve(this._fakeApiResponse);
             }, 3000);
-
         });
-
     }
 
     _setData(value) {
-
         return new Promise((resolve, reject) => {
-
             setTimeout(() => {
-
-                if (this._simulateError) {
-                    reject("fake update data error");
-                    this._simulateError = false;
-                } else {
-                    this._fakeApiResponseText = value;
-                    resolve(this._fakeApiResponse());
-                }
-
+                this._fakeApiResponse = value;
+                resolve(this._fakeApiResponse);
             }, 3000);
-
         });
-
     }
 
-    _fakeApiResponseText = "Hello world";
-
-    _fakeApiResponse() {
-        return this._fakeApiResponseText + " (" + currentTime() + ")";
-    }
-
-    simulateErrorReload() {
-        this._simulateError = true;
-        this.data.reload();
-    }
-
-    simulateErrorUpdate() {
-        this._simulateError = true;
-        this.data.setValue("This value won't be set, because our fake API will fail.");
-    }
+    _fakeApiResponse = "Hello world";
 
 }
 
 
-export const demoState = new DemoState();`;
+export const demoState = new DemoState();
+`;
       }
     }, {
       kind: "get",
@@ -207,45 +156,45 @@ import { LitStateElement } from 'lit-element-state';
 import { demoState } from './demo-state.js';
 
 
-@customElement('async-component-1')
-export class AsyncComponent1 extends LitStateElement {
+@customElement('async-update-cache-component-1')
+export class AsyncUpdateCacheComponent1 extends LitStateElement {
 
     render() {
 
         return html\`
 
             <h2>&lt;component-1&gt;</h2>
-
             <h3>Status: \${this.dataStatus}</h3>
-            <h3>Value: \${demoState.data.getValue()}</h3>
 
-            <button
-                @click=\${() => demoState.data.reload()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                reload data
-            </button>
+            <p>
+                <input
+                    type="text"
+                    .value=\${demoState.data.getValue()}
+                    @keyup=\${this.handleInputKeyUp}
+                    ?disabled=\${demoState.data.isPending()}
+                />
+            </p>
 
-            <button
-                @click=\${() => demoState.data.setValue('<component-1> updated the data!')}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                update data
-            </button>
+            <div id="buttons">
 
-            <button
-                @click=\${() => demoState.simulateErrorReload()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                reload error
-            </button>
+                <button
+                    @click=\${() => demoState.data.reload()}
+                    ?disabled=\${demoState.data.isPending()}
+                >
+                    reload data
+                </button>
 
-            <button
-                @click=\${() => demoState.simulateErrorUpdate()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                update error
-            </button>
+                <button
+                    @click=\${() => demoState.data.pushCache()}
+                    ?disabled=\${
+                        demoState.data.isPending()
+                        || !demoState.data.isPendingCache()
+                    }
+                >
+                    push cache
+                </button>
+
+            </div>
 
         \`;
 
@@ -256,10 +205,8 @@ export class AsyncComponent1 extends LitStateElement {
             return 'loading value...';
         } else if (demoState.data.isPendingSet()) {
             return 'updating value...'
-        } else if (demoState.data.isRejectedGet()) {
-            return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
-        } else if (demoState.data.isRejectedSet()) {
-            return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
+        } else if (demoState.data.isPendingCache()) {
+            return 'cache pending';
         } else if (demoState.data.isFulfilledGet()) {
             return 'value loaded';
         } else if (demoState.data.isFulfilledSet()) {
@@ -267,6 +214,10 @@ export class AsyncComponent1 extends LitStateElement {
         } else {
             return 'unknown';
         }
+    }
+
+    handleInputKeyUp(event) {
+        demoState.data.setCache(event.target.value);
     }
 
 }`;

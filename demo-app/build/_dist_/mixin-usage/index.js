@@ -32,13 +32,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, property, html, css } from '../../web_modules/lit-element.js';
 import { LitStateElement } from '../lit-state.js';
+import { demoState } from './state.js';
 import '../components/code-small.js';
 import '../components/code-big.js';
-import { demoState } from './state.js';
-import './async-update-component-1.js';
-import './async-update-component-2.js';
-export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-update')], function (_initialize, _LitStateElement) {
-  class AsyncStateVarUpdate extends _LitStateElement {
+import './mixin-component.js';
+export let MixinUsage = _decorate([customElement('mixin-usage')], function (_initialize, _LitStateElement) {
+  class MixinUsage extends _LitStateElement {
     constructor(...args) {
       super(...args);
 
@@ -48,7 +47,7 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
   }
 
   return {
-    F: AsyncStateVarUpdate,
+    F: MixinUsage,
     d: [{
       kind: "method",
       key: "render",
@@ -57,64 +56,16 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
 
             <div>
 
-                <h1>LitState <code-small>asyncStateVar</code-small> update demo</h1>
+                <h1>LitState <code-small>LitStateElementMixin</code-small> demo</h1>
 
                 <p>
-                    The <code-small><a href="#async-state-var">asyncStateVar</a></code-small>
-                    can also be used to asynchronously <strong>update</strong>
-                    data. This is done by defining 2 promises on the
-                    <code-small>asyncStateVar</code-small>: one to
-                    <strong>get</strong> the data, and one to
-                    <strong>set</strong> the data. When the status of any of
-                    the promises changes, it automatically re-renders the
-                    components that use the
-                    <code-small>asyncStateVar</code-small>:
+                    You can also use the mixin
+                    <code-small>LitStateElementMixin</code-small> instead of
+                    extending from <code-small>LitStateElement</code-small>:
                 </p>
 
-                <div id="demoComponents">
-                    <async-update-component-1></async-update-component-1>
-                    <async-update-component-2></async-update-component-2>
-                </div>
-
-                <p>
-                    Like in the previous example, we have a fake API for
-                    demonstation purposes. This fake API also simulates
-                    updating the value:
-                </p>
-
-                <p>
-                    <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
-                </p>
-
-                <p>
-                    The components use
-                    <code-small>demoState.data.setValue(value)</code-small> to
-                    initiate the <strong>set</strong> promise. When it resolves
-                    or fails, the components will be re-rendered. The components
-                    use <code-small>isPendingSet()</code-small>,
-                    <code-small>isRejectedSet()</code-small> and
-                    <code-small>isFulfilledSet()</code-small> to check the
-                    status of the <strong>set</strong> promise. For the
-                    <strong>get</strong> promise we use
-                    <code-small>isPendingGet()</code-small>,
-                    <code-small>isRejectedGet()</code-small> and
-                    <code-small>isFulfilledGet()</code-small>:
-                </p>
-
-                <p>
-                    <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
-                </p>
-
-                <p>
-                    This makes it easy to deal with asynchronous
-                    <strong>gets</strong> and <strong>sets</strong>.
-                </p>
-                
-                <p>
-                    In case you want to set the value in the UI before
-                    executing the <strong>set</strong> promise, check out
-                    <a href="#async-state-var-update-cache">asyncStateVar update with cache</a>.
-                </p>
+                <code-big .code=${this.mixinCode}></code-big>
+                <mixin-component></mixin-component>
 
             </div>
 
@@ -122,151 +73,23 @@ export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-updat
       }
     }, {
       kind: "get",
-      key: "demoStateCode",
-      value: function demoStateCode() {
-        return `import { LitState, asyncStateVar } from 'lit-element-state';
-import { currentTime } from './utils.js';
+      key: "mixinCode",
+      value: function mixinCode() {
+        return `import { LitElement, html } from 'lit-element';
+import { LitStateElementMixin } from 'lit-element-state';
+import { demoState } from './state.js';
 
 
-class DemoState extends LitState {
-
-    data = asyncStateVar({
-        get: () => this._getData(),
-        set: value => this._setData(value),
-        default: "[default value]" // optional
-    });
-
-    _simulateError = false;
-
-    _getData() {
-
-        return new Promise((resolve, reject) => {
-
-            setTimeout(() => {
-
-                if (this._simulateError) {
-                    reject("fake load data error");
-                    this._simulateError = false;
-                } else {
-                    resolve(this._fakeApiResponse());
-                }
-
-            }, 3000);
-
-        });
-
-    }
-
-    _setData(value) {
-
-        return new Promise((resolve, reject) => {
-
-            setTimeout(() => {
-
-                if (this._simulateError) {
-                    reject("fake update data error");
-                    this._simulateError = false;
-                } else {
-                    this._fakeApiResponseText = value;
-                    resolve(this._fakeApiResponse());
-                }
-
-            }, 3000);
-
-        });
-
-    }
-
-    _fakeApiResponseText = "Hello world";
-
-    _fakeApiResponse() {
-        return this._fakeApiResponseText + " (" + currentTime() + ")";
-    }
-
-    simulateErrorReload() {
-        this._simulateError = true;
-        this.data.reload();
-    }
-
-    simulateErrorUpdate() {
-        this._simulateError = true;
-        this.data.setValue("This value won't be set, because our fake API will fail.");
-    }
-
-}
-
-
-export const demoState = new DemoState();`;
-      }
-    }, {
-      kind: "get",
-      key: "componentCode",
-      value: function componentCode() {
-        return `import { customElement, html, css } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
-import { demoState } from './demo-state.js';
-
-
-@customElement('async-component-1')
-export class AsyncComponent1 extends LitStateElement {
+class MixinComponent extends LitStateElementMixin(LitElement) {
 
     render() {
 
         return html\`
-
-            <h2>&lt;component-1&gt;</h2>
-
-            <h3>Status: \${this.dataStatus}</h3>
-            <h3>Value: \${demoState.data.getValue()}</h3>
-
-            <button
-                @click=\${() => demoState.data.reload()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                reload data
-            </button>
-
-            <button
-                @click=\${() => demoState.data.setValue('<component-1> updated the data!')}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                update data
-            </button>
-
-            <button
-                @click=\${() => demoState.simulateErrorReload()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                reload error
-            </button>
-
-            <button
-                @click=\${() => demoState.simulateErrorUpdate()}
-                ?disabled=\${demoState.data.isPending()}
-            >
-                update error
-            </button>
-
+            <h2>&lt;mixin-component&gt;</h2>
+            <h3>Counter: \${demoState.counter}</h3>
+            <button @click=\${() => demoState.counter++}>increase counter</button>
         \`;
 
-    }
-
-    get dataStatus() {
-        if (demoState.data.isPendingGet()) {
-            return 'loading value...';
-        } else if (demoState.data.isPendingSet()) {
-            return 'updating value...'
-        } else if (demoState.data.isRejectedGet()) {
-            return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
-        } else if (demoState.data.isRejectedSet()) {
-            return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
-        } else if (demoState.data.isFulfilledGet()) {
-            return 'value loaded';
-        } else if (demoState.data.isFulfilledSet()) {
-            return 'value updated';
-        } else {
-            return 'unknown';
-        }
     }
 
 }`;
@@ -283,63 +106,9 @@ export class AsyncComponent1 extends LitStateElement {
                 margin-top: 25px;
             }
 
-            * {
-                box-sizing: border-box;
-            }
-
             h1 {
                 margin: 0;
                 font-size: 25px;
-            }
-
-            h2 {
-                margin: 30px 0 0;
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-                color: red;
-            }
-
-            a {
-                color: #000;
-            }
-
-            code {
-                display: inline-block;
-                padding: 2px;
-                margin: 1px;
-                background: #555;
-                color: white;
-                white-space: pre;
-            }
-
-            .fileName {
-                display: block;
-                margin: 0;
-                padding: 7px 10px;
-                background: #555;
-                font-weight: bold;
-            }
-
-            .bigCode {
-                display: block;
-                margin: 0;
-                padding: 10px;
-                width: 100%;
-            }
-
-            #demoComponents {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -15px 0 0 -15px;
-            }
-
-            #demoComponents > * {
-                border: 1px #666 solid;
-                margin: 15px 0 0 15px;
-                max-width: 290px;
             }
 
         `;

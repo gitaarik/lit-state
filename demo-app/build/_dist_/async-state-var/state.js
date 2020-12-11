@@ -7,7 +7,7 @@ class DemoState extends LitState {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "data", asyncStateVar(() => this._getData()));
+    _defineProperty(this, "data", asyncStateVar(() => this._getData(), '[default value]'));
 
     _defineProperty(this, "_simulateError", false);
 
