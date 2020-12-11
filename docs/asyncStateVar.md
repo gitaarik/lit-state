@@ -130,15 +130,13 @@ the update to your API, you can use `pushCache()`:
 
 ### Set the cache
 
-```
-javascript
+```javascript
 myState.myData.setCache('value');
 ```
 
 ### Push the cache
 
-```
-javascript
+```javascript
 myState.myData.pushCache();
 ```
 
