@@ -31,14 +31,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, property, html, css } from '../../web_modules/lit-element.js';
-import { LitStateElement } from '../lit-state.js';
+import { DemoElement } from '../demo-element.js';
 import '../components/code-small.js';
 import '../components/code-big.js';
-import { demoState } from './state.js';
 import './state-var-component-1.js';
 import './state-var-component-2.js';
-export let StateVar = _decorate([customElement('state-var')], function (_initialize, _LitStateElement) {
-  class StateVar extends _LitStateElement {
+export let StateVar = _decorate([customElement('state-var')], function (_initialize, _DemoElement) {
+  class StateVar extends _DemoElement {
     constructor(...args) {
       super(...args);
 
@@ -110,18 +109,6 @@ export let StateVar = _decorate([customElement('state-var')], function (_initial
       }
     }, {
       kind: "get",
-      key: "dataStatus",
-      value: function dataStatus() {
-        if (demoState.data.isPendingGet()) {
-          return 'getting value...';
-        } else if (demoState.data.isPendingSet()) {
-          return 'setting value...';
-        } else {
-          return 'done';
-        }
-      }
-    }, {
-      kind: "get",
       key: "demoStateCode",
       value: function demoStateCode() {
         return `import { LitState, stateVar } from 'lit-element-state';
@@ -155,71 +142,6 @@ export class Component1 extends LitStateElement {
 
 }`;
       }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-
-            :host {
-                display: block;
-                margin-top: 25px;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            h1 {
-                margin: 0;
-                font-size: 25px;
-            }
-
-            h2 {
-                margin: 30px 0 0;
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-                color: red;
-            }
-
-            a {
-                color: #000;
-            }
-
-            code {
-                display: inline-block;
-                padding: 2px;
-                margin: 1px;
-                background: #555;
-                color: white;
-                white-space: pre;
-            }
-
-
-            .bigCode {
-                display: block;
-                margin: 0;
-                padding: 10px;
-                width: 100%;
-            }
-
-            #demoComponents {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -15px 0 0 -15px;
-            }
-
-            #demoComponents > * {
-                border: 1px #666 solid;
-                margin: 15px 0 0 15px;
-            }
-
-        `;
-      }
     }]
   };
-}, LitStateElement);
+}, DemoElement);

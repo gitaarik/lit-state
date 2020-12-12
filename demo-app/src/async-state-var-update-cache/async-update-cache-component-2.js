@@ -1,19 +1,19 @@
 import { customElement, html, css } from 'lit-element';
-import { LitStateElement } from '../lit-state.js';
+import { DemoComponent } from '@app/demo-component.js';
 import { demoState } from './state';
 
 
 @customElement('async-update-cache-component-2')
-export class AsyncUpdateCacheComponent2 extends LitStateElement {
+export class AsyncUpdateCacheComponent2 extends DemoComponent {
 
     render() {
 
         return html`
 
             <h2>&lt;component-2&gt;</h2>
-            <h3 id="status">Status: ${this.dataStatus}</h3>
+            <div class="status">Status: ${this.dataStatus}</div>
 
-            <h3 id="value">
+            <div class="value">
                 <span>Value:</span>
                 <input
                     type="text"
@@ -21,7 +21,7 @@ export class AsyncUpdateCacheComponent2 extends LitStateElement {
                     @keyup=${this.handleInputKeyUp}
                     ?disabled=${demoState.data.isPending()}
                 />
-            </h3>
+            </div>
 
             <div id="buttons">
 
@@ -69,44 +69,13 @@ export class AsyncUpdateCacheComponent2 extends LitStateElement {
 
         return css`
 
-            :host {
-                display: block;
-                padding: 15px;
-                background: lightgrey;
-            }
-
-            h2 {
-                margin-top: 0;
-                font-size: 20px;
-                color: green;
-            }
-
-            h3 {
-                font-size: 16px;
-            }
-
-            #status {
-                color: blue;
-            }
-
-            #value {
+            .value {
                 display: flex;
-                color: red;
             }
 
-            #value input {
+            .value input {
                 margin-left: 5px;
                 min-width: 0;
-            }
-
-            #buttons {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -5px 0 0 -5px;
-            }
-
-            #buttons > * {
-                margin: 5px 0 0 5px;
             }
 
         `;

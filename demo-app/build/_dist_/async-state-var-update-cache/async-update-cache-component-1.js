@@ -31,10 +31,10 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, html, css } from '../../web_modules/lit-element.js';
-import { LitStateElement } from '../lit-state.js';
+import { DemoComponent } from '../demo-component.js';
 import { demoState } from './state.js';
-export let AsyncUpdateCacheComponent1 = _decorate([customElement('async-update-cache-component-1')], function (_initialize, _LitStateElement) {
-  class AsyncUpdateCacheComponent1 extends _LitStateElement {
+export let AsyncUpdateCacheComponent1 = _decorate([customElement('async-update-cache-component-1')], function (_initialize, _DemoComponent) {
+  class AsyncUpdateCacheComponent1 extends _DemoComponent {
     constructor(...args) {
       super(...args);
 
@@ -52,9 +52,9 @@ export let AsyncUpdateCacheComponent1 = _decorate([customElement('async-update-c
         return html`
 
             <h2>&lt;component-1&gt;</h2>
-            <h3 id="status">Status: ${this.dataStatus}</h3>
+            <div class="status">Status: ${this.dataStatus}</div>
 
-            <h3 id="value">
+            <div class="value">
                 <span>Value:</span>
                 <input
                     type="text"
@@ -62,7 +62,7 @@ export let AsyncUpdateCacheComponent1 = _decorate([customElement('async-update-c
                     @keyup=${this.handleInputKeyUp}
                     ?disabled=${demoState.data.isPending()}
                 />
-            </h3>
+            </div>
 
             <div id="buttons">
 
@@ -115,48 +115,17 @@ export let AsyncUpdateCacheComponent1 = _decorate([customElement('async-update-c
       value: function styles() {
         return css`
 
-            :host {
-                display: block;
-                padding: 15px;
-                background: lightgrey;
-            }
-
-            h2 {
-                margin-top: 0;
-                font-size: 20px;
-                color: green;
-            }
-
-            h3 {
-                font-size: 16px;
-            }
-
-            #status {
-                color: blue;
-            }
-
-            #value {
+            .value {
                 display: flex;
-                color: red;
             }
 
-            #value input {
+            .value input {
                 margin-left: 5px;
                 min-width: 0;
-            }
-
-            #buttons {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -5px 0 0 -5px;
-            }
-
-            #buttons > * {
-                margin: 5px 0 0 5px;
             }
 
         `;
       }
     }]
   };
-}, LitStateElement);
+}, DemoComponent);

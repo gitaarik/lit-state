@@ -31,14 +31,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, property, html, css } from '../../web_modules/lit-element.js';
-import { LitStateElement } from '../lit-state.js';
+import { DemoElement } from '../demo-element.js';
 import '../components/code-small.js';
 import '../components/code-big.js';
-import { demoState } from './state.js';
 import './async-component-1.js';
 import './async-component-2.js';
-export let AsyncStateVar = _decorate([customElement('async-state-var')], function (_initialize, _LitStateElement) {
-  class AsyncStateVar extends _LitStateElement {
+export let AsyncStateVar = _decorate([customElement('async-state-var')], function (_initialize, _DemoElement) {
+  class AsyncStateVar extends _DemoElement {
     constructor(...args) {
       super(...args);
 
@@ -237,7 +236,10 @@ export class AsyncComponent1 extends LitStateElement {
         if (demoState.data.isPending()) {
             return 'loading value...';
         } else if (demoState.data.isRejected()) {
-            return 'loading failed with error: "' + demoState.data.getError() + '"';
+            return (
+                'loading failed with error: ' +
+                '"' + demoState.data.getError() + '"'
+            );
         } else if (demoState.data.isFulfilled()) {
             return 'value loaded';
         } else {
@@ -247,79 +249,6 @@ export class AsyncComponent1 extends LitStateElement {
 
 }`;
       }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-
-            :host {
-                display: block;
-                margin-top: 25px;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            h1 {
-                margin: 0;
-                font-size: 25px;
-            }
-
-            h2 {
-                margin: 30px 0 0;
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-                color: red;
-            }
-
-            a {
-                color: #000;
-            }
-
-            code {
-                display: inline-block;
-                padding: 2px;
-                margin: 1px;
-                background: #555;
-                color: white;
-                white-space: pre;
-            }
-
-            .fileName {
-                display: block;
-                margin: 0;
-                padding: 7px 10px;
-                background: #555;
-                font-weight: bold;
-            }
-
-            .bigCode {
-                display: block;
-                margin: 0;
-                padding: 10px;
-                width: 100%;
-            }
-
-            #demoComponents {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -15px 0 0 -15px;
-            }
-
-            #demoComponents > * {
-                border: 1px #666 solid;
-                margin: 15px 0 0 15px;
-                max-width: 290px;
-            }
-
-        `;
-      }
     }]
   };
-}, LitStateElement);
+}, DemoElement);

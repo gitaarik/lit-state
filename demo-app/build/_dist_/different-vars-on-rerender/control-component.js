@@ -30,11 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, html, css } from '../../web_modules/lit-element.js';
+import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
 import { DemoComponent } from '../demo-component.js';
 import { demoState } from './state.js';
-export let AsyncUpdateComponent1 = _decorate([customElement('async-update-component-1')], function (_initialize, _DemoComponent) {
-  class AsyncUpdateComponent1 extends _DemoComponent {
+export let ControlComponent = _decorate([customElement('control-component')], function (_initialize, _DemoComponent) {
+  class ControlComponent extends _DemoComponent {
     constructor(...args) {
       super(...args);
 
@@ -44,71 +44,56 @@ export let AsyncUpdateComponent1 = _decorate([customElement('async-update-compon
   }
 
   return {
-    F: AsyncUpdateComponent1,
+    F: ControlComponent,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h2>&lt;component-1&gt;</h2>
+            <h2>&lt;control-component&gt;</h2>
 
-            <div class="status">Status: ${this.dataStatus}</div>
-            <div class="value">Value: ${demoState.data.getValue()}</div>
+            <div class="value">
+                Counter1:
+                ${demoState.counter1}
+                <button @click=${() => demoState.counter1++}>increase</button>
+            </div>
 
-            <div class="buttons">
+            <div class="value">
+                Counter2:
+                ${demoState.counter2}
+                <button @click=${() => demoState.counter2++}>increase</button>
+            </div>
+
+            <div class="value">
+
+                Data1:
+                ${demoState.data1.getValue()}
 
                 <button
-                    @click=${() => demoState.data.reload()}
-                    ?disabled=${demoState.data.isPending()}
+                    @click=${() => demoState.data1.reload()}
+                    ?disabled=${demoState.data1.isPending()}
                 >
-                    reload data
+                    ${demoState.data1.isPending() ? 'loading..' : 'reload'}
                 </button>
 
-                <button
-                    @click=${() => demoState.data.setValue('<component-1> updated the data!')}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update data
-                </button>
+            </div>
+
+            <div class="value">
+
+                Data2:
+                ${demoState.data2.getValue()}
 
                 <button
-                    @click=${() => demoState.simulateErrorReload()}
-                    ?disabled=${demoState.data.isPending()}
+                    @click=${() => demoState.data2.reload()}
+                    ?disabled=${demoState.data1.isPending()}
                 >
-                    reload error
-                </button>
-
-                <button
-                    @click=${() => demoState.simulateErrorUpdate()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update error
+                    ${demoState.data2.isPending() ? 'loading..' : 'reload'}
                 </button>
 
             </div>
 
         `;
-      }
-    }, {
-      kind: "get",
-      key: "dataStatus",
-      value: function dataStatus() {
-        if (demoState.data.isPendingGet()) {
-          return 'loading value...';
-        } else if (demoState.data.isPendingSet()) {
-          return 'updating value...';
-        } else if (demoState.data.isRejectedGet()) {
-          return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
-        } else if (demoState.data.isRejectedSet()) {
-          return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
-        } else if (demoState.data.isFulfilledGet()) {
-          return 'value loaded';
-        } else if (demoState.data.isFulfilledSet()) {
-          return 'value updated';
-        } else {
-          return 'unknown';
-        }
       }
     }]
   };

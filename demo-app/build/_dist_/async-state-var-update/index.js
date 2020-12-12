@@ -31,14 +31,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, property, html, css } from '../../web_modules/lit-element.js';
-import { LitStateElement } from '../lit-state.js';
+import { DemoElement } from '../demo-element.js';
 import '../components/code-small.js';
 import '../components/code-big.js';
-import { demoState } from './state.js';
 import './async-update-component-1.js';
 import './async-update-component-2.js';
-export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-update')], function (_initialize, _LitStateElement) {
-  class AsyncStateVarUpdate extends _LitStateElement {
+export let AsyncStateVarUpdate = _decorate([customElement('async-state-var-update')], function (_initialize, _DemoElement) {
+  class AsyncStateVarUpdate extends _DemoElement {
     constructor(...args) {
       super(...args);
 
@@ -190,7 +189,9 @@ class DemoState extends LitState {
 
     simulateErrorUpdate() {
         this._simulateError = true;
-        this.data.setValue("This value won't be set, because our fake API will fail.");
+        this.data.setValue(
+            "This value won't be set, because our fake API will fail."
+        );
     }
 
 }
@@ -227,7 +228,9 @@ export class AsyncComponent1 extends LitStateElement {
             </button>
 
             <button
-                @click=\${() => demoState.data.setValue('<component-1> updated the data!')}
+                @click=\${() => demoState.data.setValue(
+                    '<component-1> updated the data!'
+                )}
                 ?disabled=\${demoState.data.isPending()}
             >
                 update data
@@ -257,9 +260,15 @@ export class AsyncComponent1 extends LitStateElement {
         } else if (demoState.data.isPendingSet()) {
             return 'updating value...'
         } else if (demoState.data.isRejectedGet()) {
-            return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
+            return (
+                'loading failed with error: ' +
+                '"' + demoState.data.getErrorGet() + '"'
+            );
         } else if (demoState.data.isRejectedSet()) {
-            return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
+            return (
+                'updating failed with error: ' +
+                '"' + demoState.data.getErrorSet() + '"'
+            );
         } else if (demoState.data.isFulfilledGet()) {
             return 'value loaded';
         } else if (demoState.data.isFulfilledSet()) {
@@ -271,79 +280,6 @@ export class AsyncComponent1 extends LitStateElement {
 
 }`;
       }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-
-            :host {
-                display: block;
-                margin-top: 25px;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            h1 {
-                margin: 0;
-                font-size: 25px;
-            }
-
-            h2 {
-                margin: 30px 0 0;
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-                color: red;
-            }
-
-            a {
-                color: #000;
-            }
-
-            code {
-                display: inline-block;
-                padding: 2px;
-                margin: 1px;
-                background: #555;
-                color: white;
-                white-space: pre;
-            }
-
-            .fileName {
-                display: block;
-                margin: 0;
-                padding: 7px 10px;
-                background: #555;
-                font-weight: bold;
-            }
-
-            .bigCode {
-                display: block;
-                margin: 0;
-                padding: 10px;
-                width: 100%;
-            }
-
-            #demoComponents {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -15px 0 0 -15px;
-            }
-
-            #demoComponents > * {
-                border: 1px #666 solid;
-                margin: 15px 0 0 15px;
-                max-width: 290px;
-            }
-
-        `;
-      }
     }]
   };
-}, LitStateElement);
+}, DemoElement);

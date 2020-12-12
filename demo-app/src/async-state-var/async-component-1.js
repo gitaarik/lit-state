@@ -1,10 +1,10 @@
 import { customElement, html, css } from 'lit-element';
-import { LitStateElement } from '../lit-state.js';
+import { DemoComponent } from '@app/demo-component.js';
 import { demoState } from './state';
 
 
 @customElement('async-component-1')
-export class AsyncComponent1 extends LitStateElement {
+export class AsyncComponent1 extends DemoComponent {
 
     render() {
 
@@ -12,10 +12,10 @@ export class AsyncComponent1 extends LitStateElement {
 
             <h2>&lt;component-1&gt;</h2>
 
-            <h3 id="status">Status: ${this.dataStatus}</h3>
-            <h3 id="value">Value: ${demoState.data.getValue()}</h3>
+            <div class="status">Status: ${this.dataStatus}</div>
+            <div class="value">Value: ${demoState.data.getValue()}</div>
 
-            <div id="buttons">
+            <div class="buttons">
 
                 <button
                     @click=${() => demoState.data.reload()}
@@ -47,48 +47,6 @@ export class AsyncComponent1 extends LitStateElement {
         } else {
             return 'unknown';
         }
-    }
-
-    static get styles() {
-
-        return css`
-
-            :host {
-                display: block;
-                padding: 15px;
-                background: lightgrey;
-            }
-
-            h2 {
-                margin-top: 0;
-                font-size: 20px;
-                color: green;
-            }
-
-            h3 {
-                font-size: 16px;
-            }
-
-            #status {
-                color: blue;
-            }
-
-            #value {
-                color: red;
-            }
-
-            #buttons {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -5px 0 0 -5px;
-            }
-
-            #buttons > * {
-                margin: 5px 0 0 5px;
-            }
-
-        `;
-
     }
 
 }

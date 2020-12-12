@@ -32,9 +32,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, html, css } from '../../web_modules/lit-element.js';
 import { DemoComponent } from '../demo-component.js';
+import '../components/code-small.js';
 import { demoState } from './state.js';
-export let AsyncUpdateComponent1 = _decorate([customElement('async-update-component-1')], function (_initialize, _DemoComponent) {
-  class AsyncUpdateComponent1 extends _DemoComponent {
+export let ChangingComponent = _decorate([customElement('changing-component')], function (_initialize, _DemoComponent) {
+  class ChangingComponent extends _DemoComponent {
     constructor(...args) {
       super(...args);
 
@@ -44,71 +45,78 @@ export let AsyncUpdateComponent1 = _decorate([customElement('async-update-compon
   }
 
   return {
-    F: AsyncUpdateComponent1,
+    F: ChangingComponent,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
+        const [counter, data] = this.getVars();
         return html`
 
-            <h2>&lt;component-1&gt;</h2>
+            <h2>&lt;changing-component&gt;</h2>
 
-            <div class="status">Status: ${this.dataStatus}</div>
-            <div class="value">Value: ${demoState.data.getValue()}</div>
+            <div id="varsChooser">
 
-            <div class="buttons">
+                <div>Show vars:</div>
 
-                <button
-                    @click=${() => demoState.data.reload()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    reload data
-                </button>
+                <label>
+                    <input
+                        type="radio"
+                        @click=${() => demoState.showVars = 1}
+                        .checked=${demoState.showVars === 1}
+                    />
+                    <code-small>counter1</code-small> and
+                    <code-small>data1</code-small>
+                </label>
 
-                <button
-                    @click=${() => demoState.data.setValue('<component-1> updated the data!')}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update data
-                </button>
-
-                <button
-                    @click=${() => demoState.simulateErrorReload()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    reload error
-                </button>
-
-                <button
-                    @click=${() => demoState.simulateErrorUpdate()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    update error
-                </button>
+                <label>
+                    <input
+                        type="radio"
+                        @click=${() => demoState.showVars = 2}
+                        .checked=${demoState.showVars === 2}
+                    />
+                    <code-small>counter2</code-small> and
+                    <code-small>data2</code-small>
+                </label>
 
             </div>
+
+            <div class="value">Counter: ${counter}</div>
+            <div class="value">Data: ${data}</div>
 
         `;
       }
     }, {
-      kind: "get",
-      key: "dataStatus",
-      value: function dataStatus() {
-        if (demoState.data.isPendingGet()) {
-          return 'loading value...';
-        } else if (demoState.data.isPendingSet()) {
-          return 'updating value...';
-        } else if (demoState.data.isRejectedGet()) {
-          return 'loading failed with error: "' + demoState.data.getErrorGet() + '"';
-        } else if (demoState.data.isRejectedSet()) {
-          return 'updating failed with error: "' + demoState.data.getErrorSet() + '"';
-        } else if (demoState.data.isFulfilledGet()) {
-          return 'value loaded';
-        } else if (demoState.data.isFulfilledSet()) {
-          return 'value updated';
-        } else {
-          return 'unknown';
+      kind: "method",
+      key: "getVars",
+      value: function getVars() {
+        if (demoState.showVars === 1) {
+          return [demoState.counter1, demoState.data1.getValue()];
+        } else if (demoState.showVars === 2) {
+          return [demoState.counter2, demoState.data2.getValue()];
         }
+      }
+    }, {
+      kind: "get",
+      static: true,
+      key: "styles",
+      value: function styles() {
+        return css`
+
+            #varsChooser label {
+                display: block;
+                margin: 5px 0;
+                padding: 5px;
+                background: #BBB;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            #varsChooser label input {
+                margin: 0 5px 0;
+            }
+
+        `;
       }
     }]
   };

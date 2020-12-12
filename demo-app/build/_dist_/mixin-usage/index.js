@@ -32,7 +32,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, property, html, css } from '../../web_modules/lit-element.js';
 import { LitStateElement } from '../lit-state.js';
-import { demoState } from './state.js';
 import '../components/code-small.js';
 import '../components/code-big.js';
 import './mixin-component.js';
@@ -59,9 +58,9 @@ export let MixinUsage = _decorate([customElement('mixin-usage')], function (_ini
                 <h1>LitState <code-small>LitStateElementMixin</code-small> demo</h1>
 
                 <p>
-                    You can also use the mixin
-                    <code-small>LitStateElementMixin</code-small> instead of
-                    extending from <code-small>LitStateElement</code-small>:
+                    If you don't want to extend directly from
+                    <code-small>LitStateElement</code-small>, you can also use
+                    the mixin <code-small>LitStateElementMixin</code-small>:
                 </p>
 
                 <code-big .code=${this.mixinCode}></code-big>
@@ -75,11 +74,12 @@ export let MixinUsage = _decorate([customElement('mixin-usage')], function (_ini
       kind: "get",
       key: "mixinCode",
       value: function mixinCode() {
-        return `import { LitElement, html } from 'lit-element';
+        return `import { customElement, LitElement, html } from 'lit-element';
 import { LitStateElementMixin } from 'lit-element-state';
-import { demoState } from './state.js';
+import { demoState } from './demo-state.js';
 
 
+@customElement('mixin-component')
 class MixinComponent extends LitStateElementMixin(LitElement) {
 
     render() {
@@ -87,7 +87,9 @@ class MixinComponent extends LitStateElementMixin(LitElement) {
         return html\`
             <h2>&lt;mixin-component&gt;</h2>
             <h3>Counter: \${demoState.counter}</h3>
-            <button @click=\${() => demoState.counter++}>increase counter</button>
+            <button @click=\${() => demoState.counter++}>
+                increase counter
+            </button>
         \`;
 
     }

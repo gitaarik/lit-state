@@ -4,6 +4,7 @@ import './state-var/index';
 import './async-state-var/index';
 import './async-state-var-update/index';
 import './async-state-var-update-cache/index';
+import './different-vars-on-rerender/index';
 import './mixin-usage/index';
 
 
@@ -16,6 +17,7 @@ export class LitStateDemo extends LitStateElement {
         ['async-state-var', 'asyncStateVar'],
         ['async-state-var-update', 'asyncStateVar update'],
         ['async-state-var-update-cache', 'asyncStateVar update with cache'],
+        ['different-vars-on-rerender', 'Different variables on re-render'],
         ['mixin-usage', 'Mixin'],
     ];
 
@@ -38,11 +40,13 @@ export class LitStateDemo extends LitStateElement {
 
         return html`
 
-            <nav>
-                ${this.navButtons}
-            </nav>
+            <header>
+                <nav>${this.navButtons}</nav>
+            </header>
 
-            ${this.tabContents}
+            <article>
+                ${this.tabContents}
+            </article>
 
         `;
 
@@ -82,6 +86,9 @@ export class LitStateDemo extends LitStateElement {
             case 'async-state-var-update-cache':
                 return html`<async-state-var-update-cache></async-state-var-update-cache>`;
 
+            case 'different-vars-on-rerender':
+                return html`<different-vars-on-rerender></different-vars-on-rerender>`;
+
             case 'mixin-usage':
                 return html`<mixin-usage></mixin-usage>`;
 
@@ -98,6 +105,10 @@ export class LitStateDemo extends LitStateElement {
                 margin: 0 auto;
                 padding: 15px;
                 max-width: 720px;
+            }
+
+            header {
+                margin-bottom: 25px;
             }
 
             nav {

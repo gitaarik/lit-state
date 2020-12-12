@@ -78,7 +78,7 @@ export class LitState {
 
           obj[key] = value.initialValue;
         } else if (this._isAsyncStateVar(key)) {
-          obj[key].setValue(value);
+          throw "Can't assign to an asyncStateVar. If you want to " + "set a new value, use setValue().";
         } else if (value instanceof AsyncStateVar) {
           value.setLogStateVarCallback(() => {
             stateRecorder.logStateVar(obj, key);
@@ -97,10 +97,11 @@ export class LitState {
         return true;
       },
       get: (obj, key) => {
-        if (obj._isStateVar(key)) {
+        if (obj._isStateVar(key) || obj._isAsyncStateVar(key)) {
           stateRecorder.logStateVar(obj, key);
-        } else if (obj._isAsyncStateVar(key) && !obj[key].isInitiated()) {
-          stateRecorder.logStateVar(obj, key);
+        }
+
+        if (obj._isAsyncStateVar(key) && !obj[key].isInitiated()) {
           obj[key].initiate();
         }
 
@@ -172,7 +173,6 @@ class AsyncStateVar {
     this._errorGet = null;
     this._errorSet = null;
     this._value = this._getDefaultValue();
-    this._logStateVarCallback = null;
     this._onChangeCallback = null;
   }
 
@@ -231,20 +231,14 @@ class AsyncStateVar {
   }
 
   isPendingGet() {
-    this._logStateVarCallback();
-
     return this._pendingGet;
   }
 
   isPendingSet() {
-    this._logStateVarCallback();
-
     return this._pendingSet;
   }
 
   isPendingCache() {
-    this._logStateVarCallback();
-
     return this._pendingCache;
   }
 
@@ -253,14 +247,10 @@ class AsyncStateVar {
   }
 
   isRejectedGet() {
-    this._logStateVarCallback();
-
     return this._rejectedGet;
   }
 
   isRejectedSet() {
-    this._logStateVarCallback();
-
     return this._rejectedSet;
   }
 
@@ -269,14 +259,10 @@ class AsyncStateVar {
   }
 
   getErrorGet() {
-    this._logStateVarCallback();
-
     return this._errorGet;
   }
 
   getErrorSet() {
-    this._logStateVarCallback();
-
     return this._errorSet;
   }
 
@@ -285,14 +271,10 @@ class AsyncStateVar {
   }
 
   isFulfilledGet() {
-    this._logStateVarCallback();
-
     return this._fulfilledGet;
   }
 
   isFulfilledSet() {
-    this._logStateVarCallback();
-
     return this._fulfilledSet;
   }
 
@@ -310,27 +292,22 @@ class AsyncStateVar {
 
     this._onChangeCallback();
 
-    return new Promise((resolve, reject) => {
-      this._setPromise(value).then(value => {
-        this._fulfilledSet = true;
-        this._rejectedGet = false;
-        this._value = value;
-        resolve(value);
-      }).catch(error => {
-        this._rejectedSet = true;
-        this._errorSet = error;
-        reject(error);
-      }).finally(() => {
-        this._pendingSet = false;
+    this._setPromise(value).then(value => {
+      this._fulfilledSet = true;
+      this._rejectedGet = false;
+      this._value = value;
+      this._pendingCache = false;
+    }).catch(error => {
+      this._rejectedSet = true;
+      this._errorSet = error;
+    }).finally(() => {
+      this._pendingSet = false;
 
-        this._onChangeCallback();
-      });
+      this._onChangeCallback();
     });
   }
 
   setCache(value) {
-    this._logStateVarCallback();
-
     this._value = value;
     this._pendingCache = true;
 
@@ -338,16 +315,10 @@ class AsyncStateVar {
   }
 
   pushCache() {
-    this._logStateVarCallback();
-
-    this.setValue(this._value).then(() => {
-      this._pendingCache = false;
-    });
+    this.setValue(this._value);
   }
 
   reload() {
-    this._logStateVarCallback();
-
     this._loadValue();
   }
 

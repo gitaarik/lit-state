@@ -1,5 +1,5 @@
-import { LitState, asyncStateVar } from '../lit-state.js';
-import { currentTime } from './utils.js'
+import { LitState, asyncStateVar } from '@app/lit-state.js';
+import { currentTime } from '@app/utils.js'
 
 
 class DemoState extends LitState {

@@ -1,10 +1,24 @@
 # LitState Changelog
 
 
+### 1.2.0
+
+- Assigning to an `asyncStateVar` now throws an error, you have to use
+  `setValue()`. This to make usage consistent.
+- `setValue()` doesn't return a promise anymore.
+- `_pendingCache` is always set to `false` when `setValue()` succeeds, so
+  `pushCache()` doesn't need `setValue()` to return a promise anymore.
+- Removed unnecessary `logStateVar()` calls for `asyncStateVar`. Only
+  components that call `getValue()` need to re-render when the var changes.
+- Added demo page for components that show different state variables on
+  re-renders.
+- Overall demo app refactors and UI/text improvements.
+
+
 ### 1.1.2
 
 - Added `setCache(value)` and `pushCache()` functionality to `asyncStateVar`.
-- Updated demo app for `setCache(value)` and `pushCache()`.
+- Added demo page for `setCache(value)` and `pushCache()`.
 - Updated readme.
 
 

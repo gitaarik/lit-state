@@ -1,14 +1,13 @@
 import { customElement, property, html, css } from 'lit-element';
-import { LitStateElement } from '../lit-state.js';
+import { DemoElement } from '@app/demo-element';
 import '@app/components/code-small';
 import '@app/components/code-big';
-import { demoState } from './state';
 import './state-var-component-1';
 import './state-var-component-2';
 
 
 @customElement('state-var')
-export class StateVar extends LitStateElement {
+export class StateVar extends DemoElement {
 
     render() {
 
@@ -69,16 +68,6 @@ export class StateVar extends LitStateElement {
 
     }
 
-    get dataStatus() {
-        if (demoState.data.isPendingGet()) {
-            return 'getting value...';
-        } else if (demoState.data.isPendingSet()) {
-            return 'setting value...'
-        } else {
-            return 'done';
-        }
-    }
-
     get demoStateCode() {
 
         return `import { LitState, stateVar } from 'lit-element-state';
@@ -111,70 +100,6 @@ export class Component1 extends LitStateElement {
     }
 
 }`;
-
-    }
-
-    static get styles() {
-
-        return css`
-
-            :host {
-                display: block;
-                margin-top: 25px;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            h1 {
-                margin: 0;
-                font-size: 25px;
-            }
-
-            h2 {
-                margin: 30px 0 0;
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-                color: red;
-            }
-
-            a {
-                color: #000;
-            }
-
-            code {
-                display: inline-block;
-                padding: 2px;
-                margin: 1px;
-                background: #555;
-                color: white;
-                white-space: pre;
-            }
-
-
-            .bigCode {
-                display: block;
-                margin: 0;
-                padding: 10px;
-                width: 100%;
-            }
-
-            #demoComponents {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -15px 0 0 -15px;
-            }
-
-            #demoComponents > * {
-                border: 1px #666 solid;
-                margin: 15px 0 0 15px;
-            }
-
-        `;
 
     }
 

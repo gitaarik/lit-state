@@ -42,6 +42,7 @@ import './state-var/index.js';
 import './async-state-var/index.js';
 import './async-state-var-update/index.js';
 import './async-state-var-update-cache/index.js';
+import './different-vars-on-rerender/index.js';
 import './mixin-usage/index.js';
 export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitStateElement) {
   class LitStateDemo extends _LitStateElement {
@@ -68,7 +69,7 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
       key: "_navItems",
 
       value() {
-        return [['state-var', 'stateVar'], ['async-state-var', 'asyncStateVar'], ['async-state-var-update', 'asyncStateVar update'], ['async-state-var-update-cache', 'asyncStateVar update with cache'], ['mixin-usage', 'Mixin']];
+        return [['state-var', 'stateVar'], ['async-state-var', 'asyncStateVar'], ['async-state-var-update', 'asyncStateVar update'], ['async-state-var-update-cache', 'asyncStateVar update with cache'], ['different-vars-on-rerender', 'Different variables on re-render'], ['mixin-usage', 'Mixin']];
       }
 
     }, {
@@ -105,11 +106,13 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
       value: function render() {
         return html`
 
-            <nav>
-                ${this.navButtons}
-            </nav>
+            <header>
+                <nav>${this.navButtons}</nav>
+            </header>
 
-            ${this.tabContents}
+            <article>
+                ${this.tabContents}
+            </article>
 
         `;
       }
@@ -146,6 +149,9 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
           case 'async-state-var-update-cache':
             return html`<async-state-var-update-cache></async-state-var-update-cache>`;
 
+          case 'different-vars-on-rerender':
+            return html`<different-vars-on-rerender></different-vars-on-rerender>`;
+
           case 'mixin-usage':
             return html`<mixin-usage></mixin-usage>`;
         }
@@ -162,6 +168,10 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
                 margin: 0 auto;
                 padding: 15px;
                 max-width: 720px;
+            }
+
+            header {
+                margin-bottom: 25px;
             }
 
             nav {

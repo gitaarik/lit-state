@@ -31,14 +31,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, property, html, css } from '../../web_modules/lit-element.js';
-import { LitStateElement } from '../lit-state.js';
+import { DemoElement } from '../demo-element.js';
 import '../components/code-small.js';
 import '../components/code-big.js';
-import { demoState } from './state.js';
 import './async-update-cache-component-1.js';
 import './async-update-cache-component-2.js';
-export let AsyncStateVarUpdateCache = _decorate([customElement('async-state-var-update-cache')], function (_initialize, _LitStateElement) {
-  class AsyncStateVarUpdateCache extends _LitStateElement {
+export let AsyncStateVarUpdateCache = _decorate([customElement('async-state-var-update-cache')], function (_initialize, _DemoElement) {
+  class AsyncStateVarUpdateCache extends _DemoElement {
     constructor(...args) {
       super(...args);
 
@@ -111,7 +110,10 @@ export let AsyncStateVarUpdateCache = _decorate([customElement('async-state-var-
 
                 <p>
                     Like this, it's easy to keep your UI synchronized with the
-                    asynchronous data in your app.
+                    asynchronous data in your app. Also when a re-render
+                    renders different <code-small>stateVar</code-small> or
+                    <code-small>asyncStateVar</code-small> variables, LitState
+                    <a href="#different-vars-on-rerender">observes these new variables for changes too</a>.
                 </p>
 
             </div>
@@ -233,79 +235,6 @@ export class AsyncUpdateCacheComponent1 extends LitStateElement {
 
 }`;
       }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-
-            :host {
-                display: block;
-                margin-top: 25px;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            h1 {
-                margin: 0;
-                font-size: 25px;
-            }
-
-            h2 {
-                margin: 30px 0 0;
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-                color: red;
-            }
-
-            a {
-                color: #000;
-            }
-
-            code {
-                display: inline-block;
-                padding: 2px;
-                margin: 1px;
-                background: #555;
-                color: white;
-                white-space: pre;
-            }
-
-            .fileName {
-                display: block;
-                margin: 0;
-                padding: 7px 10px;
-                background: #555;
-                font-weight: bold;
-            }
-
-            .bigCode {
-                display: block;
-                margin: 0;
-                padding: 10px;
-                width: 100%;
-            }
-
-            #demoComponents {
-                display: flex;
-                flex-wrap: wrap;
-                margin: -15px 0 0 -15px;
-            }
-
-            #demoComponents > * {
-                border: 1px #666 solid;
-                margin: 15px 0 0 15px;
-                max-width: 290px;
-            }
-
-        `;
-      }
     }]
   };
-}, LitStateElement);
+}, DemoElement);
