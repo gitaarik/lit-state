@@ -47,8 +47,19 @@ export class AsyncStateVarUpdateCache extends LitStateElement {
                     In our components, we call
                     <code-small>setCache(value)</code-small> on a
                     <code-small>keyup</code-small> event of the
-                    <code-small>&lt;input&gt;</code-small> element. We
-                    additionally use the
+                    <code-small>&lt;input&gt;</code-small> element. Also, we
+                    keep the <code-small>&lt;input&gt;</code-small>
+                    synchronized by setting the <code-small>.value</code-small>
+                    property. It is important that you use the dot, to make it
+                    a <a href="https://lit-html.polymer-project.org/guide/writing-templates#bind-to-properties" target="_blank">property</a>
+                    instead of an attribute, otherwise lit-html won't be able
+                    to compare the input's current value with the value we're
+                    giving it, causing it to not re-render in certain
+                    situations.
+                </p>
+
+                <p>
+                    We additionally use the
                     <code-small>isPendingCache()</code-small> method to check
                     whether there is a cache pending to be pushed:
                 </p>
