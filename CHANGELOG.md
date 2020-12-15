@@ -1,6 +1,11 @@
 # LitState Changelog
 
 
+### 1.2.2
+
+- Updated Readme
+
+
 ### 1.2.1
 
 - Updated Readme
