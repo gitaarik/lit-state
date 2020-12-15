@@ -1,6 +1,13 @@
 # LitState Changelog
 
 
+### 1.2.3
+
+- Fixed bug where `isRejectedGet()` still returned `true` when a `setValue()`
+  failed after it, and `isRejectedSet()` still returned `true` when a
+  `getValue()` failed after it.
+
+
 ### 1.2.2
 
 - Updated Readme

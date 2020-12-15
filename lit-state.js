@@ -234,7 +234,6 @@ class AsyncStateVar {
 
         this._getPromise().then(value => {
             this._fulfilledGet = true;
-            this._rejectedSet = false;
             this._value = value;
             this._errorGet = null;
             this._pendingCache = false;
@@ -243,6 +242,7 @@ class AsyncStateVar {
             this._errorGet = error;
         }).finally(() => {
             this._pendingGet = false;
+            this._rejectedSet = false;
             this._onChangeCallback();
         });
 
@@ -316,7 +316,6 @@ class AsyncStateVar {
 
         this._setPromise(value).then(value => {
             this._fulfilledSet = true;
-            this._rejectedGet = false;
             this._value = value;
             this._pendingCache = false;
         }).catch(error => {
@@ -324,6 +323,7 @@ class AsyncStateVar {
             this._errorSet = error;
         }).finally(() => {
             this._pendingSet = false;
+            this._rejectedGet = false;
             this._onChangeCallback();
         });
 
