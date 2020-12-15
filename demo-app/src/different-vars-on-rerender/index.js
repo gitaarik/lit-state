@@ -22,8 +22,8 @@ export class DifferentVarsOnRerender extends DemoElement {
                     <code-small>stateVar</code-small> and
                     <code-small>asyncStateVar</code-small> variables are
                     accessed by your component. Then it observes these
-                    variables and re-renders the component when one of them
-                    changes.
+                    variables and re-renders itself when one of these variables
+                    change.
                 </p>
 
                 <p>
