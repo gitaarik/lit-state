@@ -31,64 +31,45 @@ functions that modify the state. Instead of extending your components from
 automatically re-render whenever a `stateVar` they use changes.
 
 
-## Minimal example
+## Usage
 
+### 1. Create a state object:
 
 ```javascript
-import { LitState, stateVar, LitStateElement } from 'lit-element-state';
+import { LitState, stateVar } from 'lit-element-state';
 
 class MyState extends LitState {
-
-    myCounter = stateVar(0); // `0` is the default value
-
-    increase() {
-        this.myCounter++;
-    }
-
+    counter = stateVar(0); // `0` is the default value
 }
 
 const myState = new MyState();
+```
 
+### 2. Use the `stateVar` in your components:
 
-class MyElement extends LitStateElement {
+```javascript
+import { LitStateElement } from 'lit-element-state';
+import { html } from 'lit-element';
 
-    render() {
-        return html`
-            <h1>Counter: ${myState.myCounter}</h1>
-            <button @click=${this._handleClick}></button>
-        `;
-    }
-
-    _handleClick() {
-        myState.increase();
-    }
-
-}
-
-class MyOtherElement extends LitStateElement {
+class MyComponent extends LitStateElement {
 
     render() {
         return html`
-            <h1>Counter: ${myState.myCounter}</h1>
-            <button @click=${this._handleClick}></button>
+            <h1>Counter: ${myState.counter}</h1>
+            <button @click=${() => myState.counter++}></button>
         `;
-    }
-
-    _handleClick() {
-        myState.increase();
     }
 
 }
 ```
 
-
-Both components `MyElement` and `MyOtherElement` will automatically re-render
-whenever `myCounter` gets increases by one of the components.
+The components that read `myState.counter` will automatically re-render when
+any (other) component updates it.
 
 In more technical words:
 
-A `LitStateElement` will re-render when any `stateVar` - which it accessed in
-the last render cycle - changes.
+A `LitStateElement` will re-render when any `stateVar` - which it read in the
+last render cycle - changes.
 
 
 ## Demo app
@@ -109,7 +90,7 @@ is accessed during the render of that component. At the end of the render, the
 `LitStateElement` collects the recorded `stateVar` variables, observes them,
 and re-renders itself whenever one of them changes. The next render it again
 records which `stateVar` variables are being used and observes them. So if the
-next render uses new `stateVars`, they will be observed.
+next render uses different `stateVars`, they too will be observed.
 
 
 ### Implementation details
@@ -129,22 +110,6 @@ optimization works in the same way for LitState's `stateVar` variables.
 
 Also, LitElement uses lit-html, which sees which parts of the template are
 changed or not. And it will only re-render the HTML elements that have changes.
-
-
-## Why anyway?
-
-Re-usable components are great and we should use them a lot. When you're
-building a complex application however, it is also desirable to have
-application-specific components that might have application-specific
-side-effects, like changing the global app state for example. And it is of
-course desirable, that when this global app state changes, the components that
-use this global app state are synchronized with it.
-
-And you can also have a re-usable component that has several internal
-sub-components. They all might need to share some common internal state.
-
-LitState is created for these use cases, and is meant to make it as simple as
-possible for the developer.
 
 
 ## Notes
@@ -226,6 +191,30 @@ class MyComponent extends LitStateElementMixin(LitElement) {
 
 
 ## FAQ
+
+
+### Why should I use shared state for my components? Doesn't that oppose the concept of web components?
+
+The big feature of web components is that they are encapsulated through the
+[Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM).
+That means that their internal state isn't affected by state from the outside.
+And also that the component's internal state doesn't affect other elements on
+the page. This makes web components great for creating reusable elements.
+Reusable elements should have no side-effects, meaning that they shouldn't
+change state outside of themselves.
+
+Reusable elements are great and we should use them a lot. When you're building
+a full application however, it is also desirable to have application-specific
+components that have application-specific side-effects. For example, changing
+the global app state. And it is of course desirable, that when this global app
+state changes, the components that use this global app state are synchronized
+with it.
+
+And you can also have a reusable component that has several internal
+sub-components. They all might need to share some common internal state.
+
+LitState is created for these use cases, and is meant to make it as simple as
+possible for the developer.
 
 ### Why not use MobX or Redux in the first place? Any benefits by using this?
 
