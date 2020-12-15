@@ -42,7 +42,7 @@ class MyState extends LitState {
     counter = stateVar(0); // `0` is the default value
 }
 
-const myState = new MyState();
+export const myState = new MyState();
 ```
 
 ### 2. Use the `stateVar` in your components:
@@ -50,6 +50,7 @@ const myState = new MyState();
 ```javascript
 import { LitStateElement } from 'lit-element-state';
 import { html } from 'lit-element';
+import { myState } form './my-state.js';
 
 class MyComponent extends LitStateElement {
 
