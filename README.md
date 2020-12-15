@@ -33,7 +33,7 @@ automatically re-render whenever a `stateVar` they use changes.
 
 ## Usage
 
-### 1. Create a state object:
+### 1. Create a `LitState` object:
 
 ```javascript
 import { LitState, stateVar } from 'lit-element-state';
