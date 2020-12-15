@@ -1,6 +1,20 @@
 # LitState Changelog
 
 
+### 1.3.0
+
+- `LitState` is now not dependend on the `StateVar` and `AsyncStateVar`
+  classes. There's one `BaseStateVar` class which all types of stateVar classes
+  should extend from. `LitState` recognizes this as a stateVar, and then
+  handles the handling of the `get` and `set` traps to the stateVar. This
+  allows for the possibility to factor out `AsyncStateVar` to a separate
+  library, making LitState smaller. Because not all apps always need
+  `AsyncStateVar`. It also allows for easily adding more (custom) types of
+  stateVars, to extend LitState.
+- Some more general refactors to make things simpler.
+- Reordered some texts in README
+
+
 ### 1.2.3
 
 - Fixed bug where `isRejectedGet()` still returned `true` when a `setValue()`

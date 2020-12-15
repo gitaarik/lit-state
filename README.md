@@ -217,21 +217,19 @@ sub-components. They all might need to share some common internal state.
 LitState is created for these use cases, and is meant to make it as simple as
 possible for the developer.
 
-### Why not use MobX or Redux in the first place? Any benefits by using this?
-
-[MobX](https://github.com/mobxjs/mobx) is quite a large library with a lot of
-whistles and bells. LitState is about 400 lines at the moment, and I'm planning
-on keeping it tiny, just like LitElement and lit-html.
+### Why not use Redux or MobX in the first place? Any benefits by using this?
 
 To use [Redux](https://github.com/reduxjs/redux) (or something similar, like
 [unistore](https://github.com/developit/unistore)) you need a lot of of boiler
-plate code: *Actions*, *Action Creators* and *Reducers*. You do have helper
-libraries that can generate these things for you, to make it slightly easier,
-but I still think it is unnecessarily complicated.
+plate code: *Actions*, *Action Creators* and *Reducers*, you need to dispatch
+created actions and you need to map the state to your props inside your
+components. You have helper libraries that make it a bit easier, but I still
+think it is unnecessarily complicated.
 
-I think MobX is much easier to use, because you don't need to write any
-boilerplate. However, MobX is a quite large library, and for more advanced
-use-cases it can become relatively complicated to use.
+I think [MobX](https://github.com/mobxjs/mobx) is much easier to use, because
+you don't need to write any boilerplate. However, MobX is a quite large library
+with a lot of whistles and bells. And for more advanced use-cases it can become
+relatively complicated to use.
 
 I think a lot of features from MobX are not really necessary when you use
 LitElement. MobX is mainly created for React. Therefore MobX has optimizations

@@ -20,19 +20,9 @@ export const LitStateElementMixin = superclass => class extends superclass {
     }
 
     _initStateObservers() {
-
         this._clearStateObservers();
-
-        if (!this.isConnected) {
-            return;
-        }
-
-        const stateVars = stateRecorder.finish();
-
-        if (stateVars) {
-            this._addStateObservers(stateVars);
-        }
-
+        if (!this.isConnected) return;
+        this._addStateObservers(stateRecorder.finish());
     }
 
     _addStateObservers(stateVars) {
@@ -48,10 +38,6 @@ export const LitStateElementMixin = superclass => class extends superclass {
     }
 
     _clearStateObservers() {
-
-        if (!this._observers.length) {
-            return;
-        }
 
         for (let [state, observer] of this._observers) {
             state.removeObserver(observer);
@@ -72,7 +58,6 @@ export class LitState {
     constructor() {
 
         this._stateVars = [];
-        this._asyncStateVars = [];
         this._observers = [];
 
         return new Proxy(this, {
@@ -80,31 +65,15 @@ export class LitState {
             set: (obj, key, value) => {
 
                 if (this._isStateVar(key)) {
-                    if (obj[key] !== value) {
-                        obj[key] = value;
-                        this._notifyObservers(key);
+                    const return_value = obj[key]._handleSet(value)
+                    if (return_value !== undefined) {
+                        return return_value;
                     }
-                } else if (value instanceof StateVar) {
+                } else if (value instanceof BaseStateVar) {
                     this._stateVars.push(key);
-                    obj[key] = value.initialValue;
-                } else if (this._isAsyncStateVar(key)) {
-                    throw (
-                        "Can't assign to an asyncStateVar. If you want to " +
-                        "set a new value, use setValue()."
-                    );
-                } else if (value instanceof AsyncStateVar) {
-
-                    value.setLogStateVarCallback(() => {
-                        stateRecorder.logStateVar(obj, key);
-                    });
-
-                    value.setOnChangeCallback(() => {
-                        this._notifyObservers(key);
-                    });
-
-                    this._asyncStateVars.push(key);
+                    value._recordRead = () => this._recordRead(key);
+                    value._notifyChange = () => this._notifyChange(key);
                     obj[key] = value;
-
                 } else {
                     obj[key] = value;
                 }
@@ -115,12 +84,8 @@ export class LitState {
 
             get: (obj, key) => {
 
-                if (obj._isStateVar(key) || obj._isAsyncStateVar(key)) {
-                    stateRecorder.logStateVar(obj, key);
-                }
-
-                if (obj._isAsyncStateVar(key) && !obj[key].isInitiated()) {
-                    obj[key].initiate();
+                if (obj._isStateVar(key)) {
+                    return obj[key]._handleGet();
                 }
 
                 return obj[key];
@@ -143,31 +108,46 @@ export class LitState {
         return this._stateVars.includes(key);
     }
 
-    _isAsyncStateVar(key) {
-        return this._asyncStateVars.includes(key);
+    _recordRead(key) {
+        stateRecorder.recordRead(this, key);
     }
 
-    _notifyObservers(key) {
-
-        if (!this._observers.length) {
-            return;
-        }
-
-        this._observers.forEach(observerObj => {
+    _notifyChange(key) {
+        for (const observerObj of this._observers) {
             if (!observerObj.keys || observerObj.keys.includes(key)) {
                 observerObj.observer(key);
             }
-        });
-
+        };
     }
 
 }
 
 
-class StateVar {
+export class BaseStateVar {
+    _handleGet() {}
+    _handleSet(value) {}
+}
+
+
+class StateVar extends BaseStateVar {
+
     constructor(initialValue) {
-        this.initialValue = initialValue;
+        super();
+        this._value = initialValue;
     }
+
+    _handleGet() {
+        this._recordRead();
+        return this._value;
+    }
+
+    _handleSet(value) {
+        if (this._value !== value) {
+            this._value = value;
+            this._notifyChange();
+        }
+    }
+
 }
 
 
@@ -176,16 +156,17 @@ export function stateVar(defaultValue) {
 }
 
 
-class AsyncStateVar {
+class AsyncStateVar extends BaseStateVar {
 
     constructor(promise, defaultValue) {
+        super();
         this._promise = promise;
         this._defaultValue = defaultValue;
-        this.init();
+        this._init();
     }
 
-    init() {
-        this._initiated = false;
+    _init() {
+        this._initiatedGet = false;
         this._pendingGet = false;
         this._pendingSet = false;
         this._pendingCache = false;
@@ -196,7 +177,6 @@ class AsyncStateVar {
         this._errorGet = null;
         this._errorSet = null;
         this._value = this._getDefaultValue();
-        this._onChangeCallback = null;
     }
 
     _getDefaultValue() {
@@ -207,21 +187,27 @@ class AsyncStateVar {
         }
     }
 
-    setLogStateVarCallback(callback) {
-        this._logStateVarCallback = callback;
+    _handleGet() {
+        this.initGet();
+        return this;
     }
 
-    setOnChangeCallback(callback) {
-        this._onChangeCallback = callback;
+    _handleSet(value) {
+        throw (
+            "Can't assign to an asyncStateVar. If you want to set a new " +
+            "value, use setValue(value), or setCache(value) and pushCache()."
+        );
     }
 
-    isInitiated() {
-        return this._initiated;
-    }
+    initGet() {
 
-    initiate() {
-        this._initiated = true;
+        if (this._initiatedGet) {
+            return;
+        }
+
+        this._initiatedGet = true;
         this._loadValue();
+
     }
 
     _loadValue() {
@@ -230,7 +216,7 @@ class AsyncStateVar {
         this._rejectedGet = false;
         this._fulfilledGet = false;
         this._fulfilledGet = false;
-        this._onChangeCallback();
+        this._notifyChange();
 
         this._getPromise().then(value => {
             this._fulfilledGet = true;
@@ -243,7 +229,7 @@ class AsyncStateVar {
         }).finally(() => {
             this._pendingGet = false;
             this._rejectedSet = false;
-            this._onChangeCallback();
+            this._notifyChange();
         });
 
     }
@@ -253,14 +239,17 @@ class AsyncStateVar {
     }
 
     isPendingGet() {
+        this._recordRead();
         return this._pendingGet;
     }
 
     isPendingSet() {
+        this._recordRead();
         return this._pendingSet;
     }
 
     isPendingCache() {
+        this._recordRead();
         return this._pendingCache;
     }
 
@@ -269,10 +258,12 @@ class AsyncStateVar {
     }
 
     isRejectedGet() {
+        this._recordRead();
         return this._rejectedGet;
     }
 
     isRejectedSet() {
+        this._recordRead();
         return this._rejectedSet;
     }
 
@@ -281,10 +272,12 @@ class AsyncStateVar {
     }
 
     getErrorGet() {
+        this._recordRead();
         return this._errorGet;
     }
 
     getErrorSet() {
+        this._recordRead();
         return this._errorSet;
     }
 
@@ -293,15 +286,17 @@ class AsyncStateVar {
     }
 
     isFulfilledGet() {
+        this._recordRead();
         return this._fulfilledGet;
     }
 
     isFulfilledSet() {
+        this._recordRead();
         return this._fulfilledSet;
     }
 
     getValue() {
-        this._logStateVarCallback();
+        this._recordRead();
         return this._value;
     }
 
@@ -312,7 +307,7 @@ class AsyncStateVar {
         this._fulfilledGet = false;
         this._rejectedSet = false;
 
-        this._onChangeCallback();
+        this._notifyChange();
 
         this._setPromise(value).then(value => {
             this._fulfilledSet = true;
@@ -324,7 +319,7 @@ class AsyncStateVar {
         }).finally(() => {
             this._pendingSet = false;
             this._rejectedGet = false;
-            this._onChangeCallback();
+            this._notifyChange();
         });
 
     }
@@ -332,7 +327,7 @@ class AsyncStateVar {
     setCache(value) {
         this._value = value;
         this._pendingCache = true;
-        this._onChangeCallback();
+        this._notifyChange();
     }
 
     pushCache() {
@@ -391,20 +386,11 @@ class StateRecorder {
         this._log = new Map();
     }
 
-    logStateVar(stateObj, key) {
-
-        if (this._log === null) {
-            return;
-        }
-
+    recordRead(stateObj, key) {
+        if (this._log === null) return;
         const keys = this._log.get(stateObj) || [];
-
-        if (!keys.includes(key)) {
-            keys.push(key);
-        }
-
+        if (!keys.includes(key)) keys.push(key);
         this._log.set(stateObj, keys);
-
     }
 
     finish() {
