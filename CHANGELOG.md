@@ -1,6 +1,11 @@
 # LitState Changelog
 
 
+### 1.2.1
+
+- Updated Readme
+
+
 ### 1.2.0
 
 - Assigning to an `asyncStateVar` now throws an error, you have to use
