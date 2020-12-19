@@ -45,7 +45,10 @@ class MyState extends LitState {
 export const myState = new MyState();
 ```
 
-### 2. Use the `stateVar` in your components:
+### 2. Make your component aware of your state:
+
+By using the `observeState()` mixin on your `LitElement` class and then just
+using the `stateVar` variables in your render method:
 
 ```javascript
 import { LitElement, html } from 'lit-element';
