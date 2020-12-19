@@ -72,8 +72,8 @@ any (other) component updates it.
 
 In more technical words:
 
-A component using the `observeState()` mixin will re-render when any `stateVar`
-- which it read in the last render cycle - changes.
+A component using the `observeState()` mixin will re-render when any
+`stateVar` - which it read in the last render cycle - changes.
 
 
 ## Demo app
