@@ -1,5 +1,5 @@
 import { LitElement } from '../web_modules/lit-element.js';
-export const LitStateElementMixin = superclass => class extends superclass {
+export const observeState = superclass => class extends superclass {
   constructor() {
     super();
     this._observers = [];
@@ -28,16 +28,12 @@ export const LitStateElementMixin = superclass => class extends superclass {
 
   _addStateObservers(stateVars) {
     for (let [state, keys] of stateVars) {
-      const observer = () => this._stateChangeCallback();
+      const observer = () => this.requestUpdate();
 
       this._observers.push([state, observer]);
 
       state.addObserver(observer, keys);
     }
-  }
-
-  _stateChangeCallback() {
-    this.requestUpdate();
   }
 
   _clearStateObservers() {
@@ -49,7 +45,7 @@ export const LitStateElementMixin = superclass => class extends superclass {
   }
 
 };
-export const LitStateElement = LitStateElementMixin(LitElement);
+export const LitStateElement = observeState(LitElement);
 export class LitState {
   constructor() {
     this._stateVars = [];

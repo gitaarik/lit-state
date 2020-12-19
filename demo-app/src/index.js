@@ -1,15 +1,13 @@
-import { customElement, property, html, css } from 'lit-element';
-import { LitStateElement } from './lit-state.js';
+import { customElement, LitElement, property, html, css } from 'lit-element';
 import './state-var/index';
 import './async-state-var/index';
 import './async-state-var-update/index';
 import './async-state-var-update-cache/index';
 import './different-vars-on-rerender/index';
-import './mixin-usage/index';
 
 
 @customElement('lit-state-demo')
-export class LitStateDemo extends LitStateElement {
+export class LitStateDemo extends LitElement {
 
     _hashChangeCallback = null;
     _navItems = [
@@ -18,7 +16,6 @@ export class LitStateDemo extends LitStateElement {
         ['async-state-var-update', 'asyncStateVar update'],
         ['async-state-var-update-cache', 'asyncStateVar update with cache'],
         ['different-vars-on-rerender', 'Different variables on re-render'],
-        ['mixin-usage', 'Mixin'],
     ];
 
     @property() activeTab = location.hash.substr(1) || 'state-var';
@@ -88,9 +85,6 @@ export class LitStateDemo extends LitStateElement {
 
             case 'different-vars-on-rerender':
                 return html`<different-vars-on-rerender></different-vars-on-rerender>`;
-
-            case 'mixin-usage':
-                return html`<mixin-usage></mixin-usage>`;
 
         }
 

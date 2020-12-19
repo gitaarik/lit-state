@@ -30,7 +30,8 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, html, css } from '../../web_modules/lit-element.js';
+import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
+import { observeState } from '../lit-state.js';
 import { DemoComponent } from '../demo-component.js';
 import { demoState } from './state.js';
 export let AsyncUpdateComponent1 = _decorate([customElement('async-update-component-1')], function (_initialize, _DemoComponent) {
@@ -112,4 +113,4 @@ export let AsyncUpdateComponent1 = _decorate([customElement('async-update-compon
       }
     }]
   };
-}, DemoComponent);
+}, DemoComponent(observeState(LitElement)));

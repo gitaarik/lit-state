@@ -123,13 +123,13 @@ export const demoState = new DemoState();
 
     get componentCode() {
 
-        return `import { customElement, html, css } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
+        return `import { customElement, LitElement, html, css } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { demoState } from './demo-state.js';
 
 
 @customElement('async-update-cache-component-1')
-export class AsyncUpdateCacheComponent1 extends LitStateElement {
+export class AsyncUpdateCacheComponent1 extends observeState(LitElement) {
 
     render() {
 

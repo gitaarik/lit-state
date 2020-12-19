@@ -1,6 +1,5 @@
-import { css } from '../web_modules/lit-element.js';
-import { LitStateElement } from './lit-state.js';
-export class DemoElement extends LitStateElement {
+import { LitElement, css } from '../web_modules/lit-element.js';
+export class DemoElement extends LitElement {
   static getStyles() {
     if (!this.styles) {
       return this._defaultStyles;

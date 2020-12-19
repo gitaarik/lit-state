@@ -156,13 +156,13 @@ export const demoState = new DemoState();`;
 
     get componentCode() {
 
-        return `import { customElement, html, css } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
+        return `import { customElement, LitElement, html, css } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { demoState } from './demo-state.js';
 
 
 @customElement('async-component-1')
-export class AsyncComponent1 extends LitStateElement {
+export class AsyncComponent1 extends observeState(LitElement) {
 
     render() {
 

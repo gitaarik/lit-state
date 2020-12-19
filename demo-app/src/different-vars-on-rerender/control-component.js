@@ -1,10 +1,11 @@
 import { customElement, LitElement, html, css } from 'lit-element';
+import { observeState } from '@app/lit-state.js';
 import { DemoComponent } from '@app/demo-component.js';
 import { demoState } from './state';
 
 
 @customElement('control-component')
-export class ControlComponent extends DemoComponent {
+export class ControlComponent extends DemoComponent(observeState(LitElement)) {
 
     render() {
 

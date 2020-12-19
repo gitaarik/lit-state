@@ -47,10 +47,11 @@ can then either call `getValue()` or `getError()`. `getError()` returns the
 error in case a promise was rejected:
 
 ```javascript
-import { LitStateElement } from 'lit-element-state';
+import { LitElement } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { myState } from './my-state.js';
 
-class MyElement extends LitStateElement {
+class MyElement extends observeState(LitElement) {
 
     render() {
         if (myState.myData.isPending()) {

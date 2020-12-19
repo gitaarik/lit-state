@@ -1,8 +1,7 @@
 import { css } from 'lit-element';
-import { LitStateElement } from '@app/lit-state';
 
 
-export class DemoComponent extends LitStateElement {
+export const DemoComponent = superclass => class extends superclass {
 
     static getStyles() {
         if (!this.styles) {

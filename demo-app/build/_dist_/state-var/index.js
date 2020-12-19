@@ -82,9 +82,8 @@ export let StateVar = _decorate([customElement('state-var')], function (_initial
                 </p>
 
                 <p>
-                    The components that use the state extend from
-                    <code-small>LitStateElement</code-small> instead of
-                    <code-small>LitElement</code-small>. This makes them
+                    The components that use the state use the mixin
+                    <code-small>observeState</code-small>. This makes them
                     automatically re-render when a
                     <code-small>stateVar</code-small> they use changes:
                 </p>
@@ -123,12 +122,12 @@ export const demoState = new DemoState();`;
       kind: "get",
       key: "componentCode",
       value: function componentCode() {
-        return `import { customElement, html } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
+        return `import { customElement, LitElement, html } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { demoState } from './demo-state.js';
 
 @customElement('component-1')
-export class Component1 extends LitStateElement {
+export class Component1 extends observeState(LitElement) {
 
     render() {
         return html\`

@@ -1,7 +1,15 @@
 # LitState Changelog
 
 
-### 1.3.0
+### 1.4.0 - Mixin primary means of making components state-aware
+
+- Making mixin usage the primary means for making your components state-aware.
+- Renamed the mixin class `LitStateElementMixin` to `observeState`, reads
+  nicer, looks better, is shorter.
+- Updated docs and demo app to use the new mixin class.
+
+
+### 1.3.0 - LitState independent from StateVar classes
 
 - `LitState` is now not dependend on the `StateVar` and `AsyncStateVar`
   classes. There's one `BaseStateVar` class which all types of stateVar classes

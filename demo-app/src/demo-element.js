@@ -1,8 +1,7 @@
-import { css } from 'lit-element';
-import { LitStateElement } from '@app/lit-state';
+import { LitElement, css } from 'lit-element';
 
 
-export class DemoElement extends LitStateElement {
+export class DemoElement extends LitElement {
 
     static getStyles() {
         if (!this.styles) {

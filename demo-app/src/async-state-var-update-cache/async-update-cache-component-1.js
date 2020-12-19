@@ -1,10 +1,11 @@
-import { customElement, html, css } from 'lit-element';
+import { customElement, LitElement, html, css } from 'lit-element';
+import { observeState } from '@app/lit-state.js';
 import { DemoComponent } from '@app/demo-component.js';
 import { demoState } from './state';
 
 
 @customElement('async-update-cache-component-1')
-export class AsyncUpdateCacheComponent1 extends DemoComponent {
+export class AsyncUpdateCacheComponent1 extends DemoComponent(observeState(LitElement)) {
 
     render() {
 

@@ -116,10 +116,9 @@ export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on
                     You don't have to worry about which
                     <code-small>stateVar</code-small> or
                     <code-small>asyncStateVar</code-small> you render at which
-                    time. As long as your component extends from
-                    <code-small>LitStateElement</code-small> or uses the mixin
-                    <code-small><a href="#mixin-usage">LitStateElementMixin</a></code-small>,
-                    LitState will keep your component synchronized.
+                    time. As long as your component uses the
+                    <code-small>observeState</code-small> mixin, your component
+                    will stay synchronized.
                 </p>
 
             </div>
@@ -130,13 +129,13 @@ export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on
       kind: "get",
       key: "changingComponentCode",
       value: function changingComponentCode() {
-        return `import { customElement, html } from 'lit-element';
-import { LitStateElement } from 'lit-element-state';
+        return `import { customElement, LitElement, html } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { demoState } from './demo-state.js';
 
 
 @customElement('changing-component')
-export class ChangingComponent extends LitStateElement {
+export class ChangingComponent extends observeState(LitElement) {
 
     render() {
 

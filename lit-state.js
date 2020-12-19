@@ -1,7 +1,7 @@
 import { LitElement } from 'lit-element';
 
 
-export const LitStateElementMixin = superclass => class extends superclass {
+export const observeState = superclass => class extends superclass {
 
     constructor() {
         super();
@@ -27,30 +27,23 @@ export const LitStateElementMixin = superclass => class extends superclass {
 
     _addStateObservers(stateVars) {
         for (let [state, keys] of stateVars) {
-            const observer = () => this._stateChangeCallback();
+            const observer = () => this.requestUpdate();
             this._observers.push([state, observer]);
             state.addObserver(observer, keys);
         }
     }
 
-    _stateChangeCallback() {
-        this.requestUpdate();
-    }
-
     _clearStateObservers() {
-
         for (let [state, observer] of this._observers) {
             state.removeObserver(observer);
         }
-
         this._observers = [];
-
     }
 
 }
 
 
-export const LitStateElement = LitStateElementMixin(LitElement);
+export const LitStateElement = observeState(LitElement);
 
 
 export class LitState {

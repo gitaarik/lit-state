@@ -36,16 +36,14 @@ function _superPropBase(object, property) { while (!Object.prototype.hasOwnPrope
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-import { customElement, property, html, css } from '../web_modules/lit-element.js';
-import { LitStateElement } from './lit-state.js';
+import { customElement, LitElement, property, html, css } from '../web_modules/lit-element.js';
 import './state-var/index.js';
 import './async-state-var/index.js';
 import './async-state-var-update/index.js';
 import './async-state-var-update-cache/index.js';
 import './different-vars-on-rerender/index.js';
-import './mixin-usage/index.js';
-export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitStateElement) {
-  class LitStateDemo extends _LitStateElement {
+export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitElement) {
+  class LitStateDemo extends _LitElement {
     constructor(...args) {
       super(...args);
 
@@ -69,7 +67,7 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
       key: "_navItems",
 
       value() {
-        return [['state-var', 'stateVar'], ['async-state-var', 'asyncStateVar'], ['async-state-var-update', 'asyncStateVar update'], ['async-state-var-update-cache', 'asyncStateVar update with cache'], ['different-vars-on-rerender', 'Different variables on re-render'], ['mixin-usage', 'Mixin']];
+        return [['state-var', 'stateVar'], ['async-state-var', 'asyncStateVar'], ['async-state-var-update', 'asyncStateVar update'], ['async-state-var-update-cache', 'asyncStateVar update with cache'], ['different-vars-on-rerender', 'Different variables on re-render']];
       }
 
     }, {
@@ -151,9 +149,6 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
 
           case 'different-vars-on-rerender':
             return html`<different-vars-on-rerender></different-vars-on-rerender>`;
-
-          case 'mixin-usage':
-            return html`<mixin-usage></mixin-usage>`;
         }
       }
     }, {
@@ -204,4 +199,4 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
       }
     }]
   };
-}, LitStateElement);
+}, LitElement);

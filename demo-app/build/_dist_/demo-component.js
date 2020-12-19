@@ -1,6 +1,5 @@
 import { css } from '../web_modules/lit-element.js';
-import { LitStateElement } from './lit-state.js';
-export class DemoComponent extends LitStateElement {
+export const DemoComponent = superclass => class extends superclass {
   static getStyles() {
     if (!this.styles) {
       return this._defaultStyles;
@@ -53,4 +52,4 @@ export class DemoComponent extends LitStateElement {
         `;
   }
 
-}
+};

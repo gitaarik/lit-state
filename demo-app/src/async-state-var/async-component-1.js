@@ -1,10 +1,11 @@
-import { customElement, html, css } from 'lit-element';
+import { customElement, LitElement, html, css } from 'lit-element';
+import { observeState } from '@app/lit-state.js';
 import { DemoComponent } from '@app/demo-component.js';
 import { demoState } from './state';
 
 
 @customElement('async-component-1')
-export class AsyncComponent1 extends DemoComponent {
+export class AsyncComponent1 extends DemoComponent(observeState(LitElement)) {
 
     render() {
 

@@ -26,9 +26,9 @@ slightly awkward package name.*
 
 You keep your shared state in a `LitState` derived class. This class contains
 `stateVar` variables that contain the state. This class can also contain helper
-functions that modify the state. Instead of extending your components from
-`LitElement` you extend them from `LitStateElement`. This makes your components
-automatically re-render whenever a `stateVar` they use changes.
+functions that modify the state. Decorate your `LitElement` classes with the
+`observeState()` mixin. This makes your components automatically re-render
+whenever a `stateVar` they use changes.
 
 
 ## Usage
@@ -48,11 +48,11 @@ export const myState = new MyState();
 ### 2. Use the `stateVar` in your components:
 
 ```javascript
-import { LitStateElement } from 'lit-element-state';
-import { html } from 'lit-element';
+import { LitElement, html } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { myState } form './my-state.js';
 
-class MyComponent extends LitStateElement {
+class MyComponent extends observeState(LitElement) {
 
     render() {
         return html`
@@ -69,8 +69,8 @@ any (other) component updates it.
 
 In more technical words:
 
-A `LitStateElement` will re-render when any `stateVar` - which it read in the
-last render cycle - changes.
+A component using the `observeState()` mixin will re-render when any `stateVar`
+- which it read in the last render cycle - changes.
 
 
 ## Demo app
@@ -85,18 +85,18 @@ To see it working, check out the
 ### Basics
 
 The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-to detect whenever a `stateVar` is get or set. During the render of a
-`LitStateElement`, there is a recorder active that records any `stateVar` that
-is accessed during the render of that component. At the end of the render, the
-`LitStateElement` collects the recorded `stateVar` variables, observes them,
-and re-renders itself whenever one of them changes. The next render it again
-records which `stateVar` variables are being used and observes them. So if the
-next render uses different `stateVars`, they too will be observed.
+to detect whenever a `stateVar` is get or set. When using the `observeState()`
+mixin, during the render of the component, there is a recorder active that
+records any `stateVar` that is accessed during the render of that component. At
+the end of the render, the recorded `stateVar` variables are collected and
+observers are added to them. Whenever one of them changes, the component
+re-renders itself. If the re-render uses different `stateVar` variables, they
+are again recorded and observed.
 
 
 ### Implementation details
 
-To re-render itself, a `LitStateElement` component calls LitElement's
+To re-render the component, the `observeState()` mixin calls LitElement's
 [`this.requestUpdate()`](https://lit-element.polymer-project.org/api/classes/_lit_element_.litelement.html#requestupdate)
 (with no arguments). This will enqueue an update request for the component. The
 component will re-render at the end of the execution queue.
@@ -170,25 +170,6 @@ kind of thing, check out
 
 LitState also has a convenient way of dealing with asynchronous data in your
 app. See the [asyncStateVar](docs/asyncStateVar.md).
-
-
-### Mixin class `LitStateElementMixin`
-
-If you don't want to directly extend from `LitStateElement`, you can use the
-mixin `LitStateElementMixin`:
-
-```javascript
-import { LitElement } from 'lit-element';
-import { LitStateElementMixin } from 'lit-element-state';
-
-class MyComponent extends LitStateElementMixin(LitElement) {
-
-    render() {
-        // ...
-    }
-
-}
-```
 
 
 ## FAQ
