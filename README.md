@@ -260,3 +260,9 @@ so I need to dive into that.
 
 If you have comments, suggestions, questions, any kind of feedback, or you want
 to contribute, I would be pleased to hear from you. Feel free to open an issue.
+
+
+## Also see
+
+- [asyncStateVar](https://github.com/gitaarik/lit-state-async-state-var) - asyncStateVar for LitState, easy handing of async data 
+- [LitStyle](https://github.com/gitaarik/lit-style) - Shared component styles for LitElement 
