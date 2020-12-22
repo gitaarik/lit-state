@@ -30,12 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
-import { DemoPage } from '../../web_modules/lit-element-demo-app-helpers.js';
-import '../../web_modules/lit-element-demo-app-helpers.js';
-import './nested-state-component.js';
-export let NestedStates = _decorate([customElement('nested-states')], function (_initialize, _DemoPage) {
-  class NestedStates extends _DemoPage {
+import { customElement, LitElement, property, html, css } from '../web_modules/lit-element.js';
+import { DemoPage } from '../web_modules/lit-element-demo-app-helpers.js';
+import '../web_modules/lit-element-demo-app-helpers.js';
+export let IntroPage = _decorate([customElement('intro-page')], function (_initialize, _DemoPage) {
+  class IntroPage extends _DemoPage {
     constructor(...args) {
       super(...args);
 
@@ -45,90 +44,79 @@ export let NestedStates = _decorate([customElement('nested-states')], function (
   }
 
   return {
-    F: NestedStates,
+    F: IntroPage,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h1>Nested States</h1>
+            <h1>LitState</h1>
+
+            <h2>Simple shared app state management for LitElement</h2>
 
             <p>
-                You can also easily nest states.
-                <code-small>stateVar</code-small> variables can contain
-                instances of other states. They will be recognized by LitState
-                just the same.
+                LitState automatically re-renders your LitElement
+                components, when a shared app state variable they use
+                changes.
             </p>
 
-            <h2>Example:</h3>
+            <h2>Installation</h2>
 
             <p>
-                <code-big filename='states.js' .code=${this.statesSourceCode}></code-big>
+                <code-big .code=${'npm install lit-element-state'}></code-big>
+            </p>
+
+            <h2>Usage</h2>
+
+            <h3>1. Create a <code-small>LitState</code-small> object:</h3>
+
+            <p>
+                <code-big filename='state.js' .code=${this.stateCode}></code-big>
+            </p>
+
+            <h3>2. Make your component aware of your state:</h3>
+
+            <p>
+                By using the <code-small>observeState()</code-small> mixin on
+                your <code-small>LitElement</code-small> class and then just
+                using the <code-small>stateVar</code-small> variables in your
+                render method:
             </p>
 
             <p>
-                <code-big filename='nested-state-component.js' .code=${this.nestedStateComponentSourceCode}></code-big>
-            </p>
-
-            <h2>Output:</h3>
-
-            <p>
-                <nested-state-component></nested-state-component>
+                <code-big filename='component.js' .code=${this.componentCode}></code-big>
             </p>
 
         `;
       }
     }, {
       kind: "get",
-      key: "statesSourceCode",
-      value: function statesSourceCode() {
+      key: "stateCode",
+      value: function stateCode() {
         return `import { LitState, stateVar } from 'lit-element-state';
 
-class ParentState extends LitState {
-    childState1 = stateVar();
-    childState2 = stateVar();
+class MyState extends LitState {
+    counter = stateVar(0); // \`0\` is the default value
 }
 
-class ChildState extends LitState {
-    counter = stateVar(0);
-}
-
-export const parentState = new ParentState();
-const childState1 = new ChildState();
-const childState2 = new ChildState();
-
-childState1.counter = 1;
-childState2.counter = 1000;
-
-parentState.childState1 = childState1;
-parentState.childState2 = childState2;`;
+export const myState = new MyState();`;
       }
     }, {
       kind: "get",
-      key: "nestedStateComponentSourceCode",
-      value: function nestedStateComponentSourceCode() {
-        return `import { customElement, LitElement, html, css } from 'lit-element';
+      key: "componentCode",
+      value: function componentCode() {
+        return `import { LitElement, html } from 'lit-element';
 import { observeState } from 'lit-element-state';
-import { parentState } from './states.js';
+import { myState } form './my-state.js';
 
-@customElement('nested-state-component')
-export class NestedStateComponent extends observeState(LitElement) {
+class MyComponent extends observeState(LitElement) {
 
     render() {
-
         return html\`
-
-            <h2>&lt;nested-state-component&gt;</h2>
-
-            <h3 class="value">ChildState1 counter: \${parentState.childState1.counter}</h3>
-            <button @click=\${() => parentState.childState1.counter++}>increase counter</button>
-
-            <h3 class="value">ChildState2 counter: \${parentState.childState2.counter}</h3>
-            <button @click=\${() => parentState.childState2.counter++}>increase counter</button>
-
+            <h1>Counter: \${myState.counter}</h1>
+            <button @click=\${() => myState.counter++}></button>
         \`;
-
     }
 
 }`;

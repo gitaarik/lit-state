@@ -12,49 +12,45 @@ export class BasicUsage extends DemoPage(LitElement) {
 
         return html`
 
-            <div>
+            <h1>LitState demo</h1>
 
-                <h1>LitState demo</h1>
+            <p>
+                Below are 2 components with a shared state
+                <code-small>demoState</code-small>. When you change the state
+                from one component, the other component automatically
+                synchronizes:
+            </p>
 
-                <p>
-                    Below are 2 components with a shared state
-                    <code-small>demoState</code-small>. When you change the
-                    state from one component, the other component automatically
-                    synchronizes:
-                </p>
-
-                <div class="demoComponents">
-                    <state-var-component-1></state-var-component-1>
-                    <state-var-component-2></state-var-component-2>
-                </div>
-
-                <p>
-                    The shared state <code-small>demoState</code-small>
-                    contains a <code-small>stateVar</code-small> called
-                    <code-small>counter</code-small>. It holds an integer that
-                    has an initial value of <code-small>0</code-small>:
-                </p>
-
-                <p>
-                    <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
-                </p>
-
-                <p>
-                    The components that use the state use the mixin
-                    <code-small>observeState</code-small>. This makes them
-                    automatically re-render when a
-                    <code-small>stateVar</code-small> they use changes:
-                </p>
-
-                <p>
-                    <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
-                </p>
-
-                <p>
-                    That's all. How simple do you want to have it?
-                </p>
-
+            <div class="demoComponents">
+                <state-var-component-1></state-var-component-1>
+                <state-var-component-2></state-var-component-2>
             </div>
+
+            <p>
+                The shared state <code-small>demoState</code-small> contains a
+                <code-small>stateVar</code-small> called
+                <code-small>counter</code-small>. It holds an integer that has
+                an initial value of <code-small>0</code-small>:
+            </p>
+
+            <p>
+                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+            </p>
+
+            <p>
+                The components that use the state use the mixin
+                <code-small>observeState</code-small>. This makes them
+                automatically re-render when a
+                <code-small>stateVar</code-small> they use changes:
+            </p>
+
+            <p>
+                <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
+            </p>
+
+            <p>
+                That's all. How simple do you want to have it?
+            </p>
 
         `;
 

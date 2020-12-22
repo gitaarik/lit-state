@@ -7,7 +7,7 @@ class DemoState extends LitState {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "showVars", stateVar(1));
+    _defineProperty(this, "showCounter", stateVar(1));
 
     _defineProperty(this, "counter1", stateVar(0));
 

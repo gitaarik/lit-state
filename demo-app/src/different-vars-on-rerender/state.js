@@ -3,7 +3,7 @@ import { currentTime } from 'lit-element-demo-app-helpers';
 
 
 class DemoState extends LitState {
-    showVars = stateVar(1);
+    showCounter = stateVar(1);
     counter1 = stateVar(0);
     counter2 = stateVar(0);
 }

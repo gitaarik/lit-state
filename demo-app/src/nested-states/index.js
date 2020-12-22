@@ -11,34 +11,30 @@ export class NestedStates extends DemoPage(LitElement) {
 
         return html`
 
-            <div>
+            <h1>Nested States</h1>
 
-                <h1>Nested States</h1>
+            <p>
+                You can also easily nest states.
+                <code-small>stateVar</code-small> variables can contain
+                instances of other states. They will be recognized by LitState
+                just the same.
+            </p>
 
-                <p>
-                    You can also easily nest states.
-                    <code-small>stateVar</code-small> variables can contain
-                    instances of other states. They will be recognized by
-                    LitState just the same.
-                </p>
+            <h2>Example:</h3>
 
-                <h2>Example:</h3>
+            <p>
+                <code-big filename='states.js' .code=${this.statesSourceCode}></code-big>
+            </p>
 
-                <p>
-                    <code-big filename='states.js' .code=${this.statesSourceCode}></code-big>
-                </p>
+            <p>
+                <code-big filename='nested-state-component.js' .code=${this.nestedStateComponentSourceCode}></code-big>
+            </p>
 
-                <p>
-                    <code-big filename='nested-state-component.js' .code=${this.nestedStateComponentSourceCode}></code-big>
-                </p>
+            <h2>Output:</h3>
 
-                <h2>Output:</h3>
-
-                <p>
-                    <nested-state-component></nested-state-component>
-                </p>
-
-            </div>
+            <p>
+                <nested-state-component></nested-state-component>
+            </p>
 
         `;
 

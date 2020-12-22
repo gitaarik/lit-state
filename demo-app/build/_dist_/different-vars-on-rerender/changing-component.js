@@ -57,22 +57,22 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
             <label>
                 <input
                     type="radio"
-                    @click=${() => demoState.showVars = 1}
-                    .checked=${demoState.showVars === 1}
+                    @click=${() => demoState.showCounter = 1}
+                    .checked=${demoState.showCounter === 1}
                 />
-                <code-small>counter1</code-small>
+                Show <code-small>counter1</code-small>
             </label>
 
             <label>
                 <input
                     type="radio"
-                    @click=${() => demoState.showVars = 2}
-                    .checked=${demoState.showVars === 2}
+                    @click=${() => demoState.showCounter = 2}
+                    .checked=${demoState.showCounter === 2}
                 />
-                <code-small>counter2</code-small>
+                Show <code-small>counter2</code-small>
             </label>
 
-            <h3 class="value">Counter: ${this.counter}</h3>
+            <h3 class="value">Value: ${this.counter}</h3>
 
         `;
       }
@@ -80,9 +80,9 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
       kind: "get",
       key: "counter",
       value: function counter() {
-        if (demoState.showVars === 1) {
+        if (demoState.showCounter === 1) {
           return demoState.counter1;
-        } else if (demoState.showVars === 2) {
+        } else if (demoState.showCounter === 2) {
           return demoState.counter2;
         }
       }

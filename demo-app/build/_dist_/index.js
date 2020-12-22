@@ -32,6 +32,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, LitElement, property, html, css } from '../web_modules/lit-element.js';
 import '../web_modules/lit-element-demo-app-helpers.js';
+import './intro-page.js';
 import './basic-usage/index.js';
 import './different-vars-on-rerender/index.js';
 import './nested-states/index.js';
@@ -58,6 +59,10 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
       key: "pages",
       value: function pages() {
         return [{
+          hash: 'intro-page',
+          title: 'Introduction',
+          template: html`<intro-page></intro-page>`
+        }, {
           hash: 'basic-usage',
           title: 'Basic usage',
           template: html`<basic-usage></basic-usage>`

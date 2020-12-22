@@ -1,5 +1,6 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
 import 'lit-element-demo-app-helpers';
+import './intro-page';
 import './basic-usage/index';
 import './different-vars-on-rerender/index';
 import './nested-states/index';
@@ -14,6 +15,11 @@ export class LitStateDemo extends LitElement {
 
 	get pages() {
 		return [
+			{
+				hash: 'intro-page',
+				title: 'Introduction',
+				template: html`<intro-page></intro-page>`
+			},
 			{
 				hash: 'basic-usage',
 				title: 'Basic usage',
