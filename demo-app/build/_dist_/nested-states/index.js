@@ -30,13 +30,12 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html, css } from '../web_modules/lit-element.js';
-import '../web_modules/lit-element-demo-app-helpers.js';
-import './basic-usage/index.js';
-import './different-vars-on-rerender/index.js';
-import './nested-states/index.js';
-export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitElement) {
-  class LitStateDemo extends _LitElement {
+import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
+import { DemoPage } from '../../web_modules/lit-element-demo-app-helpers.js';
+import '../../web_modules/lit-element-demo-app-helpers.js';
+import './nested-state-component.js';
+export let NestedStates = _decorate([customElement('nested-states')], function (_initialize, _DemoPage) {
+  class NestedStates extends _DemoPage {
     constructor(...args) {
       super(...args);
 
@@ -46,31 +45,98 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
   }
 
   return {
-    F: LitStateDemo,
+    F: NestedStates,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
-        return html`<demo-shell .pages=${this.pages}></demo-shell>`;
+        return html`
+
+            <div>
+
+                <h1>Nested States</h1>
+
+                <p>
+                    You can also easily nest states.
+                    <code-small>stateVar</code-small> variables can contain
+                    instances of other states. They will be recognized by
+                    LitState just the same.
+                </p>
+
+                <h2>Example:</h3>
+
+                <p>
+                    <code-big filename='states.js' .code=${this.statesSourceCode}></code-big>
+                </p>
+
+                <p>
+                    <code-big filename='nested-state-component.js' .code=${this.nestedStateComponentSourceCode}></code-big>
+                </p>
+
+                <h2>Output:</h3>
+
+                <p>
+                    <nested-state-component></nested-state-component>
+                </p>
+
+            </div>
+
+        `;
       }
     }, {
       kind: "get",
-      key: "pages",
-      value: function pages() {
-        return [{
-          hash: 'basic-usage',
-          title: 'Basic usage',
-          template: html`<basic-usage></basic-usage>`
-        }, {
-          hash: 'different-vars-on-rerender',
-          title: 'Different vars on rerender',
-          template: html`<different-vars-on-rerender></different-vars-on-rerender>`
-        }, {
-          hash: 'nested-states',
-          title: 'Nested states',
-          template: html`<nested-states></nested-states>`
-        }];
+      key: "statesSourceCode",
+      value: function statesSourceCode() {
+        return `import { LitState, stateVar } from 'lit-element-state';
+
+class ParentState extends LitState {
+    childState1 = stateVar();
+    childState2 = stateVar();
+}
+
+class ChildState extends LitState {
+    counter = stateVar(0);
+}
+
+export const parentState = new ParentState();
+const childState1 = new ChildState();
+const childState2 = new ChildState();
+
+childState1.counter = 1;
+childState2.counter = 1000;
+
+parentState.childState1 = childState1;
+parentState.childState2 = childState2;`;
+      }
+    }, {
+      kind: "get",
+      key: "nestedStateComponentSourceCode",
+      value: function nestedStateComponentSourceCode() {
+        return `import { customElement, LitElement, html, css } from 'lit-element';
+import { observeState } from 'lit-element-state';
+import { parentState } from './states.js';
+
+@customElement('nested-state-component')
+export class NestedStateComponent extends observeState(LitElement) {
+
+    render() {
+
+        return html\`
+
+            <h2>&lt;nested-state-component&gt;</h2>
+
+            <h3 class="value">ChildState1 counter: \${parentState.childState1.counter}</h3>
+            <button @click=\${() => parentState.childState1.counter++}>increase counter</button>
+
+            <h3 class="value">ChildState2 counter: \${parentState.childState2.counter}</h3>
+            <button @click=\${() => parentState.childState2.counter++}>increase counter</button>
+
+        \`;
+
+    }
+
+}`;
       }
     }]
   };
-}, LitElement);
+}, DemoPage(LitElement));
