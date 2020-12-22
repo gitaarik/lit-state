@@ -31,12 +31,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
+import { DemoComponent } from '../../web_modules/lit-element-demo-app-helpers.js';
 import { observeState } from '../lit-state.js';
-import { DemoComponent } from '../demo-component.js';
-import '../components/code-small.js';
 import { demoState } from './state.js';
-export let ChangingComponent = _decorate([customElement('changing-component')], function (_initialize, _DemoComponent) {
-  class ChangingComponent extends _DemoComponent {
+export let ChangingComponent = _decorate([customElement('changing-component')], function (_initialize, _observeState) {
+  class ChangingComponent extends _observeState {
     constructor(...args) {
       super(...args);
 
@@ -51,50 +50,40 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
       kind: "method",
       key: "render",
       value: function render() {
-        const [counter, data] = this.getVars();
         return html`
 
             <h2>&lt;changing-component&gt;</h2>
 
-            <div id="varsChooser">
+            <label>
+                <input
+                    type="radio"
+                    @click=${() => demoState.showVars = 1}
+                    .checked=${demoState.showVars === 1}
+                />
+                <code-small>counter1</code-small>
+            </label>
 
-                <div>Show vars:</div>
+            <label>
+                <input
+                    type="radio"
+                    @click=${() => demoState.showVars = 2}
+                    .checked=${demoState.showVars === 2}
+                />
+                <code-small>counter2</code-small>
+            </label>
 
-                <label>
-                    <input
-                        type="radio"
-                        @click=${() => demoState.showVars = 1}
-                        .checked=${demoState.showVars === 1}
-                    />
-                    <code-small>counter1</code-small> and
-                    <code-small>data1</code-small>
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        @click=${() => demoState.showVars = 2}
-                        .checked=${demoState.showVars === 2}
-                    />
-                    <code-small>counter2</code-small> and
-                    <code-small>data2</code-small>
-                </label>
-
-            </div>
-
-            <div class="value">Counter: ${counter}</div>
-            <div class="value">Data: ${data}</div>
+            <h3 class="value">Counter: ${this.counter}</h3>
 
         `;
       }
     }, {
-      kind: "method",
-      key: "getVars",
-      value: function getVars() {
+      kind: "get",
+      key: "counter",
+      value: function counter() {
         if (demoState.showVars === 1) {
-          return [demoState.counter1, demoState.data1.getValue()];
+          return demoState.counter1;
         } else if (demoState.showVars === 2) {
-          return [demoState.counter2, demoState.data2.getValue()];
+          return demoState.counter2;
         }
       }
     }, {
@@ -104,7 +93,7 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
       value: function styles() {
         return css`
 
-            #varsChooser label {
+            label {
                 display: block;
                 margin: 5px 0;
                 padding: 5px;
@@ -113,7 +102,7 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
                 cursor: pointer;
             }
 
-            #varsChooser label input {
+            label input {
                 margin: 0 5px 0;
             }
 
@@ -121,4 +110,4 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
       }
     }]
   };
-}, DemoComponent(observeState(LitElement)));
+}, observeState(DemoComponent(LitElement)));

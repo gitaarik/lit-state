@@ -168,11 +168,14 @@ kind of thing, check out
 
 ## Extra features
 
+### Custom `stateVar` variables
 
-### Easy handling of asynchronous data with `asyncStateVar`
-
-LitState also has a convenient way of dealing with asynchronous data in your
-app. See the [asyncStateVar](docs/asyncStateVar.md).
+You can easily extend LitState with custom `stateVar` variables. An example of
+this is the [asyncStateVar](https://github.com/gitaarik/lit-state-async-state-var),
+which is a `stateVar` variation that makes handling with asynchronous data
+easy. To make a custom `stateVar` yourself, create a class that extends from
+`BaseStateVar`. More documentation will follow, but for now you can check the
+source of LitState and `asyncStateVar`.
 
 
 ## FAQ

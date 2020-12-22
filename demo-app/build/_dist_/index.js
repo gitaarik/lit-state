@@ -30,17 +30,9 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 import { customElement, LitElement, property, html, css } from '../web_modules/lit-element.js';
-import './state-var/index.js';
-import './async-state-var/index.js';
-import './async-state-var-update/index.js';
-import './async-state-var-update-cache/index.js';
+import '../web_modules/lit-element-demo-app-helpers.js';
+import './basic-usage/index.js';
 import './different-vars-on-rerender/index.js';
 export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitElement) {
   class LitStateDemo extends _LitElement {
@@ -55,147 +47,24 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
   return {
     F: LitStateDemo,
     d: [{
-      kind: "field",
-      key: "_hashChangeCallback",
-
-      value() {
-        return null;
-      }
-
-    }, {
-      kind: "field",
-      key: "_navItems",
-
-      value() {
-        return [['state-var', 'stateVar'], ['async-state-var', 'asyncStateVar'], ['async-state-var-update', 'asyncStateVar update'], ['async-state-var-update-cache', 'asyncStateVar update with cache'], ['different-vars-on-rerender', 'Different variables on re-render']];
-      }
-
-    }, {
-      kind: "field",
-      decorators: [property()],
-      key: "activeTab",
-
-      value() {
-        return location.hash.substr(1) || 'state-var';
-      }
-
-    }, {
-      kind: "method",
-      key: "connectedCallback",
-      value: function connectedCallback() {
-        _get(_getPrototypeOf(LitStateDemo.prototype), "connectedCallback", this).call(this);
-
-        this.addHashChangeCallback();
-      }
-    }, {
-      kind: "method",
-      key: "addHashChangeCallback",
-      value: function addHashChangeCallback() {
-        this._hashChangeCallback = window.addEventListener('hashchange', () => {
-          this.activeTab = location.hash.substr(1);
-          window.scrollTo({
-            top: 0
-          });
-        });
-      }
-    }, {
       kind: "method",
       key: "render",
       value: function render() {
-        return html`
-
-            <header>
-                <nav>${this.navButtons}</nav>
-            </header>
-
-            <article>
-                ${this.tabContents}
-            </article>
-
-        `;
+        return html`<demo-shell .pages=${this.pages}></demo-shell>`;
       }
     }, {
       kind: "get",
-      key: "navButtons",
-      value: function navButtons() {
-        return this._navItems.map(item => {
-          return html`
-                <button
-                    @click=${() => location.hash = item[0]}
-                    ?active=${this.activeTab == item[0]}
-                >
-                    ${item[1]}
-                </button>
-            `;
-        });
-      }
-    }, {
-      kind: "get",
-      key: "tabContents",
-      value: function tabContents() {
-        switch (this.activeTab) {
-          default:
-          case 'state-var':
-            return html`<state-var></state-var>`;
-
-          case 'async-state-var':
-            return html`<async-state-var></async-state-var>`;
-
-          case 'async-state-var-update':
-            return html`<async-state-var-update></async-state-var-update>`;
-
-          case 'async-state-var-update-cache':
-            return html`<async-state-var-update-cache></async-state-var-update-cache>`;
-
-          case 'different-vars-on-rerender':
-            return html`<different-vars-on-rerender></different-vars-on-rerender>`;
-        }
-      }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-
-            :host {
-                display: block;
-                margin: 0 auto;
-                padding: 15px;
-                max-width: 720px;
-            }
-
-            header {
-                margin-bottom: 25px;
-            }
-
-            nav {
-                display: flex;
-            }
-
-            nav button {
-                margin: 0;
-                padding: 10px;
-                border: 1px #999 solid;
-                border-left-width: 0;
-                background: #DDD;
-                color: #000;
-                cursor: pointer;
-            }
-
-            nav button:first-child {
-                border-left-width: 1px;
-            }
-
-            nav button:hover {
-                background: #EEE;
-            }
-
-            nav button[active] {
-                background: #FFF;
-            }
-
-        `;
+      key: "pages",
+      value: function pages() {
+        return [{
+          hash: 'basic-usage',
+          title: 'Basic usage',
+          template: html`<basic-usage></basic-usage>`
+        }, {
+          hash: 'different-vars-on-rerender',
+          title: 'Different vars on rerender',
+          template: html`<different-vars-on-rerender></different-vars-on-rerender>`
+        }];
       }
     }]
   };

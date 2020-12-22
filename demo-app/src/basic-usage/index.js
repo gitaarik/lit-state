@@ -1,13 +1,12 @@
-import { customElement, property, html, css } from 'lit-element';
-import { DemoElement } from '@app/demo-element';
-import '@app/components/code-small';
-import '@app/components/code-big';
+import { customElement, LitElement, property, html, css } from 'lit-element';
+import { DemoPage } from 'lit-element-demo-app-helpers';
+import 'lit-element-demo-app-helpers';
 import './state-var-component-1';
 import './state-var-component-2';
 
 
-@customElement('state-var')
-export class StateVar extends DemoElement {
+@customElement('basic-usage')
+export class BasicUsage extends DemoPage(LitElement) {
 
     render() {
 
@@ -15,7 +14,7 @@ export class StateVar extends DemoElement {
 
             <div>
 
-                <h1>LitState <code-small>stateVar</code-small> demo</h1>
+                <h1>LitState demo</h1>
 
                 <p>
                     Below are 2 components with a shared state
@@ -24,7 +23,7 @@ export class StateVar extends DemoElement {
                     synchronizes:
                 </p>
 
-                <div id="demoComponents">
+                <div class="demoComponents">
                     <state-var-component-1></state-var-component-1>
                     <state-var-component-2></state-var-component-2>
                 </div>
@@ -53,12 +52,6 @@ export class StateVar extends DemoElement {
 
                 <p>
                     That's all. How simple do you want to have it?
-                </p>
-
-                <p>
-                    LitState also has a convenient way of dealing with
-                    asynchronous data. See
-                    <code-small><a href="#async-state-var">asyncStateVar</a></code-small>.
                 </p>
 
             </div>

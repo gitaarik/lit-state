@@ -1,8 +1,6 @@
 {
   "imports": {
-    "highlight.js/lib/core": "./highlightjs/lib/core.js",
-    "highlight.js/lib/languages/javascript": "./highlightjs/lib/languages/javascript.js",
-    "highlight.js/lib/languages/xml": "./highlightjs/lib/languages/xml.js",
-    "lit-element": "./lit-element.js"
+    "lit-element": "./lit-element.js",
+    "lit-element-demo-app-helpers": "./lit-element-demo-app-helpers.js"
   }
 }

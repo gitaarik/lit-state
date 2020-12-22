@@ -1,3 +1,5 @@
+import { L as LitElement, h as html, c as css } from './common/lit-element-7d33ee9a.js';
+
 function deepFreeze(obj) {
     if (obj instanceof Map) {
         obj.clear = obj.delete = obj.set = function () {
@@ -1278,7 +1280,7 @@ function commonKeyword(keyword) {
   return COMMON_KEYWORDS.includes(keyword.toLowerCase());
 }
 
-var version = "10.4.0";
+var version = "10.4.1";
 
 // @ts-nocheck
 
@@ -2255,4 +2257,1308 @@ var highlight = HLJS({});
 
 var core = highlight;
 
-export default core;
+const IDENT_RE$1 = '[A-Za-z$_][0-9A-Za-z$_]*';
+const KEYWORDS = [
+  "as", // for exports
+  "in",
+  "of",
+  "if",
+  "for",
+  "while",
+  "finally",
+  "var",
+  "new",
+  "function",
+  "do",
+  "return",
+  "void",
+  "else",
+  "break",
+  "catch",
+  "instanceof",
+  "with",
+  "throw",
+  "case",
+  "default",
+  "try",
+  "switch",
+  "continue",
+  "typeof",
+  "delete",
+  "let",
+  "yield",
+  "const",
+  "class",
+  // JS handles these with a special rule
+  // "get",
+  // "set",
+  "debugger",
+  "async",
+  "await",
+  "static",
+  "import",
+  "from",
+  "export",
+  "extends"
+];
+const LITERALS = [
+  "true",
+  "false",
+  "null",
+  "undefined",
+  "NaN",
+  "Infinity"
+];
+
+const TYPES = [
+  "Intl",
+  "DataView",
+  "Number",
+  "Math",
+  "Date",
+  "String",
+  "RegExp",
+  "Object",
+  "Function",
+  "Boolean",
+  "Error",
+  "Symbol",
+  "Set",
+  "Map",
+  "WeakSet",
+  "WeakMap",
+  "Proxy",
+  "Reflect",
+  "JSON",
+  "Promise",
+  "Float64Array",
+  "Int16Array",
+  "Int32Array",
+  "Int8Array",
+  "Uint16Array",
+  "Uint32Array",
+  "Float32Array",
+  "Array",
+  "Uint8Array",
+  "Uint8ClampedArray",
+  "ArrayBuffer"
+];
+
+const ERROR_TYPES = [
+  "EvalError",
+  "InternalError",
+  "RangeError",
+  "ReferenceError",
+  "SyntaxError",
+  "TypeError",
+  "URIError"
+];
+
+const BUILT_IN_GLOBALS = [
+  "setInterval",
+  "setTimeout",
+  "clearInterval",
+  "clearTimeout",
+
+  "require",
+  "exports",
+
+  "eval",
+  "isFinite",
+  "isNaN",
+  "parseFloat",
+  "parseInt",
+  "decodeURI",
+  "decodeURIComponent",
+  "encodeURI",
+  "encodeURIComponent",
+  "escape",
+  "unescape"
+];
+
+const BUILT_IN_VARIABLES = [
+  "arguments",
+  "this",
+  "super",
+  "console",
+  "window",
+  "document",
+  "localStorage",
+  "module",
+  "global" // Node.js
+];
+
+const BUILT_INS = [].concat(
+  BUILT_IN_GLOBALS,
+  BUILT_IN_VARIABLES,
+  TYPES,
+  ERROR_TYPES
+);
+
+/**
+ * @param {string} value
+ * @returns {RegExp}
+ * */
+
+/**
+ * @param {RegExp | string } re
+ * @returns {string}
+ */
+function source$1(re) {
+  if (!re) return null;
+  if (typeof re === "string") return re;
+
+  return re.source;
+}
+
+/**
+ * @param {RegExp | string } re
+ * @returns {string}
+ */
+function lookahead(re) {
+  return concat$1('(?=', re, ')');
+}
+
+/**
+ * @param {...(RegExp | string) } args
+ * @returns {string}
+ */
+function concat$1(...args) {
+  const joined = args.map((x) => source$1(x)).join("");
+  return joined;
+}
+
+/*
+Language: JavaScript
+Description: JavaScript (JS) is a lightweight, interpreted, or just-in-time compiled programming language with first-class functions.
+Category: common, scripting
+Website: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+*/
+
+/** @type LanguageFn */
+function javascript(hljs) {
+  /**
+   * Takes a string like "<Booger" and checks to see
+   * if we can find a matching "</Booger" later in the
+   * content.
+   * @param {RegExpMatchArray} match
+   * @param {{after:number}} param1
+   */
+  const hasClosingTag = (match, { after }) => {
+    const tag = "</" + match[0].slice(1);
+    const pos = match.input.indexOf(tag, after);
+    return pos !== -1;
+  };
+
+  const IDENT_RE$1$1 = IDENT_RE$1;
+  const FRAGMENT = {
+    begin: '<>',
+    end: '</>'
+  };
+  const XML_TAG = {
+    begin: /<[A-Za-z0-9\\._:-]+/,
+    end: /\/[A-Za-z0-9\\._:-]+>|\/>/,
+    /**
+     * @param {RegExpMatchArray} match
+     * @param {CallbackResponse} response
+     */
+    isTrulyOpeningTag: (match, response) => {
+      const afterMatchIndex = match[0].length + match.index;
+      const nextChar = match.input[afterMatchIndex];
+      // nested type?
+      // HTML should not include another raw `<` inside a tag
+      // But a type might: `<Array<Array<number>>`, etc.
+      if (nextChar === "<") {
+        response.ignoreMatch();
+        return;
+      }
+      // <something>
+      // This is now either a tag or a type.
+      if (nextChar === ">") {
+        // if we cannot find a matching closing tag, then we
+        // will ignore it
+        if (!hasClosingTag(match, { after: afterMatchIndex })) {
+          response.ignoreMatch();
+        }
+      }
+    }
+  };
+  const KEYWORDS$1 = {
+    $pattern: IDENT_RE$1,
+    keyword: KEYWORDS.join(" "),
+    literal: LITERALS.join(" "),
+    built_in: BUILT_INS.join(" ")
+  };
+
+  // https://tc39.es/ecma262/#sec-literals-numeric-literals
+  const decimalDigits = '[0-9](_?[0-9])*';
+  const frac = `\\.(${decimalDigits})`;
+  // DecimalIntegerLiteral, including Annex B NonOctalDecimalIntegerLiteral
+  // https://tc39.es/ecma262/#sec-additional-syntax-numeric-literals
+  const decimalInteger = `0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*`;
+  const NUMBER = {
+    className: 'number',
+    variants: [
+      // DecimalLiteral
+      { begin: `(\\b(${decimalInteger})((${frac})|\\.)?|(${frac}))` +
+        `[eE][+-]?(${decimalDigits})\\b` },
+      { begin: `\\b(${decimalInteger})\\b((${frac})\\b|\\.)?|(${frac})\\b` },
+
+      // DecimalBigIntegerLiteral
+      { begin: `\\b(0|[1-9](_?[0-9])*)n\\b` },
+
+      // NonDecimalIntegerLiteral
+      { begin: "\\b0[xX][0-9a-fA-F](_?[0-9a-fA-F])*n?\\b" },
+      { begin: "\\b0[bB][0-1](_?[0-1])*n?\\b" },
+      { begin: "\\b0[oO][0-7](_?[0-7])*n?\\b" },
+
+      // LegacyOctalIntegerLiteral (does not include underscore separators)
+      // https://tc39.es/ecma262/#sec-additional-syntax-numeric-literals
+      { begin: "\\b0[0-7]+n?\\b" },
+    ],
+    relevance: 0
+  };
+
+  const SUBST = {
+    className: 'subst',
+    begin: '\\$\\{',
+    end: '\\}',
+    keywords: KEYWORDS$1,
+    contains: [] // defined later
+  };
+  const HTML_TEMPLATE = {
+    begin: 'html`',
+    end: '',
+    starts: {
+      end: '`',
+      returnEnd: false,
+      contains: [
+        hljs.BACKSLASH_ESCAPE,
+        SUBST
+      ],
+      subLanguage: 'xml'
+    }
+  };
+  const CSS_TEMPLATE = {
+    begin: 'css`',
+    end: '',
+    starts: {
+      end: '`',
+      returnEnd: false,
+      contains: [
+        hljs.BACKSLASH_ESCAPE,
+        SUBST
+      ],
+      subLanguage: 'css'
+    }
+  };
+  const TEMPLATE_STRING = {
+    className: 'string',
+    begin: '`',
+    end: '`',
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      SUBST
+    ]
+  };
+  const JSDOC_COMMENT = hljs.COMMENT(
+    '/\\*\\*',
+    '\\*/',
+    {
+      relevance: 0,
+      contains: [
+        {
+          className: 'doctag',
+          begin: '@[A-Za-z]+',
+          contains: [
+            {
+              className: 'type',
+              begin: '\\{',
+              end: '\\}',
+              relevance: 0
+            },
+            {
+              className: 'variable',
+              begin: IDENT_RE$1$1 + '(?=\\s*(-)|$)',
+              endsParent: true,
+              relevance: 0
+            },
+            // eat spaces (not newlines) so we can find
+            // types or variables
+            {
+              begin: /(?=[^\n])\s/,
+              relevance: 0
+            }
+          ]
+        }
+      ]
+    }
+  );
+  const COMMENT = {
+    className: "comment",
+    variants: [
+      JSDOC_COMMENT,
+      hljs.C_BLOCK_COMMENT_MODE,
+      hljs.C_LINE_COMMENT_MODE
+    ]
+  };
+  const SUBST_INTERNALS = [
+    hljs.APOS_STRING_MODE,
+    hljs.QUOTE_STRING_MODE,
+    HTML_TEMPLATE,
+    CSS_TEMPLATE,
+    TEMPLATE_STRING,
+    NUMBER,
+    hljs.REGEXP_MODE
+  ];
+  SUBST.contains = SUBST_INTERNALS
+    .concat({
+      // we need to pair up {} inside our subst to prevent
+      // it from ending too early by matching another }
+      begin: /\{/,
+      end: /\}/,
+      keywords: KEYWORDS$1,
+      contains: [
+        "self"
+      ].concat(SUBST_INTERNALS)
+    });
+  const SUBST_AND_COMMENTS = [].concat(COMMENT, SUBST.contains);
+  const PARAMS_CONTAINS = SUBST_AND_COMMENTS.concat([
+    // eat recursive parens in sub expressions
+    {
+      begin: /\(/,
+      end: /\)/,
+      keywords: KEYWORDS$1,
+      contains: ["self"].concat(SUBST_AND_COMMENTS)
+    }
+  ]);
+  const PARAMS = {
+    className: 'params',
+    begin: /\(/,
+    end: /\)/,
+    excludeBegin: true,
+    excludeEnd: true,
+    keywords: KEYWORDS$1,
+    contains: PARAMS_CONTAINS
+  };
+
+  return {
+    name: 'Javascript',
+    aliases: ['js', 'jsx', 'mjs', 'cjs'],
+    keywords: KEYWORDS$1,
+    // this will be extended by TypeScript
+    exports: { PARAMS_CONTAINS },
+    illegal: /#(?![$_A-z])/,
+    contains: [
+      hljs.SHEBANG({
+        label: "shebang",
+        binary: "node",
+        relevance: 5
+      }),
+      {
+        label: "use_strict",
+        className: 'meta',
+        relevance: 10,
+        begin: /^\s*['"]use (strict|asm)['"]/
+      },
+      hljs.APOS_STRING_MODE,
+      hljs.QUOTE_STRING_MODE,
+      HTML_TEMPLATE,
+      CSS_TEMPLATE,
+      TEMPLATE_STRING,
+      COMMENT,
+      NUMBER,
+      { // object attr container
+        begin: concat$1(/[{,\n]\s*/,
+          // we need to look ahead to make sure that we actually have an
+          // attribute coming up so we don't steal a comma from a potential
+          // "value" container
+          //
+          // NOTE: this might not work how you think.  We don't actually always
+          // enter this mode and stay.  Instead it might merely match `,
+          // <comments up next>` and then immediately end after the , because it
+          // fails to find any actual attrs. But this still does the job because
+          // it prevents the value contain rule from grabbing this instead and
+          // prevening this rule from firing when we actually DO have keys.
+          lookahead(concat$1(
+            // we also need to allow for multiple possible comments inbetween
+            // the first key:value pairing
+            /(((\/\/.*$)|(\/\*(\*[^/]|[^*])*\*\/))\s*)*/,
+            IDENT_RE$1$1 + '\\s*:'))),
+        relevance: 0,
+        contains: [
+          {
+            className: 'attr',
+            begin: IDENT_RE$1$1 + lookahead('\\s*:'),
+            relevance: 0
+          }
+        ]
+      },
+      { // "value" container
+        begin: '(' + hljs.RE_STARTERS_RE + '|\\b(case|return|throw)\\b)\\s*',
+        keywords: 'return throw case',
+        contains: [
+          COMMENT,
+          hljs.REGEXP_MODE,
+          {
+            className: 'function',
+            // we have to count the parens to make sure we actually have the
+            // correct bounding ( ) before the =>.  There could be any number of
+            // sub-expressions inside also surrounded by parens.
+            begin: '(\\(' +
+            '[^()]*(\\(' +
+            '[^()]*(\\(' +
+            '[^()]*' +
+            '\\)[^()]*)*' +
+            '\\)[^()]*)*' +
+            '\\)|' + hljs.UNDERSCORE_IDENT_RE + ')\\s*=>',
+            returnBegin: true,
+            end: '\\s*=>',
+            contains: [
+              {
+                className: 'params',
+                variants: [
+                  {
+                    begin: hljs.UNDERSCORE_IDENT_RE,
+                    relevance: 0
+                  },
+                  {
+                    className: null,
+                    begin: /\(\s*\)/,
+                    skip: true
+                  },
+                  {
+                    begin: /\(/,
+                    end: /\)/,
+                    excludeBegin: true,
+                    excludeEnd: true,
+                    keywords: KEYWORDS$1,
+                    contains: PARAMS_CONTAINS
+                  }
+                ]
+              }
+            ]
+          },
+          { // could be a comma delimited list of params to a function call
+            begin: /,/, relevance: 0
+          },
+          {
+            className: '',
+            begin: /\s/,
+            end: /\s*/,
+            skip: true
+          },
+          { // JSX
+            variants: [
+              { begin: FRAGMENT.begin, end: FRAGMENT.end },
+              {
+                begin: XML_TAG.begin,
+                // we carefully check the opening tag to see if it truly
+                // is a tag and not a false positive
+                'on:begin': XML_TAG.isTrulyOpeningTag,
+                end: XML_TAG.end
+              }
+            ],
+            subLanguage: 'xml',
+            contains: [
+              {
+                begin: XML_TAG.begin,
+                end: XML_TAG.end,
+                skip: true,
+                contains: ['self']
+              }
+            ]
+          }
+        ],
+        relevance: 0
+      },
+      {
+        className: 'function',
+        beginKeywords: 'function',
+        end: /[{;]/,
+        excludeEnd: true,
+        keywords: KEYWORDS$1,
+        contains: [
+          'self',
+          hljs.inherit(hljs.TITLE_MODE, { begin: IDENT_RE$1$1 }),
+          PARAMS
+        ],
+        illegal: /%/
+      },
+      {
+        // prevent this from getting swallowed up by function
+        // since they appear "function like"
+        beginKeywords: "while if switch catch for"
+      },
+      {
+        className: 'function',
+        // we have to count the parens to make sure we actually have the correct
+        // bounding ( ).  There could be any number of sub-expressions inside
+        // also surrounded by parens.
+        begin: hljs.UNDERSCORE_IDENT_RE +
+          '\\(' + // first parens
+          '[^()]*(\\(' +
+            '[^()]*(\\(' +
+              '[^()]*' +
+            '\\)[^()]*)*' +
+          '\\)[^()]*)*' +
+          '\\)\\s*\\{', // end parens
+        returnBegin:true,
+        contains: [
+          PARAMS,
+          hljs.inherit(hljs.TITLE_MODE, { begin: IDENT_RE$1$1 }),
+        ]
+      },
+      // hack: prevents detection of keywords in some circumstances
+      // .keyword()
+      // $keyword = x
+      {
+        variants: [
+          { begin: '\\.' + IDENT_RE$1$1 },
+          { begin: '\\$' + IDENT_RE$1$1 }
+        ],
+        relevance: 0
+      },
+      { // ES6 class
+        className: 'class',
+        beginKeywords: 'class',
+        end: /[{;=]/,
+        excludeEnd: true,
+        illegal: /[:"[\]]/,
+        contains: [
+          { beginKeywords: 'extends' },
+          hljs.UNDERSCORE_TITLE_MODE
+        ]
+      },
+      {
+        begin: /\b(?=constructor)/,
+        end: /[{;]/,
+        excludeEnd: true,
+        contains: [
+          hljs.inherit(hljs.TITLE_MODE, { begin: IDENT_RE$1$1 }),
+          'self',
+          PARAMS
+        ]
+      },
+      {
+        begin: '(get|set)\\s+(?=' + IDENT_RE$1$1 + '\\()',
+        end: /\{/,
+        keywords: "get set",
+        contains: [
+          hljs.inherit(hljs.TITLE_MODE, { begin: IDENT_RE$1$1 }),
+          { begin: /\(\)/ }, // eat to avoid empty params
+          PARAMS
+        ]
+      },
+      {
+        begin: /\$[(.]/ // relevance booster for a pattern common to JS libs: `$(something)` and `$.something`
+      }
+    ]
+  };
+}
+
+var javascript_1 = javascript;
+
+/**
+ * @param {string} value
+ * @returns {RegExp}
+ * */
+
+/**
+ * @param {RegExp | string } re
+ * @returns {string}
+ */
+function source$2(re) {
+  if (!re) return null;
+  if (typeof re === "string") return re;
+
+  return re.source;
+}
+
+/**
+ * @param {RegExp | string } re
+ * @returns {string}
+ */
+function lookahead$1(re) {
+  return concat$2('(?=', re, ')');
+}
+
+/**
+ * @param {RegExp | string } re
+ * @returns {string}
+ */
+function optional(re) {
+  return concat$2('(', re, ')?');
+}
+
+/**
+ * @param {...(RegExp | string) } args
+ * @returns {string}
+ */
+function concat$2(...args) {
+  const joined = args.map((x) => source$2(x)).join("");
+  return joined;
+}
+
+/**
+ * Any of the passed expresssions may match
+ *
+ * Creates a huge this | this | that | that match
+ * @param {(RegExp | string)[] } args
+ * @returns {string}
+ */
+function either(...args) {
+  const joined = '(' + args.map((x) => source$2(x)).join("|") + ")";
+  return joined;
+}
+
+/*
+Language: HTML, XML
+Website: https://www.w3.org/XML/
+Category: common
+*/
+
+/** @type LanguageFn */
+function xml(hljs) {
+  // Element names can contain letters, digits, hyphens, underscores, and periods
+  const TAG_NAME_RE = concat$2(/[A-Z_]/, optional(/[A-Z0-9_.-]+:/), /[A-Z0-9_.-]*/);
+  const XML_IDENT_RE = '[A-Za-z0-9\\._:-]+';
+  const XML_ENTITIES = {
+    className: 'symbol',
+    begin: '&[a-z]+;|&#[0-9]+;|&#x[a-f0-9]+;'
+  };
+  const XML_META_KEYWORDS = {
+    begin: '\\s',
+    contains: [
+      {
+        className: 'meta-keyword',
+        begin: '#?[a-z_][a-z1-9_-]+',
+        illegal: '\\n'
+      }
+    ]
+  };
+  const XML_META_PAR_KEYWORDS = hljs.inherit(XML_META_KEYWORDS, {
+    begin: '\\(',
+    end: '\\)'
+  });
+  const APOS_META_STRING_MODE = hljs.inherit(hljs.APOS_STRING_MODE, {
+    className: 'meta-string'
+  });
+  const QUOTE_META_STRING_MODE = hljs.inherit(hljs.QUOTE_STRING_MODE, {
+    className: 'meta-string'
+  });
+  const TAG_INTERNALS = {
+    endsWithParent: true,
+    illegal: /</,
+    relevance: 0,
+    contains: [
+      {
+        className: 'attr',
+        begin: XML_IDENT_RE,
+        relevance: 0
+      },
+      {
+        begin: /=\s*/,
+        relevance: 0,
+        contains: [
+          {
+            className: 'string',
+            endsParent: true,
+            variants: [
+              {
+                begin: /"/,
+                end: /"/,
+                contains: [ XML_ENTITIES ]
+              },
+              {
+                begin: /'/,
+                end: /'/,
+                contains: [ XML_ENTITIES ]
+              },
+              {
+                begin: /[^\s"'=<>`]+/
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    name: 'HTML, XML',
+    aliases: [
+      'html',
+      'xhtml',
+      'rss',
+      'atom',
+      'xjb',
+      'xsd',
+      'xsl',
+      'plist',
+      'wsf',
+      'svg'
+    ],
+    case_insensitive: true,
+    contains: [
+      {
+        className: 'meta',
+        begin: '<![a-z]',
+        end: '>',
+        relevance: 10,
+        contains: [
+          XML_META_KEYWORDS,
+          QUOTE_META_STRING_MODE,
+          APOS_META_STRING_MODE,
+          XML_META_PAR_KEYWORDS,
+          {
+            begin: '\\[',
+            end: '\\]',
+            contains: [
+              {
+                className: 'meta',
+                begin: '<![a-z]',
+                end: '>',
+                contains: [
+                  XML_META_KEYWORDS,
+                  XML_META_PAR_KEYWORDS,
+                  QUOTE_META_STRING_MODE,
+                  APOS_META_STRING_MODE
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      hljs.COMMENT(
+        '<!--',
+        '-->',
+        {
+          relevance: 10
+        }
+      ),
+      {
+        begin: '<!\\[CDATA\\[',
+        end: '\\]\\]>',
+        relevance: 10
+      },
+      XML_ENTITIES,
+      {
+        className: 'meta',
+        begin: /<\?xml/,
+        end: /\?>/,
+        relevance: 10
+      },
+      {
+        className: 'tag',
+        /*
+        The lookahead pattern (?=...) ensures that 'begin' only matches
+        '<style' as a single word, followed by a whitespace or an
+        ending braket. The '$' is needed for the lexeme to be recognized
+        by hljs.subMode() that tests lexemes outside the stream.
+        */
+        begin: '<style(?=\\s|>)',
+        end: '>',
+        keywords: {
+          name: 'style'
+        },
+        contains: [ TAG_INTERNALS ],
+        starts: {
+          end: '</style>',
+          returnEnd: true,
+          subLanguage: [
+            'css',
+            'xml'
+          ]
+        }
+      },
+      {
+        className: 'tag',
+        // See the comment in the <style tag about the lookahead pattern
+        begin: '<script(?=\\s|>)',
+        end: '>',
+        keywords: {
+          name: 'script'
+        },
+        contains: [ TAG_INTERNALS ],
+        starts: {
+          end: /<\/script>/,
+          returnEnd: true,
+          subLanguage: [
+            'javascript',
+            'handlebars',
+            'xml'
+          ]
+        }
+      },
+      // we need this for now for jSX
+      {
+        className: 'tag',
+        begin: /<>|<\/>/
+      },
+      // open tag
+      {
+        className: 'tag',
+        begin: concat$2(
+          /</,
+          lookahead$1(concat$2(
+            TAG_NAME_RE,
+            // <tag/>
+            // <tag>
+            // <tag ...
+            either(/\/>/, />/, /\s/)
+          ))
+        ),
+        end: /\/?>/,
+        contains: [
+          {
+            className: 'name',
+            begin: TAG_NAME_RE,
+            relevance: 0,
+            starts: TAG_INTERNALS
+          }
+        ]
+      },
+      // close tag
+      {
+        className: 'tag',
+        begin: concat$2(
+          /<\//,
+          lookahead$1(concat$2(
+            TAG_NAME_RE, />/
+          ))
+        ),
+        contains: [
+          {
+            className: 'name',
+            begin: TAG_NAME_RE,
+            relevance: 0
+          },
+          {
+            begin: />/,
+            relevance: 0
+          }
+        ]
+      }
+    ]
+  };
+}
+
+var xml_1 = xml;
+
+core.registerLanguage('javascript', javascript_1);
+core.registerLanguage('xml', xml_1);
+
+
+class CodeBig extends LitElement {
+
+    static get properties() {
+        return {
+            fileName: {type: String},
+            code: {type: String}
+        }
+    }
+
+    firstUpdated() {
+        super.firstUpdated();
+        this._initHighlightJs();
+    }
+
+    _initHighlightJs() {
+        this.shadowRoot.querySelectorAll('.hljs').forEach(block => {
+            core.highlightBlock(block);
+        });
+    }
+
+    render() {
+        return html`
+            ${this._fileName}
+            <code class="hljs">${this.code}</code>
+        `;
+    }
+
+    get _fileName() {
+
+        if (!this.fileName) {
+            return;
+        }
+
+        return html`<code class="fileName">${this.fileName}</code>`;
+
+    }
+
+    static get styles() {
+
+        return css`
+
+            :host {
+                display: block;
+            }
+
+            .fileName {
+                display: block;
+                margin: 0;
+                padding: 7px 10px;
+                background: #555;
+                color: #FFF;
+                font-weight: bold;
+            }
+
+            .hljs {
+                display: block;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 10px;
+                width: 100%;
+                white-space: pre;
+                overflow-x: auto;
+                color: #ffffff;
+                background: #1c1b1b;
+            }
+
+            .hljs-comment {
+                color: #999999;
+            }
+
+            .hljs-keyword,
+            .hljs-selector-tag,
+            .hljs-meta-keyword,
+            .hljs-doctag,
+            .hljs-section,
+            .hljs-selector-class,
+            .hljs-meta,
+            .hljs-selector-pseudo,
+            .hljs-attr {
+                color: #88aece;
+            }
+
+            .hljs-attribute {
+                color: v#c59bc1;
+            }
+
+            .hljs-name,
+            .hljs-type,
+            .hljs-number,
+            .hljs-selector-id,
+            .hljs-quote,
+            .hljs-template-tag,
+            .hljs-built_in,
+            .hljs-title,
+            .hljs-literal {
+                color: #f08d49;
+            }
+
+            .hljs-string,
+            .hljs-regexp,
+            .hljs-symbol,
+            .hljs-variable,
+            .hljs-template-variable,
+            .hljs-link,
+            .hljs-selector-attr,
+            .hljs-meta-string {
+                color: #b5bd68;
+            }
+
+            .hljs-bullet,
+            .hljs-code {
+                color: #cccccc;
+            }
+
+            .hljs-deletion {
+                color: #de7176;
+            }
+
+            .hljs-addition {
+                color: #76c490;
+            }
+
+            .hljs-emphasis {
+                font-style: italic;
+            }
+
+            .hljs-strong {
+                font-weight: bold;
+            }
+
+        `;
+
+    }
+
+}
+
+customElements.define('code-big', CodeBig);
+
+class CodeSmall extends LitElement {
+
+    render() {
+        return html`<slot></slot>`;
+    }
+
+    static get styles() {
+        return css`
+            :host {
+                display: inline-block;
+                padding: 1px 3px;
+                margin: 1px;
+                background: #444;
+                color: white;
+                white-space: pre;
+            }
+        `;
+    }
+
+}
+
+customElements.define('code-small', CodeSmall);
+
+class DemoShell extends LitElement {
+
+    _hashChangeCallback = null;
+
+    static get properties() {
+        return {
+            pages: {type: Array},
+            activePageHash: {type: String}
+        }
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        this._addHashChangeCallback();
+        this._setInitialActiveHash();
+    }
+
+    _addHashChangeCallback() {
+        this._hashChangeCallback = window.addEventListener('hashchange', () => {
+            this.activePageHash = location.hash.substr(1);
+            window.scrollTo({ top: 0 });
+        });
+    }
+
+    _setInitialActiveHash() {
+
+        this.activePageHash = location.hash.substr(1);
+
+        if (!this.activePageHash) {
+            this.activePageHash = this.pages[0].hash;
+        }
+
+    }
+
+    render() {
+
+        return html`
+
+            <header>
+                <nav>${this.navButtons}</nav>
+            </header>
+
+            <article>
+                ${this.activePage.template}
+            </article>
+
+        `;
+
+    }
+
+    get navButtons() {
+
+        return this.pages.map(item => {
+
+            return html`
+                <button
+                    @click=${() => location.hash = item.hash}
+                    ?active=${this.activePage.hash == item.hash}
+                >
+                    ${item.title}
+                </button>
+            `;
+
+        });
+
+    }
+
+    get activePage() {
+
+        for (const item of this.pages) {
+            if (item.hash == this.activePageHash) {
+                return item;
+            }
+        }
+
+        // If `this.activePageHash` is not found, fall back to first page
+        return this.pages[0];
+
+    }
+
+    static get styles() {
+
+        return css`
+
+            :host {
+                display: block;
+                margin: 0 auto;
+                padding: 15px;
+                max-width: 720px;
+            }
+
+            header {
+                margin-bottom: 15px;
+            }
+
+            nav {
+                display: flex;
+            }
+
+            nav button {
+                margin: 0;
+                padding: 10px;
+                border: 1px #999 solid;
+                border-left-width: 0;
+                background: #C7C3BB;
+                color: #000;
+                cursor: pointer;
+            }
+
+            nav button:first-child {
+                border-left-width: 1px;
+            }
+
+            nav button:hover,
+            nav button[active] {
+                background: #DAD7D2;
+            }
+
+        `;
+
+    }
+
+}
+
+customElements.define('demo-shell', DemoShell);
+
+function litStyle(myStyles) {
+
+    return superclass => class extends superclass {
+
+        static getStyles() {
+
+            const styles = super.getStyles();
+
+            if (!styles) {
+                return myStyles;
+            } else if (Array.isArray(styles)) {
+                return [myStyles, ...styles];
+            } else {
+                return [myStyles, styles];
+            }
+
+        }
+
+    }
+
+    
+
+}
+
+const DemoComponent = litStyle(css`
+
+    :host {
+        display: block;
+        padding: 15px;
+        background: #DAD7D2;
+        border: 1px #666 solid;
+    }
+
+    h2 {
+        margin-top: 0;
+        font-size: 20px;
+        color: green;
+    }
+
+    h3 {
+        margin: 20px 0;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .status {
+        color: blue;
+    }
+
+    .value {
+        color: red;
+    }
+
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -5px 0 0 -5px;
+    }
+
+    .buttons > * {
+        margin: 5px 0 0 5px;
+    }
+
+`);
+
+const DemoPage = litStyle(css`
+
+    :host {
+        display: block;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    h1 {
+        padding: 10px 0;
+        margin: 20px 0 15px;
+        font-size: 25px;
+        border-bottom: 1px solid #AAA;
+    }
+
+    h2 {
+        margin: 25px 0 10px;
+        font-size: 20px;
+    }
+
+    h3 {
+        margin: 20px 0 5px;
+        font-size: 16px;
+    }
+
+    p {
+        margin: 15px 0;
+        line-height: 1.5;
+    }
+
+    a {
+        color: #000;
+    }
+
+    .demoComponents {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -15px 0 0 -15px;
+    }
+
+    .demoComponents > * {
+        margin: 15px 0 0 15px;
+        max-width: 290px;
+    }
+
+`);
+
+function currentTime() {
+
+    const date = new Date();
+    const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+    const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+
+    return hours + ':' + minutes + ':' + seconds;
+
+}
+
+export { DemoComponent, DemoPage, currentTime };

@@ -30,9 +30,12 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
-export let CodeSmall = _decorate([customElement('code-small')], function (_initialize, _LitElement) {
-  class CodeSmall extends _LitElement {
+import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
+import { DemoComponent } from '../../web_modules/lit-element-demo-app-helpers.js';
+import { observeState } from '../lit-state.js';
+import { demoState } from './state.js';
+export let StateVarComponent2 = _decorate([customElement('state-var-component-2')], function (_initialize, _observeState) {
+  class StateVarComponent2 extends _observeState {
     constructor(...args) {
       super(...args);
 
@@ -42,29 +45,17 @@ export let CodeSmall = _decorate([customElement('code-small')], function (_initi
   }
 
   return {
-    F: CodeSmall,
+    F: StateVarComponent2,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
-        return html`<slot></slot>`;
-      }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-            :host {
-                display: inline-block;
-                padding: 1px 2px;
-                margin: 1px;
-                background: #444;
-                color: white;
-                white-space: pre;
-            }
+        return html`
+            <h2>&lt;component-2&gt;</h2>
+            <h3 class="value">Counter: ${demoState.counter}</h3>
+            <button @click=${() => demoState.counter++}>increase counter</button>
         `;
       }
     }]
   };
-}, LitElement);
+}, observeState(DemoComponent(LitElement)));

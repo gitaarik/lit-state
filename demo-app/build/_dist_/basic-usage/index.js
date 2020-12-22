@@ -30,12 +30,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
-import { observeState } from '../lit-state.js';
-import { DemoComponent } from '../demo-component.js';
-import { demoState } from './state.js';
-export let AsyncUpdateCacheComponent2 = _decorate([customElement('async-update-cache-component-2')], function (_initialize, _DemoComponent) {
-  class AsyncUpdateCacheComponent2 extends _DemoComponent {
+import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
+import { DemoPage } from '../../web_modules/lit-element-demo-app-helpers.js';
+import '../../web_modules/lit-element-demo-app-helpers.js';
+import './state-var-component-1.js';
+import './state-var-component-2.js';
+export let BasicUsage = _decorate([customElement('basic-usage')], function (_initialize, _DemoPage) {
+  class BasicUsage extends _DemoPage {
     constructor(...args) {
       super(...args);
 
@@ -45,41 +46,54 @@ export let AsyncUpdateCacheComponent2 = _decorate([customElement('async-update-c
   }
 
   return {
-    F: AsyncUpdateCacheComponent2,
+    F: BasicUsage,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h2>&lt;component-2&gt;</h2>
-            <div class="status">Status: ${this.dataStatus}</div>
+            <div>
 
-            <div class="value">
-                <span>Value:</span>
-                <input
-                    type="text"
-                    .value=${demoState.data.getValue()}
-                    @keyup=${this.handleInputKeyUp}
-                    ?disabled=${demoState.data.isPending()}
-                />
-            </div>
+                <h1>LitState demo</h1>
 
-            <div id="buttons">
+                <p>
+                    Below are 2 components with a shared state
+                    <code-small>demoState</code-small>. When you change the
+                    state from one component, the other component automatically
+                    synchronizes:
+                </p>
 
-                <button
-                    @click=${() => demoState.data.reload()}
-                    ?disabled=${demoState.data.isPending()}
-                >
-                    reload data
-                </button>
+                <div class="demoComponents">
+                    <state-var-component-1></state-var-component-1>
+                    <state-var-component-2></state-var-component-2>
+                </div>
 
-                <button
-                    @click=${() => demoState.data.pushCache()}
-                    ?disabled=${demoState.data.isPending() || !demoState.data.isPendingCache()}
-                >
-                    push cache
-                </button>
+                <p>
+                    The shared state <code-small>demoState</code-small>
+                    contains a <code-small>stateVar</code-small> called
+                    <code-small>counter</code-small>. It holds an integer that
+                    has an initial value of <code-small>0</code-small>:
+                </p>
+
+                <p>
+                    <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+                </p>
+
+                <p>
+                    The components that use the state use the mixin
+                    <code-small>observeState</code-small>. This makes them
+                    automatically re-render when a
+                    <code-small>stateVar</code-small> they use changes:
+                </p>
+
+                <p>
+                    <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
+                </p>
+
+                <p>
+                    That's all. How simple do you want to have it?
+                </p>
 
             </div>
 
@@ -87,46 +101,39 @@ export let AsyncUpdateCacheComponent2 = _decorate([customElement('async-update-c
       }
     }, {
       kind: "get",
-      key: "dataStatus",
-      value: function dataStatus() {
-        if (demoState.data.isPendingGet()) {
-          return 'loading value...';
-        } else if (demoState.data.isPendingSet()) {
-          return 'updating value...';
-        } else if (demoState.data.isPendingCache()) {
-          return 'cache pending';
-        } else if (demoState.data.isFulfilledGet()) {
-          return 'value loaded';
-        } else if (demoState.data.isFulfilledSet()) {
-          return 'value updated';
-        } else {
-          return 'unknown';
-        }
-      }
-    }, {
-      kind: "method",
-      key: "handleInputKeyUp",
-      value: function handleInputKeyUp(event) {
-        demoState.data.setCache(event.target.value);
+      key: "demoStateCode",
+      value: function demoStateCode() {
+        return `import { LitState, stateVar } from 'lit-element-state';
+
+class DemoState extends LitState {
+    counter = stateVar(0);
+}
+
+export const demoState = new DemoState();`;
       }
     }, {
       kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
+      key: "componentCode",
+      value: function componentCode() {
+        return `import { customElement, LitElement, html } from 'lit-element';
+import { observeState } from 'lit-element-state';
+import { demoState } from './demo-state.js';
 
-            .value {
-                display: flex;
-            }
+@customElement('component-1')
+export class Component1 extends observeState(LitElement) {
 
-            .value input {
-                margin-left: 5px;
-                min-width: 0;
-            }
+    render() {
+        return html\`
+            <h2>&lt;component-1&gt;</h2>
+            <h3>Counter: \${demoState.counter}</h3>
+            <button @click=\${() => demoState.counter++}>
+                increase counter
+            </button>
+        \`;
+    }
 
-        `;
+}`;
       }
     }]
   };
-}, DemoComponent(observeState(LitElement)));
+}, DemoPage(LitElement));

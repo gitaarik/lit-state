@@ -30,14 +30,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, property, html, css } from '../../web_modules/lit-element.js';
-import { DemoElement } from '../demo-element.js';
-import '../components/code-small.js';
-import '../components/code-big.js';
+import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
+import { DemoPage } from '../../web_modules/lit-element-demo-app-helpers.js';
+import '../../web_modules/lit-element-demo-app-helpers.js';
 import './changing-component.js';
 import './control-component.js';
-export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on-rerender')], function (_initialize, _DemoElement) {
-  class DifferentVarsOnRerender extends _DemoElement {
+export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on-rerender')], function (_initialize, _DemoPage) {
+  class DifferentVarsOnRerender extends _DemoPage {
     constructor(...args) {
       super(...args);
 
@@ -60,22 +59,19 @@ export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on
 
                 <p>
                     When your component renders, LitState records which
-                    <code-small>stateVar</code-small> and
-                    <code-small>asyncStateVar</code-small> variables are
-                    accessed by your component. Then it observes these
-                    variables and re-renders itself when one of these variables
-                    change.
+                    <code-small>stateVar</code-small> variables are accessed by
+                    your component. Then it observes these variables and
+                    re-renders itself when one of these variables change.
                 </p>
 
                 <p>
                     When a re-render renders different
-                    <code-small>stateVar</code-small> and/or
-                    <code-small>asyncStateVar</code-small> variables, they will
+                    <code-small>stateVar</code-small> variables, they will
                     again be recorded and observed, so that the component also
                     re-renders when these new variables change:
                 </p>
 
-                <div id="demoComponents">
+                <div class="demoComponents">
                     <changing-component></changing-component>
                     <control-component></control-component>
                 </div>
@@ -98,25 +94,13 @@ export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on
                 </p>
 
                 <p>
-                    <code-small>counter1</code-small> and
-                    <code-small>counter2</code-small> are
-                    <code-small><a href="#state-var">stateVar</a></code-small> variables.
-                    <code-small>data1</code-small> and
-                    <code-small>data2</code-small> are
-                    <code-small><a href="#async-state-var">asyncStateVar</a></code-small>
-                    variables. For clarification, here's the source of
-                    <code-small>demo-state.js</code-small>:
-                </p>
-
-                <p>
                     <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
                 </p>
 
                 <p>
                     You don't have to worry about which
-                    <code-small>stateVar</code-small> or
-                    <code-small>asyncStateVar</code-small> you render at which
-                    time. As long as your component uses the
+                    <code-small>stateVar</code-small> you render at which time.
+                    As long as your component uses the
                     <code-small>observeState</code-small> mixin, your component
                     will stay synchronized.
                 </p>
@@ -139,48 +123,39 @@ export class ChangingComponent extends observeState(LitElement) {
 
     render() {
 
-        const [counter, data] = this.getVars();
-
         return html\`
 
             <h2>&lt;changing-component&gt;</h2>
 
-            <div>
+            <label>
+                <input
+                    type="radio"
+                    @click=\${() => demoState.showVars = 1}
+                    .checked=\${demoState.showVars === 1}
+                />
+                <code>counter1</code>
+            </label>
 
-                <div>Show vars:</div>
+            <label>
+                <input
+                    type="radio"
+                    @click=\${() => demoState.showVars = 2}
+                    .checked=\${demoState.showVars === 2}
+                />
+                <code>counter2</code>
+            </label>
 
-                <label>
-                    <input
-                        type="radio"
-                        @click=\${() => demoState.showVars = 1}
-                        .checked=\${demoState.showVars === 1}
-                    />
-                    <code>counter1</code> and <code>data1</code>
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        @click=\${() => demoState.showVars = 2}
-                        .checked=\${demoState.showVars === 2}
-                    />
-                    <code>counter2</code> and <code>data2</code>
-                </label>
-
-            </div>
-
-            <h3>Counter: \${counter}</h3>
-            <h3>Data: \${data}</h3>
+            <h3>Counter: \${this.counter}</h3>
 
         \`;
 
     }
 
-    getVars() {
+    get counter() {
         if (demoState.showVars === 1) {
-            return [demoState.counter1, demoState.data1.getValue()];
+            return demoState.counter1;
         } else if (demoState.showVars === 2) {
-            return [demoState.counter2, demoState.data2.getValue()];
+            return demoState.counter2;
         }
     }
 
@@ -190,42 +165,14 @@ export class ChangingComponent extends observeState(LitElement) {
       kind: "get",
       key: "demoStateCode",
       value: function demoStateCode() {
-        return `import { LitState, stateVar, asyncStateVar } from 'lit-element-state';
+        return `import { LitState, stateVar } from 'lit-element-state';
 import { currentTime } from './utils.js'
 
 
 class DemoState extends LitState {
-
     showVars = stateVar(1);
     counter1 = stateVar(0);
     counter2 = stateVar(0);
-
-    data1 = asyncStateVar(
-        () => this._getData1(),
-        currentTime()
-    );
-
-    data2 = asyncStateVar(
-        () => this._getData2(),
-        currentTime()
-    );
-
-    _getData1() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(currentTime());
-            }, 3000);
-        });
-    }
-
-    _getData2() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(currentTime());
-            }, 3000);
-        });
-    }
-
 }
 
 
@@ -233,4 +180,4 @@ export const demoState = new DemoState();`;
       }
     }]
   };
-}, DemoElement);
+}, DemoPage(LitElement));

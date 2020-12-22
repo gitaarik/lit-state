@@ -1,6 +1,13 @@
 # LitState Changelog
 
 
+### 1.5.0 - Moved `asyncStateVar` to separate repository
+
+- The `asyncStateVar` is now available [here](https://github.com/gitaarik/lit-state-async-state-var)
+  so that LitState is tiny for projects that don't use `asyncStateVar`.
+- Updated docs and demo app.
+
+
 ### 1.4.0 - Mixin primary means of making components state-aware
 
 - Making mixin usage the primary means for making your components state-aware.

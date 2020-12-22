@@ -30,20 +30,12 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
-import hljs from '../../web_modules/highlightjs/lib/core.js';
-import javascript from '../../web_modules/highlightjs/lib/languages/javascript.js';
-import xml from '../../web_modules/highlightjs/lib/languages/xml.js';
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('xml', xml);
-export let CodeBig = _decorate([customElement('code-big')], function (_initialize, _LitElement) {
-  class CodeBig extends _LitElement {
+import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
+import { DemoComponent } from '../../web_modules/lit-element-demo-app-helpers.js';
+import { observeState } from '../lit-state.js';
+import { demoState } from './state.js';
+export let StateVarComponent1 = _decorate([customElement('state-var-component-1')], function (_initialize, _observeState) {
+  class StateVarComponent1 extends _observeState {
     constructor(...args) {
       super(...args);
 
@@ -53,150 +45,17 @@ export let CodeBig = _decorate([customElement('code-big')], function (_initializ
   }
 
   return {
-    F: CodeBig,
+    F: StateVarComponent1,
     d: [{
-      kind: "field",
-      decorators: [property()],
-      key: "fileName",
-      value: void 0
-    }, {
-      kind: "field",
-      decorators: [property()],
-      key: "code",
-      value: void 0
-    }, {
-      kind: "method",
-      key: "firstUpdated",
-      value: function firstUpdated() {
-        _get(_getPrototypeOf(CodeBig.prototype), "firstUpdated", this).call(this);
-
-        this._initHighlightJs();
-      }
-    }, {
-      kind: "method",
-      key: "_initHighlightJs",
-      value: function _initHighlightJs() {
-        this.shadowRoot.querySelectorAll('.hljs').forEach(block => {
-          hljs.highlightBlock(block);
-        });
-      }
-    }, {
       kind: "method",
       key: "render",
       value: function render() {
         return html`
-            ${this._fileName}
-            <code class="hljs">${this.code}</code>
-        `;
-      }
-    }, {
-      kind: "get",
-      key: "_fileName",
-      value: function _fileName() {
-        if (!this.fileName) {
-          return;
-        }
-
-        return html`<code class="fileName">${this.fileName}</code>`;
-      }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-
-            :host {
-                display: block;
-            }
-
-            .fileName {
-                display: block;
-                margin: 0;
-                padding: 7px 10px;
-                background: #555;
-                color: #FFF;
-                font-weight: bold;
-            }
-
-            .hljs {
-                display: block;
-                box-sizing: border-box;
-                margin: 0;
-                padding: 10px;
-                width: 100%;
-                white-space: pre;
-                overflow-x: auto;
-                color: #ffffff;
-                background: #1c1b1b;
-            }
-
-            .hljs-comment {
-                color: #999999;
-            }
-
-            .hljs-keyword,
-            .hljs-selector-tag,
-            .hljs-meta-keyword,
-            .hljs-doctag,
-            .hljs-section,
-            .hljs-selector-class,
-            .hljs-meta,
-            .hljs-selector-pseudo,
-            .hljs-attr {
-                color: #88aece;
-            }
-
-            .hljs-attribute {
-                color: v#c59bc1;
-            }
-
-            .hljs-name,
-            .hljs-type,
-            .hljs-number,
-            .hljs-selector-id,
-            .hljs-quote,
-            .hljs-template-tag,
-            .hljs-built_in,
-            .hljs-title,
-            .hljs-literal {
-                color: #f08d49;
-            }
-
-            .hljs-string,
-            .hljs-regexp,
-            .hljs-symbol,
-            .hljs-variable,
-            .hljs-template-variable,
-            .hljs-link,
-            .hljs-selector-attr,
-            .hljs-meta-string {
-                color: #b5bd68;
-            }
-
-            .hljs-bullet,
-            .hljs-code {
-                color: #cccccc;
-            }
-
-            .hljs-deletion {
-                color: #de7176;
-            }
-
-            .hljs-addition {
-                color: #76c490;
-            }
-
-            .hljs-emphasis {
-                font-style: italic;
-            }
-
-            .hljs-strong {
-                font-weight: bold;
-            }
-
+            <h2>&lt;component-1&gt;</h2>
+            <h3 class="value">Counter: ${demoState.counter}</h3>
+            <button @click=${() => demoState.counter++}>increase counter</button>
         `;
       }
     }]
   };
-}, LitElement);
+}, observeState(DemoComponent(LitElement)));

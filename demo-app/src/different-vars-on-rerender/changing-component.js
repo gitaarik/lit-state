@@ -1,59 +1,47 @@
 import { customElement, LitElement, html, css } from 'lit-element';
+import { DemoComponent } from 'lit-element-demo-app-helpers';
 import { observeState } from '@app/lit-state.js';
-import { DemoComponent } from '@app/demo-component.js';
-import '@app/components/code-small';
-import { demoState } from './state';
+import { demoState } from './state.js';
 
 
 @customElement('changing-component')
-export class ChangingComponent extends DemoComponent(observeState(LitElement)) {
+export class ChangingComponent extends observeState(DemoComponent(LitElement)) {
 
     render() {
-
-        const [counter, data] = this.getVars();
 
         return html`
 
             <h2>&lt;changing-component&gt;</h2>
 
-            <div id="varsChooser">
+            <label>
+                <input
+                    type="radio"
+                    @click=${() => demoState.showVars = 1}
+                    .checked=${demoState.showVars === 1}
+                />
+                <code-small>counter1</code-small>
+            </label>
 
-                <div>Show vars:</div>
+            <label>
+                <input
+                    type="radio"
+                    @click=${() => demoState.showVars = 2}
+                    .checked=${demoState.showVars === 2}
+                />
+                <code-small>counter2</code-small>
+            </label>
 
-                <label>
-                    <input
-                        type="radio"
-                        @click=${() => demoState.showVars = 1}
-                        .checked=${demoState.showVars === 1}
-                    />
-                    <code-small>counter1</code-small> and
-                    <code-small>data1</code-small>
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        @click=${() => demoState.showVars = 2}
-                        .checked=${demoState.showVars === 2}
-                    />
-                    <code-small>counter2</code-small> and
-                    <code-small>data2</code-small>
-                </label>
-
-            </div>
-
-            <div class="value">Counter: ${counter}</div>
-            <div class="value">Data: ${data}</div>
+            <h3 class="value">Counter: ${this.counter}</h3>
 
         `;
 
     }
 
-    getVars() {
+    get counter() {
         if (demoState.showVars === 1) {
-            return [demoState.counter1, demoState.data1.getValue()];
+            return demoState.counter1;
         } else if (demoState.showVars === 2) {
-            return [demoState.counter2, demoState.data2.getValue()];
+            return demoState.counter2;
         }
     }
 
@@ -61,7 +49,7 @@ export class ChangingComponent extends DemoComponent(observeState(LitElement)) {
 
         return css`
 
-            #varsChooser label {
+            label {
                 display: block;
                 margin: 5px 0;
                 padding: 5px;
@@ -70,7 +58,7 @@ export class ChangingComponent extends DemoComponent(observeState(LitElement)) {
                 cursor: pointer;
             }
 
-            #varsChooser label input {
+            label input {
                 margin: 0 5px 0;
             }
 
