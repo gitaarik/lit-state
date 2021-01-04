@@ -125,7 +125,7 @@ export class ChangingComponent extends observeState(LitElement) {
             <label>
                 <input
                     type="radio"
-                    @click=\${() => demoState.showCounter = 1}
+                    @click=\${this.handleShowCounter1RadioClick}
                     .checked=\${demoState.showCounter === 1}
                 />
                 <code>counter1</code>
@@ -134,7 +134,7 @@ export class ChangingComponent extends observeState(LitElement) {
             <label>
                 <input
                     type="radio"
-                    @click=\${() => demoState.showCounter = 2}
+                    @click=\${this.handleShowCounter2RadioClick}
                     .checked=\${demoState.showCounter === 2}
                 />
                 <code>counter2</code>
@@ -144,6 +144,14 @@ export class ChangingComponent extends observeState(LitElement) {
 
         \`;
 
+    }
+
+    handleShowCounter1RadioClick() {
+        demoState.showCounter = 1;
+    }
+
+    handleShowCounter2RadioClick() {
+        demoState.showCounter = 2;
     }
 
     get counter() {

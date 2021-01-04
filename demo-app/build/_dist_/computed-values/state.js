@@ -30,12 +30,10 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
-import { DemoComponent } from '../../web_modules/lit-element-demo-app-helpers.js';
-import { observeState } from '../lit-state.js';
-import { demoState } from './state.js';
-export let ChangingComponent = _decorate([customElement('changing-component')], function (_initialize, _observeState) {
-  class ChangingComponent extends _observeState {
+import { LitState, stateVar } from '../lit-state.js';
+
+let DemoState = _decorate(null, function (_initialize, _LitState) {
+  class DemoState extends _LitState {
     constructor(...args) {
       super(...args);
 
@@ -45,81 +43,40 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
   }
 
   return {
-    F: ChangingComponent,
+    F: DemoState,
     d: [{
-      kind: "method",
-      key: "render",
-      value: function render() {
-        return html`
+      kind: "field",
+      decorators: [stateVar()],
+      key: "number1",
 
-            <h2>&lt;changing-component&gt;</h2>
-
-            <label>
-                <input
-                    type="radio"
-                    @click=${this.handleShowCounter1RadioClick}
-                    .checked=${demoState.showCounter === 1}
-                />
-                Show <code-small>counter1</code-small>
-            </label>
-
-            <label>
-                <input
-                    type="radio"
-                    @click=${this.handleShowCounter2RadioClick}
-                    .checked=${demoState.showCounter === 2}
-                />
-                Show <code-small>counter2</code-small>
-            </label>
-
-            <h3 class="value">Value: ${this.counter}</h3>
-
-        `;
+      value() {
+        return 0;
       }
+
+    }, {
+      kind: "field",
+      decorators: [stateVar()],
+      key: "number2",
+
+      value() {
+        return 0;
+      }
+
     }, {
       kind: "get",
-      key: "counter",
-      value: function counter() {
-        if (demoState.showCounter === 1) {
-          return demoState.counter1;
-        } else if (demoState.showCounter === 2) {
-          return demoState.counter2;
-        }
+      key: "sum",
+      value: function sum() {
+        return this.number1 + this.number2;
       }
     }, {
       kind: "method",
-      key: "handleShowCounter1RadioClick",
-      value: function handleShowCounter1RadioClick() {
-        demoState.showCounter = 1;
-      }
-    }, {
-      kind: "method",
-      key: "handleShowCounter2RadioClick",
-      value: function handleShowCounter2RadioClick() {
-        demoState.showCounter = 2;
-      }
-    }, {
-      kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
-
-            label {
-                display: block;
-                margin: 5px 0;
-                padding: 5px;
-                background: #BBB;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-
-            label input {
-                margin: 0 5px 0;
-            }
-
-        `;
+      key: "increaseBoth",
+      value: function increaseBoth() {
+        this.number1++;
+        this.number2++;
       }
     }]
   };
-}, observeState(DemoComponent(LitElement)));
+}, LitState);
+
+export const demoState = new DemoState();

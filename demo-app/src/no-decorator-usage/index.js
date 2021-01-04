@@ -26,6 +26,8 @@ export class NoDecoratorUsage extends DemoPage(LitElement) {
                 <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
             </p>
 
+            <p>The result it the same as when you would use decorators.</p>
+
             <div class="demoComponents">
                 <no-deco-component-1></no-deco-component-1>
                 <no-deco-component-2></no-deco-component-2>

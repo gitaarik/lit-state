@@ -30,12 +30,12 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
-import { DemoComponent } from '../../web_modules/lit-element-demo-app-helpers.js';
-import { observeState } from '../lit-state.js';
-import { demoState } from './state.js';
-export let ChangingComponent = _decorate([customElement('changing-component')], function (_initialize, _observeState) {
-  class ChangingComponent extends _observeState {
+import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
+import { DemoPage } from '../../web_modules/lit-element-demo-app-helpers.js';
+import '../../web_modules/lit-element-demo-app-helpers.js';
+import './computed-value-component.js';
+export let ComputedValues = _decorate([customElement('computed-values')], function (_initialize, _DemoPage) {
+  class ComputedValues extends _DemoPage {
     constructor(...args) {
       super(...args);
 
@@ -45,81 +45,130 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
   }
 
   return {
-    F: ChangingComponent,
+    F: ComputedValues,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h2>&lt;changing-component&gt;</h2>
+            <h1>Computed values</h1>
 
-            <label>
-                <input
-                    type="radio"
-                    @click=${this.handleShowCounter1RadioClick}
-                    .checked=${demoState.showCounter === 1}
-                />
-                Show <code-small>counter1</code-small>
-            </label>
+            <p>
+                You can have helper methods on your
+                <code-small>LitState</code-small> class that return computed
+                values, or update multiple values at the same time.
+            </p>
 
-            <label>
-                <input
-                    type="radio"
-                    @click=${this.handleShowCounter2RadioClick}
-                    .checked=${demoState.showCounter === 2}
-                />
-                Show <code-small>counter2</code-small>
-            </label>
+            <p>
+                <computed-value-component></computed-value-component>
+            </p>
 
-            <h3 class="value">Value: ${this.counter}</h3>
+            <p>
+                In our state class, we have a getter function that returns the
+                sum of both numbers. Also there is a method that increases both
+                numbers.
+            </p>
+
+            <p>
+                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+            </p>
+
+            <p>
+                Out component makes use of these helper methods, so that it
+                doesn't have to do this work itself.
+            </p>
+
+            <p>
+                <code-big filename='computed-value-component.js' .code=${this.computedValueComponentCode}></code-big>
+            </p>
 
         `;
       }
     }, {
       kind: "get",
-      key: "counter",
-      value: function counter() {
-        if (demoState.showCounter === 1) {
-          return demoState.counter1;
-        } else if (demoState.showCounter === 2) {
-          return demoState.counter2;
-        }
-      }
-    }, {
-      kind: "method",
-      key: "handleShowCounter1RadioClick",
-      value: function handleShowCounter1RadioClick() {
-        demoState.showCounter = 1;
-      }
-    }, {
-      kind: "method",
-      key: "handleShowCounter2RadioClick",
-      value: function handleShowCounter2RadioClick() {
-        demoState.showCounter = 2;
+      key: "demoStateCode",
+      value: function demoStateCode() {
+        return `import { LitState, stateVar } from 'lit-element-state.js';
+
+class DemoState extends LitState {
+
+    @stateVar() number1 = 0;
+    @stateVar() number2 = 0;
+
+    get sum() {
+        return this.number1 + this.number2;
+    }
+
+    increaseBoth() {
+        this.number1++;
+        this.number2++;
+    }
+
+}
+
+export const demoState = new DemoState();`;
       }
     }, {
       kind: "get",
-      static: true,
-      key: "styles",
-      value: function styles() {
-        return css`
+      key: "computedValueComponentCode",
+      value: function computedValueComponentCode() {
+        return `import { customElement, LitElement, html } from 'lit-element';
+import { observeState } from 'lit-element-state';
+import { demoState } from './demo-state.js';
 
-            label {
-                display: block;
-                margin: 5px 0;
-                padding: 5px;
-                background: #BBB;
-                border-radius: 5px;
-                cursor: pointer;
-            }
 
-            label input {
-                margin: 0 5px 0;
-            }
+@customElement('computed-value-component')
+export class ComputedValueComponent extends observeState(LitElement) {
 
-        `;
+    render() {
+
+        return html\`
+
+            <h2>&lt;computed-value-component&gt;</h2>
+
+            <h3>
+                Number 1:
+                <input
+                    type="number"
+                    .value=\${demoState.number1}
+                    @change=\${this.handleNumber1InputChange}
+                ></input>
+            </h3>
+
+            <h3>
+                Number 2:
+                <input
+                    type="number"
+                    .value=\${demoState.number2}
+                    @change=\${this.handleNumber2InputChange}
+                ></input>
+            </h3>
+
+            <h3>
+                <button @click=\${this.handleIncreaseBothButtonClick}>Increase both</button>
+            </h3>
+
+            <h3>Sum: \${demoState.sum}</h3>
+
+        \`;
+
+    }
+
+    handleNumber1InputChange(event) {
+        demoState.number1 = parseInt(event.target.value);
+    }
+
+    handleNumber2InputChange(event) {
+        demoState.number2 = parseInt(event.target.value);
+    }
+
+    handleIncreaseBothButtonClick() {
+        demoState.increaseBoth();
+    }
+
+}`;
       }
     }]
   };
-}, observeState(DemoComponent(LitElement)));
+}, DemoPage(LitElement));

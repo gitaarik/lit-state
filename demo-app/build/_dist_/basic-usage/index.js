@@ -122,10 +122,14 @@ export class Component1 extends observeState(LitElement) {
         return html\`
             <h2>&lt;component-1&gt;</h2>
             <h3>Counter: \${demoState.counter}</h3>
-            <button @click=\${() => demoState.counter++}>
+            <button @click=\${this.handleIncreaseCounterButtonClick}>
                 increase counter
             </button>
         \`;
+    }
+
+    handleIncreaseCounterButtonClick() {
+        demoState.counter++;
     }
 
 }`;

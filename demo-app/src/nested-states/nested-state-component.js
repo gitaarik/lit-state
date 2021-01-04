@@ -14,13 +14,21 @@ export class NestedStateComponent extends observeState(DemoComponent(LitElement)
             <h2>&lt;nested-state-component&gt;</h2>
 
             <h3 class="value">ChildState1 counter: ${parentState.childState1.counter}</h3>
-            <button @click=${() => parentState.childState1.counter++}>increase counter</button>
+            <button @click=${this.handleIncreaseChild1CounterButtonClick}>increase counter</button>
 
             <h3 class="value">ChildState2 counter: ${parentState.childState2.counter}</h3>
-            <button @click=${() => parentState.childState2.counter++}>increase counter</button>
+            <button @click=${this.handleIncreaseChild2CounterButtonClick}>increase counter</button>
 
         `;
 
+    }
+
+    handleIncreaseChild1CounterButtonClick() {
+        parentState.childState1.counter++;
+    }
+
+    handleIncreaseChild2CounterButtonClick() {
+        parentState.childState2.counter++;
     }
 
 }

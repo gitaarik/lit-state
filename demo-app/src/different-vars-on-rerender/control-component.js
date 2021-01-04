@@ -16,17 +16,25 @@ export class ControlComponent extends observeState(DemoComponent(LitElement)) {
             <h3 class="value">
                 Counter1:
                 ${demoState.counter1}
-                <button @click=${() => demoState.counter1++}>increase</button>
+                <button @click=${this.handleIncreaseCounter1ButtonClick}>increase</button>
             </h3>
 
             <h3 class="value">
                 Counter2:
                 ${demoState.counter2}
-                <button @click=${() => demoState.counter2++}>increase</button>
+                <button @click=${this.handleIncreaseCounter2ButtonClick}>increase</button>
             </h3>
 
         `;
 
+    }
+
+    handleIncreaseCounter1ButtonClick() {
+        demoState.counter1++;
+    }
+
+    handleIncreaseCounter2ButtonClick() {
+        demoState.counter2++;
     }
 
 }

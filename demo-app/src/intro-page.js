@@ -80,8 +80,12 @@ class MyComponent extends observeState(LitElement) {
     render() {
         return html\`
             <h1>Counter: \${myState.counter}</h1>
-            <button @click=\${() => myState.counter++}></button>
+            <button @click=\${this.handleIncreaseCounterButtonClick}></button>
         \`;
+    }
+
+    handleIncreaseCounterButtonClick() {
+        myState.counter++;
     }
 
 }`;

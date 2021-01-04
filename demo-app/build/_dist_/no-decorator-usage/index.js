@@ -67,6 +67,8 @@ export let NoDecoratorUsage = _decorate([customElement('no-decorator-usage')], f
                 <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
             </p>
 
+            <p>The result it the same as when you would use decorators.</p>
+
             <div class="demoComponents">
                 <no-deco-component-1></no-deco-component-1>
                 <no-deco-component-2></no-deco-component-2>

@@ -4,6 +4,7 @@ import './intro-page';
 import './basic-usage/index';
 import './no-decorator-usage/index';
 import './different-vars-on-rerender/index';
+import './computed-values/index';
 import './nested-states/index';
 
 
@@ -35,6 +36,11 @@ export class LitStateDemo extends LitElement {
 				hash: 'different-vars-on-rerender',
 				title: 'Different vars on rerender',
 				template: html`<different-vars-on-rerender></different-vars-on-rerender>`
+			},
+			{
+				hash: 'computed-values',
+				title: 'Computed values',
+				template: html`<computed-values></computed-values>`
 			},
 			{
 				hash: 'nested-states',

@@ -36,6 +36,7 @@ import './intro-page.js';
 import './basic-usage/index.js';
 import './no-decorator-usage/index.js';
 import './different-vars-on-rerender/index.js';
+import './computed-values/index.js';
 import './nested-states/index.js';
 export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitElement) {
   class LitStateDemo extends _LitElement {
@@ -75,6 +76,10 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
           hash: 'different-vars-on-rerender',
           title: 'Different vars on rerender',
           template: html`<different-vars-on-rerender></different-vars-on-rerender>`
+        }, {
+          hash: 'computed-values',
+          title: 'Computed values',
+          template: html`<computed-values></computed-values>`
         }, {
           hash: 'nested-states',
           title: 'Nested states',
