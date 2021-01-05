@@ -1,12 +1,12 @@
 {
   "name": "lit-element-state",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Simple shared app state management for LitElement",
   "main": "lit-state.js",
   "files": [
     "lit-state.js"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "lit-element": "^2.4.0"
   },
   "scripts": {
