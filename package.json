@@ -1,9 +1,14 @@
 {
   "name": "lit-element-state",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Simple shared app state management for LitElement",
   "main": "lit-state.js",
-  "files": ["lit-state.js"],
+  "files": [
+    "lit-state.js"
+  ],
+  "dependencies": {
+    "lit-element": "^2.4.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
