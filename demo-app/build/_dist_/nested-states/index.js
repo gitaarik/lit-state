@@ -86,12 +86,12 @@ export let NestedStates = _decorate([customElement('nested-states')], function (
         return `import { LitState, stateVar } from 'lit-element-state';
 
 class ParentState extends LitState {
-    childState1 = stateVar();
-    childState2 = stateVar();
+    @stateVar() childState1;
+    @stateVar() childState2;
 }
 
 class ChildState extends LitState {
-    counter = stateVar(0);
+    @stateVar() counter;
 }
 
 export const parentState = new ParentState();

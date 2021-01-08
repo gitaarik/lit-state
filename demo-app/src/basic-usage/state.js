@@ -2,7 +2,7 @@ import { LitState, stateVar } from '@app/lit-state.js';
 
 
 class DemoState extends LitState {
-    counter = stateVar(0);
+    @stateVar() counter = 0;
 }
 
 

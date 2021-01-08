@@ -1,3 +1,5 @@
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 import { LitElement } from '../web_modules/lit-element.js';
 export const observeState = superclass => class extends superclass {
   constructor() {
@@ -48,38 +50,9 @@ export const observeState = superclass => class extends superclass {
 export const LitStateElement = observeState(LitElement);
 export class LitState {
   constructor() {
-    this._stateVars = [];
+    this._initStateVars();
+
     this._observers = [];
-    return new Proxy(this, {
-      set: (obj, key, value) => {
-        if (this._isStateVar(key)) {
-          const return_value = obj[key]._handleSet(value);
-
-          if (return_value !== undefined) {
-            return return_value;
-          }
-        } else if (value instanceof BaseStateVar) {
-          this._stateVars.push(key);
-
-          value._recordRead = () => this._recordRead(key);
-
-          value._notifyChange = () => this._notifyChange(key);
-
-          obj[key] = value;
-        } else {
-          obj[key] = value;
-        }
-
-        return true;
-      },
-      get: (obj, key) => {
-        if (obj._isStateVar(key)) {
-          return obj[key]._handleGet();
-        }
-
-        return obj[key];
-      }
-    });
   }
 
   addObserver(observer, keys) {
@@ -93,8 +66,40 @@ export class LitState {
     this._observers = this._observers.filter(observerObj => observerObj.observer !== observer);
   }
 
-  _isStateVar(key) {
-    return this._stateVars.includes(key);
+  _initStateVars() {
+    for (let [name, options] of Object.entries(this.constructor.stateVars)) {
+      this.constructor._initStateVar(name, options);
+    }
+  }
+
+  static _initStateVar(name, options) {
+    if (!options.handler) {
+      options.handler = StateVar;
+    }
+
+    const key = `__${name}`;
+    Object.defineProperty(this.prototype, name, {
+      get() {
+        return this[key]._handleGet();
+      },
+
+      set(value) {
+        if (!(key in this)) {
+          this[key] = new options.handler();
+
+          this[key]._recordRead = () => this._recordRead(name);
+
+          this[key]._notifyChange = () => this._notifyChange(name);
+
+          this[key]._initialized = true;
+        }
+
+        return this[key]._handleSet(value);
+      },
+
+      configurable: true,
+      enumerable: true
+    });
   }
 
   _recordRead(key) {
@@ -112,7 +117,14 @@ export class LitState {
   }
 
 }
+
+_defineProperty(LitState, "stateVars", {});
+
 export class BaseStateVar {
+  constructor() {
+    _defineProperty(this, "_initialized", false);
+  }
+
   _handleGet() {}
 
   _handleSet(value) {}
@@ -120,11 +132,6 @@ export class BaseStateVar {
 }
 
 class StateVar extends BaseStateVar {
-  constructor(initialValue) {
-    super();
-    this._value = initialValue;
-  }
-
   _handleGet() {
     this._recordRead();
 
@@ -137,12 +144,32 @@ class StateVar extends BaseStateVar {
 
       this._notifyChange();
     }
+
+    return true;
   }
 
 }
 
-export function stateVar(defaultValue) {
-  return new StateVar(defaultValue);
+export function stateVar(options = {}) {
+  return element => {
+    return {
+      kind: 'field',
+      key: Symbol(),
+      placement: 'own',
+      descriptor: {},
+
+      initializer() {
+        if (typeof element.initializer === 'function') {
+          this[element.key] = element.initializer.call(this);
+        }
+      },
+
+      finisher(clazz) {
+        clazz._initStateVar(element.key, options);
+      }
+
+    };
+  };
 }
 
 class StateRecorder {

@@ -30,10 +30,13 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { LitState, stateVar } from '../lit-state.js';
-
-let DemoState = _decorate(null, function (_initialize, _LitState) {
-  class DemoState extends _LitState {
+import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
+import { DemoPage } from '../../web_modules/lit-element-demo-app-helpers.js';
+import '../../web_modules/lit-element-demo-app-helpers.js';
+import './no-deco-component-1.js';
+import './no-deco-component-2.js';
+export let NoDecoratorUsage = _decorate([customElement('no-decorator-usage')], function (_initialize, _DemoPage) {
+  class NoDecoratorUsage extends _DemoPage {
     constructor(...args) {
       super(...args);
 
@@ -43,36 +46,62 @@ let DemoState = _decorate(null, function (_initialize, _LitState) {
   }
 
   return {
-    F: DemoState,
+    F: NoDecoratorUsage,
     d: [{
-      kind: "field",
-      decorators: [stateVar()],
-      key: "showCounter",
+      kind: "method",
+      key: "render",
+      value: function render() {
+        return html`
 
-      value() {
-        return 1;
+            <h1>Usage without decorator</h1>
+
+            <p>
+                In case you can't or don't want to use decorators, you can
+                define the stateVars with a static
+                <code-small>stateVars</code-small> getter method. Then you can
+                use the <code-small>constructor</code-small> to set the initial
+                values.
+            </p>
+
+            <p>
+                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+            </p>
+
+            <div class="demoComponents">
+                <no-deco-component-1></no-deco-component-1>
+                <no-deco-component-2></no-deco-component-2>
+            </div>
+
+            <p>
+                It is basically the same how you would define LitElement
+                properties without decorators.
+            </p>
+
+        `;
       }
-
     }, {
-      kind: "field",
-      decorators: [stateVar()],
-      key: "counter1",
+      kind: "get",
+      key: "demoStateCode",
+      value: function demoStateCode() {
+        return `import { LitState, stateVar } from 'lit-element-state';
 
-      value() {
-        return 0;
+class DemoState extends LitState {
+
+    static get stateVars() {
+        return {
+            counter: {}
+        };
+    }
+
+    constructor() {
+        super();
+        this.counter = 0;
+    }
+
+}
+
+export const demoState = new DemoState();`;
       }
-
-    }, {
-      kind: "field",
-      decorators: [stateVar()],
-      key: "counter2",
-
-      value() {
-        return 0;
-      }
-
     }]
   };
-}, LitState);
-
-export const demoState = new DemoState();
+}, DemoPage(LitElement));

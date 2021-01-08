@@ -2,6 +2,7 @@ import { customElement, LitElement, property, html, css } from 'lit-element';
 import 'lit-element-demo-app-helpers';
 import './intro-page';
 import './basic-usage/index';
+import './no-decorator-usage/index';
 import './different-vars-on-rerender/index';
 import './nested-states/index';
 
@@ -26,6 +27,11 @@ export class LitStateDemo extends LitElement {
 				template: html`<basic-usage></basic-usage>`
 			},
 			{
+				hash: 'no-decorator-usage',
+				title: 'Usage without decorators',
+				template: html`<no-decorator-usage></no-decorator-usage>`
+			},
+            {
 				hash: 'different-vars-on-rerender',
 				title: 'Different vars on rerender',
 				template: html`<different-vars-on-rerender></different-vars-on-rerender>`
@@ -34,7 +40,7 @@ export class LitStateDemo extends LitElement {
 				hash: 'nested-states',
 				title: 'Nested states',
 				template: html`<nested-states></nested-states>`
-			}
+            }
 		];
 	}
 

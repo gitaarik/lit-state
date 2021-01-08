@@ -165,9 +165,9 @@ import { currentTime } from './utils.js'
 
 
 class DemoState extends LitState {
-    showCounter = stateVar(1);
-    counter1 = stateVar(0);
-    counter2 = stateVar(0);
+    @stateVar() showCounter = 1;
+    @stateVar() counter1 = 0;
+    @stateVar() counter2 = 0;
 }
 
 

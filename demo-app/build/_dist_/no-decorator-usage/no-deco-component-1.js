@@ -30,10 +30,12 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { LitState, stateVar } from '../lit-state.js';
-
-let DemoState = _decorate(null, function (_initialize, _LitState) {
-  class DemoState extends _LitState {
+import { customElement, LitElement, html, css } from '../../web_modules/lit-element.js';
+import { DemoComponent } from '../../web_modules/lit-element-demo-app-helpers.js';
+import { observeState } from '../lit-state.js';
+import { demoState } from './state.js';
+export let NoDecoComponent1 = _decorate([customElement('no-deco-component-1')], function (_initialize, _observeState) {
+  class NoDecoComponent1 extends _observeState {
     constructor(...args) {
       super(...args);
 
@@ -43,36 +45,17 @@ let DemoState = _decorate(null, function (_initialize, _LitState) {
   }
 
   return {
-    F: DemoState,
+    F: NoDecoComponent1,
     d: [{
-      kind: "field",
-      decorators: [stateVar()],
-      key: "showCounter",
-
-      value() {
-        return 1;
+      kind: "method",
+      key: "render",
+      value: function render() {
+        return html`
+            <h2>&lt;component-1&gt;</h2>
+            <h3 class="value">Counter: ${demoState.counter}</h3>
+            <button @click=${() => demoState.counter++}>increase counter</button>
+        `;
       }
-
-    }, {
-      kind: "field",
-      decorators: [stateVar()],
-      key: "counter1",
-
-      value() {
-        return 0;
-      }
-
-    }, {
-      kind: "field",
-      decorators: [stateVar()],
-      key: "counter2",
-
-      value() {
-        return 0;
-      }
-
     }]
   };
-}, LitState);
-
-export const demoState = new DemoState();
+}, observeState(DemoComponent(LitElement)));

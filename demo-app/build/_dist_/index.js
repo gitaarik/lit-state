@@ -34,6 +34,7 @@ import { customElement, LitElement, property, html, css } from '../web_modules/l
 import '../web_modules/lit-element-demo-app-helpers.js';
 import './intro-page.js';
 import './basic-usage/index.js';
+import './no-decorator-usage/index.js';
 import './different-vars-on-rerender/index.js';
 import './nested-states/index.js';
 export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitElement) {
@@ -66,6 +67,10 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
           hash: 'basic-usage',
           title: 'Basic usage',
           template: html`<basic-usage></basic-usage>`
+        }, {
+          hash: 'no-decorator-usage',
+          title: 'Usage without decorators',
+          template: html`<no-decorator-usage></no-decorator-usage>`
         }, {
           hash: 'different-vars-on-rerender',
           title: 'Different vars on rerender',

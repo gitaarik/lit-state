@@ -2,13 +2,13 @@ import { LitState, stateVar } from '@app/lit-state.js';
 
 
 class ParentState extends LitState {
-    childState1 = stateVar();
-    childState2 = stateVar();
+    @stateVar() childState1;
+    @stateVar() childState2;
 }
 
 
 class ChildState extends LitState {
-    counter = stateVar(0);
+    @stateVar() counter;
 }
 
 

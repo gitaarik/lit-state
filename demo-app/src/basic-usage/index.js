@@ -61,7 +61,7 @@ export class BasicUsage extends DemoPage(LitElement) {
         return `import { LitState, stateVar } from 'lit-element-state';
 
 class DemoState extends LitState {
-    counter = stateVar(0);
+    @stateVar() counter = 0;
 }
 
 export const demoState = new DemoState();`;

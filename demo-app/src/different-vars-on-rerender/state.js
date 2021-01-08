@@ -1,11 +1,10 @@
 import { LitState, stateVar } from '@app/lit-state.js';
-import { currentTime } from 'lit-element-demo-app-helpers';
 
 
 class DemoState extends LitState {
-    showCounter = stateVar(1);
-    counter1 = stateVar(0);
-    counter2 = stateVar(0);
+    @stateVar() showCounter = 1;
+    @stateVar() counter1 = 0;
+    @stateVar() counter2 = 0;
 }
 
 

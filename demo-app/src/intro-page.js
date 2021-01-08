@@ -17,7 +17,8 @@ export class IntroPage extends DemoPage(LitElement) {
             <p>
                 LitState automatically re-renders your LitElement
                 components, when a shared app state variable they use
-                changes.
+                changes. It's like LitElement's properties, but then shared
+                over multiple components.
             </p>
 
             <h2>Installation</h2>
@@ -31,16 +32,21 @@ export class IntroPage extends DemoPage(LitElement) {
             <h3>1. Create a <code-small>LitState</code-small> object:</h3>
 
             <p>
-                <code-big filename='state.js' .code=${this.stateCode}></code-big>
+                Use the <code-small>stateVar()</code-small> decorator to define
+                the variables that should be observed by LitState.
+            </p>
+
+            <p>
+                <code-big filename='my-state.js' .code=${this.stateCode}></code-big>
             </p>
 
             <h3>2. Make your component aware of your state:</h3>
 
             <p>
-                By using the <code-small>observeState()</code-small> mixin on
-                your <code-small>LitElement</code-small> class and then just
-                using the <code-small>stateVar</code-small> variables in your
-                render method:
+                Use the <code-small>observeState()</code-small> mixin on your
+                <code-small>LitElement</code-small> components to make them
+                re-render when any <code-small>stateVar</code-small> variables
+                they use changes.
             </p>
 
             <p>
@@ -56,7 +62,7 @@ export class IntroPage extends DemoPage(LitElement) {
         return `import { LitState, stateVar } from 'lit-element-state';
 
 class MyState extends LitState {
-    counter = stateVar(0); // \`0\` is the default value
+    @stateVar() counter = 0;
 }
 
 export const myState = new MyState();`;
