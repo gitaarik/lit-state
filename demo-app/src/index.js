@@ -6,6 +6,7 @@ import './no-decorator-usage/index';
 import './different-vars-on-rerender/index';
 import './computed-values/index';
 import './nested-states/index';
+import './state-var-handler/index';
 
 
 @customElement('lit-state-demo')
@@ -34,7 +35,7 @@ export class LitStateDemo extends LitElement {
 			},
             {
 				hash: 'different-vars-on-rerender',
-				title: 'Different vars on rerender',
+				title: 'Different vars on re-render',
 				template: html`<different-vars-on-rerender></different-vars-on-rerender>`
 			},
 			{
@@ -46,6 +47,11 @@ export class LitStateDemo extends LitElement {
 				hash: 'nested-states',
 				title: 'Nested states',
 				template: html`<nested-states></nested-states>`
+            },
+			{
+				hash: 'state-var-handler',
+				title: 'StateVar handler',
+				template: html`<state-var-handler></state-var-handler>`
             }
 		];
 	}

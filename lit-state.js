@@ -1,6 +1,3 @@
-import { LitElement } from 'lit-element';
-
-
 export const observeState = superclass => class extends superclass {
 
     constructor() {
@@ -43,16 +40,13 @@ export const observeState = superclass => class extends superclass {
 }
 
 
-export const LitStateElement = observeState(LitElement);
-
-
 export class LitState {
 
     static stateVars = {};
 
     constructor() {
-        this._initStateVars();
         this._observers = [];
+        this._initStateVars();
     }
 
     addObserver(observer, keys) {
@@ -64,44 +58,37 @@ export class LitState {
     }
 
     _initStateVars() {
-        for (let [name, options] of Object.entries(this.constructor.stateVars)) {
-            this.constructor._initStateVar(name, options);
+        for (let [key, options] of Object.entries(this.constructor.stateVars)) {
+            this._initStateVar(key, options);
         }
     }
 
-    static _initStateVar(name, options) {
+    _initStateVar(key, options) {
 
         if (!options.handler) {
             options.handler = StateVar;
         }
 
-        const key = `__${name}`;
+        const stateVar = new options.handler({
+            options: options,
+            recordRead: () => this._recordRead(key),
+            notifyChange: () => this._notifyChange(key)
+        });
 
         Object.defineProperty(
-            this.prototype,
-            name,
+            this,
+            key,
             {
-
                 get() {
-                    return this[key]._handleGet();
+                    return stateVar.get();
                 },
-
                 set(value) {
-
-                    if (!(key in this)) {
-                        this[key] = new options.handler();
-                        this[key]._recordRead = () => this._recordRead(name);
-                        this[key]._notifyChange = () => this._notifyChange(name);
-                        this[key]._initialized = true;
+                    if (stateVar.shouldSetValue(value)) {
+                        stateVar.set(value);
                     }
-
-                    return this[key]._handleSet(value);
-
                 },
-
                 configurable: true,
                 enumerable: true
-
             }
         );
 
@@ -122,29 +109,31 @@ export class LitState {
 }
 
 
-export class BaseStateVar {
-    _initialized = false;
-    _handleGet() {}
-    _handleSet(value) {}
-}
+export class StateVar {
 
-
-class StateVar extends BaseStateVar {
-
-    _handleGet() {
-        this._recordRead();
-        return this._value;
+    constructor(args) {
+        this.options = args.options; // The options given in the `stateVar` declaration
+        this.recordRead = args.recordRead; // Callback to indicate the `stateVar` is read
+        this.notifyChange = args.notifyChange; // Callback to indicate the `stateVar` value has changed
+        this.value = undefined; // The initial value
     }
 
-    _handleSet(value) {
+    // Called when the `stateVar` on the `State` class is read.
+    get() {
+        this.recordRead();
+        return this.value;
+    }
 
-        if (this._value !== value) {
-            this._value = value;
-            this._notifyChange();
-        }
+    // Returns whether the given `value` should be passed on to the `set()`
+    // method. Can be used for validation and/or optimization.
+    shouldSetValue(value) {
+        return this.value !== value;
+    }
 
-        return true;
-
+    // Called when the `stateVar` on the `State` class is set.
+    set(value) {
+        this.value = value;
+        this.notifyChange()
     }
 
 }
@@ -164,8 +153,9 @@ export function stateVar(options = {}) {
                     this[element.key] = element.initializer.call(this);
                 }
             },
-            finisher(clazz) {
-                clazz._initStateVar(element.key, options);
+            finisher(litStateClass) {
+                options.element = element;
+                litStateClass.stateVars[element.key] = options;
             }
         };
 
