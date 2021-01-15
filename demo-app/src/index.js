@@ -7,6 +7,7 @@ import './different-vars-on-rerender/index';
 import './computed-values/index';
 import './nested-states/index';
 import './state-var-handler/index';
+import './manually-observe-state/index';
 
 
 @customElement('lit-state-demo')
@@ -52,6 +53,11 @@ export class LitStateDemo extends LitElement {
 				hash: 'state-var-handler',
 				title: 'StateVar handler',
 				template: html`<state-var-handler></state-var-handler>`
+            },
+            {
+				hash: 'manually-observe-state',
+				title: 'Manually observe state',
+				template: html`<manually-observe-state></manually-observe-state>`
             }
 		];
 	}
