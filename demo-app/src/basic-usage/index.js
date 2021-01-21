@@ -1,12 +1,12 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import { DemoPage } from 'lit-element-demo-app-helpers';
-import 'lit-element-demo-app-helpers';
+import { LitDocsContent } from 'lit-docs';
+import 'lit-docs';
 import './state-var-component-1';
 import './state-var-component-2';
 
 
 @customElement('basic-usage')
-export class BasicUsage extends DemoPage(LitElement) {
+export class BasicUsage extends LitDocsContent(LitElement) {
 
     render() {
 
@@ -16,7 +16,7 @@ export class BasicUsage extends DemoPage(LitElement) {
 
             <p>
                 Below are 2 components with a shared state
-                <code-small>demoState</code-small>. When you change the state
+                <code>demoState</code>. When you change the state
                 from one component, the other component automatically
                 synchronizes:
             </p>
@@ -27,25 +27,25 @@ export class BasicUsage extends DemoPage(LitElement) {
             </div>
 
             <p>
-                The shared state <code-small>demoState</code-small> contains a
-                <code-small>stateVar</code-small> called
-                <code-small>counter</code-small>. It holds an integer that has
-                an initial value of <code-small>0</code-small>:
+                The shared state <code>demoState</code> contains a
+                <code>stateVar</code> called
+                <code>counter</code>. It holds an integer that has
+                an initial value of <code>0</code>:
             </p>
 
             <p>
-                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
             <p>
                 The components that use the state use the mixin
-                <code-small>observeState</code-small>. This makes them
+                <code>observeState</code>. This makes them
                 automatically re-render when a
-                <code-small>stateVar</code-small> they use changes:
+                <code>stateVar</code> they use changes:
             </p>
 
             <p>
-                <code-big filename='component-1.js' .code=${this.componentCode}></code-big>
+                <code-block filename='component-1.js' .code=${this.componentCode}></code-block>
             </p>
 
             <p>

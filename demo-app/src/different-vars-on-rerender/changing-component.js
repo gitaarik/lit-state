@@ -1,5 +1,5 @@
 import { customElement, LitElement, html, css } from 'lit-element';
-import { DemoComponent } from 'lit-element-demo-app-helpers';
+import { DemoComponent } from '@app/demo-component.js';
 import { observeState } from '@app/lit-state.js';
 import { demoState } from './state.js';
 
@@ -19,7 +19,7 @@ export class ChangingComponent extends observeState(DemoComponent(LitElement)) {
                     @click=${this.handleShowCounter1RadioClick}
                     .checked=${demoState.showCounter === 1}
                 />
-                Show <code-small>counter1</code-small>
+                Show <code>counter1</code>
             </label>
 
             <label>
@@ -28,7 +28,7 @@ export class ChangingComponent extends observeState(DemoComponent(LitElement)) {
                     @click=${this.handleShowCounter2RadioClick}
                     .checked=${demoState.showCounter === 2}
                 />
-                Show <code-small>counter2</code-small>
+                Show <code>counter2</code>
             </label>
 
             <h3 class="value">Value: ${this.counter}</h3>

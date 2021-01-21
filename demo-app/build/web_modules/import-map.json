@@ -1,6 +1,0 @@
-{
-  "imports": {
-    "lit-element": "./lit-element.js",
-    "lit-element-demo-app-helpers": "./lit-element-demo-app-helpers.js"
-  }
-}

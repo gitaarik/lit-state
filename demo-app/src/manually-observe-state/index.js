@@ -1,6 +1,6 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import { DemoPage } from 'lit-element-demo-app-helpers';
-import 'lit-element-demo-app-helpers';
+import { LitDocsContent } from 'lit-docs';
+import 'lit-docs';
 import './observe-all-state-vars/automatic-component.js';
 import './observe-all-state-vars/manual-component.js';
 import './observe-specific-state-vars/specific-automatic-component.js';
@@ -8,7 +8,7 @@ import './observe-specific-state-vars/specific-manual-component.js';
 
 
 @customElement('manually-observe-state')
-export class ManuallyObserveState extends DemoPage(LitElement) {
+export class ManuallyObserveState extends LitDocsContent(LitElement) {
 
     render() {
 
@@ -17,7 +17,7 @@ export class ManuallyObserveState extends DemoPage(LitElement) {
             <h1>Manually observe the state</h1>
 
             <p>
-                When you use the <code-small>observeState()</code-small> mixin,
+                When you use the <code>observeState()</code> mixin,
                 your LitState Element automatically observes the states you use
                 in that component, and re-renders when the state changes. You
                 can also manually add more observers that will be notified when
@@ -33,36 +33,36 @@ export class ManuallyObserveState extends DemoPage(LitElement) {
 
             <p>
                 To add observers to a certain state instance, you just call
-                <code-small>myState.addObserver(myCallback)</code-small>. The
+                <code>myState.addObserver(myCallback)</code>. The
                 callback will be called any time a
-                <code-small>stateVar</code-small> changes. The callback will
+                <code>stateVar</code> changes. The callback will
                 get as a first argument the name of the
-                <code-small>stateVar</code-small> that changed. To stop
+                <code>stateVar</code> that changed. To stop
                 observing, call
-                <code-small>myState.removeObserver(myCallback)</code-small>. It
+                <code>myState.removeObserver(myCallback)</code>. It
                 is similar to the way
-                <code-small>document.addEventListener()</code-small> and
-                <code-small>document.removeEventListener()</code-small> work.
+                <code>document.addEventListener()</code> and
+                <code>document.removeEventListener()</code> work.
             </p>
 
             <p>
                 To keep the example simple, we still use a LitElement
                 component. We just don't use the
-                <code-small>observeState()</code-small> mixin. There are
+                <code>observeState()</code> mixin. There are
                 buttons to manually add and remove the observer:
 
             <p>
-                <code-big filename='manual-component.js' .code=${this.manuallyObserveStateCode}></code-big>
+                <code-block filename='manual-component.js' .code=${this.manuallyObserveStateCode}></code-block>
             </p>
 
             <h2>Observe specific stateVars</h2>
 
             <p>
                 As an optional second argument to
-                <code-small>addObserver()</code-small>, you can provide an
-                array with <code-small>stateVar</code-small> names that you
+                <code>addObserver()</code>, you can provide an
+                array with <code>stateVar</code> names that you
                 want to observe. The callback will then only be called when any
-                of those <code-small>stateVar</code-small> variables change.
+                of those <code>stateVar</code> variables change.
             </p>
 
             <div class="demoComponents">
@@ -71,7 +71,7 @@ export class ManuallyObserveState extends DemoPage(LitElement) {
             </div>
 
             <p>
-                <code-big filename='manual-component.js' .code=${this.manuallyObserveSpecificStateCode}></code-big>
+                <code-block filename='manual-component.js' .code=${this.manuallyObserveSpecificStateCode}></code-block>
             </p>
 
         `;

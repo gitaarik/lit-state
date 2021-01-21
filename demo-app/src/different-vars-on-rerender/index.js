@@ -1,12 +1,12 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import { DemoPage } from 'lit-element-demo-app-helpers';
-import 'lit-element-demo-app-helpers';
+import { LitDocsContent } from 'lit-docs';
+import 'lit-docs';
 import './changing-component';
 import './control-component';
 
 
 @customElement('different-vars-on-rerender')
-export class DifferentVarsOnRerender extends DemoPage(LitElement) {
+export class DifferentVarsOnRerender extends LitDocsContent(LitElement) {
 
     render() {
 
@@ -16,14 +16,14 @@ export class DifferentVarsOnRerender extends DemoPage(LitElement) {
 
             <p>
                 When your component renders, LitState records which
-                <code-small>stateVar</code-small> variables are accessed by
+                <code>stateVar</code> variables are accessed by
                 your component. Then it observes these variables and re-renders
                 itself when one of these variables change.
             </p>
 
             <p>
                 When a re-render renders different
-                <code-small>stateVar</code-small> variables than the previous
+                <code>stateVar</code> variables than the previous
                 render, these new variables will again be recorded and
                 observed, so that the component also re-renders when these new
                 variables change:
@@ -36,28 +36,28 @@ export class DifferentVarsOnRerender extends DemoPage(LitElement) {
 
             <p>
                 In this example,
-                <code-small>&lt;changing-component&gt;</code-small> only shows
+                <code>&lt;changing-component&gt;</code> only shows
                 1 counter at a time.
-                <code-small>&lt;control-component&gt;</code-small> shows them
+                <code>&lt;control-component&gt;</code> shows them
                 both, and you can modify them there. You can see that
-                <code-small>&lt;changing-component&gt;</code-small> keeps
+                <code>&lt;changing-component&gt;</code> keeps
                 re-rendering when any counter it shows changes. Even when a
                 re-render shows a different counter than the previous render:
             </p>
 
             <p>
-                <code-big filename='changing-component.js' .code=${this.changingComponentCode}></code-big>
+                <code-block filename='changing-component.js' .code=${this.changingComponentCode}></code-block>
             </p>
 
             <p>
-                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
             <p>
                 You don't have to worry about which
-                <code-small>stateVar</code-small> you render at which time. As
+                <code>stateVar</code> you render at which time. As
                 long as your component uses the
-                <code-small>observeState</code-small> mixin, your component
+                <code>observeState</code> mixin, your component
                 will stay synchronized.
             </p>
 

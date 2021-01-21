@@ -1,25 +1,25 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import { DemoPage } from 'lit-element-demo-app-helpers';
-import 'lit-element-demo-app-helpers';
+import { LitDocsContent } from 'lit-docs';
+import 'lit-docs';
 import './custom-state-var-handler-component';
 
 
 @customElement('state-var-handler')
-export class StateVarHandler extends DemoPage(LitElement) {
+export class StateVarHandler extends LitDocsContent(LitElement) {
 
     render() {
 
         return html`
 
-            <h1><code-small>stateVar</code-small> handler</h1>
+            <h1><code>stateVar</code> handler</h1>
 
             <p>
-                You can also define your own <code-small>stateVar</code-small>
+                You can also define your own <code>stateVar</code>
                 handler class. This allows you to have custom functionality
                 when you read/write your stateVars. For example, a
-                <code-small>LocalStorageHandler</code-small> that saves your
-                <code-small>stateVar</code-small> values to
-                <code-small>localStorage</code-small>. So that your state is
+                <code>LocalStorageHandler</code> that saves your
+                <code>stateVar</code> values to
+                <code>localStorage</code>. So that your state is
                 retained when you refresh your page.
             </p>
 
@@ -35,81 +35,81 @@ export class StateVarHandler extends DemoPage(LitElement) {
             <p>
                 We implement this handler by creating a new class that extends
                 from the default handler class
-                <code-small>StateVar</code-small>. This default handler class
+                <code>StateVar</code>. This default handler class
                 looks like this:
             </p>
 
             <p>
-                <code-big filename='lit-state.js' .code=${this.litStateStateVarHandlerCode}></code-big>
+                <code-block filename='lit-state.js' .code=${this.litStateStateVarHandlerCode}></code-block>
             </p>
 
             <p>
                 You see that the constructor sets some default variables. These
                 can be used when defining the behavior of our handler. In our
                 extend of this class, we override the
-                <code-small>constructor()</code-small> and
-                <code-small>set()</code-small> methods:
+                <code>constructor()</code> and
+                <code>set()</code> methods:
             </p>
 
             <p>
-                <code-big filename='local-storage-handler.js' .code=${this.localStorageHandlerCode}></code-big>
+                <code-block filename='local-storage-handler.js' .code=${this.localStorageHandlerCode}></code-block>
             </p>
 
             <p>
-                Like this, when the <code-small>stateVar</code-small> is
+                Like this, when the <code>stateVar</code> is
                 created, the initial value is set to any previously set
-                <code-small>localStorage</code-small> value, or else to
-                <code-small>options.initialValue</code-small>. And whenever a
+                <code>localStorage</code> value, or else to
+                <code>options.initialValue</code>. And whenever a
                 new value is set, it is saved to
-                <code-small>localStorage</code-small>. The option
-                <code-small>localStorageKey</code-small> is used as the key for
-                the <code-small>localStorage</code-small>.
+                <code>localStorage</code>. The option
+                <code>localStorageKey</code> is used as the key for
+                the <code>localStorage</code>.
             </p>
 
             <p>
                 Now let's see how we use this custom
-                <code-small>stateVar</code-small> handler in our
-                <code-small>demoState</code-small> class:
+                <code>stateVar</code> handler in our
+                <code>demoState</code> class:
             </p>
 
             <p>
-                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
             <p>
                 You see that we tell LitState to use a different handler by
-                specifying the <code-small>handler</code-small> option. The
+                specifying the <code>handler</code> option. The
                 other options are options of our own custom handler. The
-                <code-small>initialValue</code-small> should be set through an
-                option. It can't be set like <code-small>counter = 0</code-small>,
+                <code>initialValue</code> should be set through an
+                option. It can't be set like <code>counter = 0</code>,
                 because that would be seen as a regular assignment, and would
                 override any previously value in
-                <code-small>localStorage</code-small>.
+                <code>localStorage</code>.
             </p>
 
             <p>
-                If you use your custom <code-small>stateVar</code-small>
+                If you use your custom <code>stateVar</code>
                 handler a lot, it could be useful to also make a custom
                 decorator function:
             </p>
 
             <p>
-                <code-big .code=${this.localStorageHandlerDecoratorCode}></code-big>
+                <code-block .code=${this.localStorageHandlerDecoratorCode}></code-block>
             </p>
 
             <p>
-                This allows you to define the <code-small>stateVar</code-small>
+                This allows you to define the <code>stateVar</code>
                 like this:
             </p>
 
             <p>
-                <code-big filename='demo-state.js' .code=${this.demoStateCustomDecoratorCode}></code-big>
+                <code-block filename='demo-state.js' .code=${this.demoStateCustomDecoratorCode}></code-block>
             </p>
 
             <p>
-                Custom <code-small>stateVar</code-small> handlers give you a
+                Custom <code>stateVar</code> handlers give you a
                 lot of power for customizing what happens when your
-                <code-small>stateVar</code-small> variables are being get/set.
+                <code>stateVar</code> variables are being get/set.
             </p>
 
         `;

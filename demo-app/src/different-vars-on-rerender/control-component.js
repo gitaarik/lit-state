@@ -1,5 +1,5 @@
 import { customElement, LitElement, html, css } from 'lit-element';
-import { DemoComponent } from 'lit-element-demo-app-helpers';
+import { DemoComponent } from '@app/demo-component.js';
 import { observeState } from '@app/lit-state.js';
 import { demoState } from './state';
 

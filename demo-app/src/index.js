@@ -1,5 +1,5 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import 'lit-element-demo-app-helpers';
+import 'lit-docs';
 import './intro-page';
 import './basic-usage/index';
 import './no-decorator-usage/index';
@@ -14,50 +14,66 @@ import './manually-observe-state/index';
 export class LitStateDemo extends LitElement {
 
     render() {
-        return html`<demo-shell .pages=${this.pages}></demo-shell>`;
+        return html`<lit-docs-ui title="LitState" .pages=${this.pages}></lit-docs-ui>`;
     }
 
 	get pages() {
 		return [
 			{
-				hash: 'intro-page',
 				title: 'Introduction',
+				path: 'intro-page',
 				template: html`<intro-page></intro-page>`
 			},
 			{
-				hash: 'basic-usage',
 				title: 'Basic usage',
+				path: 'basic-usage',
 				template: html`<basic-usage></basic-usage>`
-			},
-			{
-				hash: 'no-decorator-usage',
-				title: 'Usage without decorators',
-				template: html`<no-decorator-usage></no-decorator-usage>`
+                submenu: [
+                    {
+                        title: 'Usage without decorators',
+                        path: 'no-decorator-usage',
+                        template: html`<no-decorator-usage></no-decorator-usage>`
+                    }
+                ]
 			},
             {
-				hash: 'different-vars-on-rerender',
-				title: 'Different vars on re-render',
-				template: html`<different-vars-on-rerender></different-vars-on-rerender>`
-			},
-			{
-				hash: 'computed-values',
-				title: 'Computed values',
-				template: html`<computed-values></computed-values>`
-			},
-			{
-				hash: 'nested-states',
-				title: 'Nested states',
-				template: html`<nested-states></nested-states>`
-            },
-			{
-				hash: 'state-var-handler',
-				title: 'StateVar handler',
-				template: html`<state-var-handler></state-var-handler>`
+                title: 'State class usage',
+                path: 'state-class-usage',
+                template: html`hi`,
+                submenu: [
+                    {
+                        title: 'Computed values',
+                        path: 'computed-values',
+                        template: html`<computed-values></computed-values>`
+                    },
+                    {
+                        title: 'Nested states',
+                        path: 'nested-states',
+                        template: html`<nested-states></nested-states>`
+                    },
+                    {
+                        title: 'Different vars on re-render',
+                        path: 'different-vars-on-rerender',
+                        template: html`<different-vars-on-rerender></different-vars-on-rerender>`
+                    }
+                ]
             },
             {
-				hash: 'manually-observe-state',
-				title: 'Manually observe state',
-				template: html`<manually-observe-state></manually-observe-state>`
+                title: 'Advanced usage',
+                path: 'advanced-usage',
+                template: html`hi`,
+                submenu: [
+                    {
+                        title: 'StateVar handler',
+                        path: 'state-var-handler',
+                        template: html`<state-var-handler></state-var-handler>`
+                    },
+                    {
+                        title: 'Manually observe state',
+                        path: 'manually-observe-state',
+                        template: html`<manually-observe-state></manually-observe-state>`
+                    }
+                ]
             }
 		];
 	}

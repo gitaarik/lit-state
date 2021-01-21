@@ -1,5 +1,5 @@
 import { customElement, LitElement, property, html } from 'lit-element';
-import { DemoComponent } from 'lit-element-demo-app-helpers';
+import { DemoComponent } from '@app/demo-component.js';
 import { demoState } from './state';
 
 

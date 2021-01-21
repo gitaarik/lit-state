@@ -1,11 +1,11 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import { DemoPage } from 'lit-element-demo-app-helpers';
-import 'lit-element-demo-app-helpers';
+import { LitDocsContent } from 'lit-docs';
+import 'lit-docs';
 import './nested-state-component.js';
 
 
 @customElement('nested-states')
-export class NestedStates extends DemoPage(LitElement) {
+export class NestedStates extends LitDocsContent(LitElement) {
 
     render() {
 
@@ -15,7 +15,7 @@ export class NestedStates extends DemoPage(LitElement) {
 
             <p>
                 You can also easily nest states.
-                <code-small>stateVar</code-small> variables can contain
+                <code>stateVar</code> variables can contain
                 instances of other states. They will be recognized by LitState
                 just the same.
             </p>
@@ -23,11 +23,11 @@ export class NestedStates extends DemoPage(LitElement) {
             <h2>Example:</h3>
 
             <p>
-                <code-big filename='states.js' .code=${this.statesSourceCode}></code-big>
+                <code-block filename='states.js' .code=${this.statesSourceCode}></code-block>
             </p>
 
             <p>
-                <code-big filename='nested-state-component.js' .code=${this.nestedStateComponentSourceCode}></code-big>
+                <code-block filename='nested-state-component.js' .code=${this.nestedStateComponentSourceCode}></code-block>
             </p>
 
             <h2>Output:</h3>

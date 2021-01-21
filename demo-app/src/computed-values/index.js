@@ -1,11 +1,11 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import { DemoPage } from 'lit-element-demo-app-helpers';
-import 'lit-element-demo-app-helpers';
+import { LitDocsContent } from 'lit-docs';
+import 'lit-docs';
 import './computed-value-component.js';
 
 
 @customElement('computed-values')
-export class ComputedValues extends DemoPage(LitElement) {
+export class ComputedValues extends LitDocsContent(LitElement) {
 
     render() {
 
@@ -15,7 +15,7 @@ export class ComputedValues extends DemoPage(LitElement) {
 
             <p>
                 You can have helper methods on your
-                <code-small>LitState</code-small> class that return computed
+                <code>LitState</code> class that return computed
                 values, or update multiple values at the same time.
             </p>
 
@@ -30,7 +30,7 @@ export class ComputedValues extends DemoPage(LitElement) {
             </p>
 
             <p>
-                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
             <p>
@@ -39,7 +39,7 @@ export class ComputedValues extends DemoPage(LitElement) {
             </p>
 
             <p>
-                <code-big filename='computed-value-component.js' .code=${this.computedValueComponentCode}></code-big>
+                <code-block filename='computed-value-component.js' .code=${this.computedValueComponentCode}></code-block>
             </p>
 
         `;

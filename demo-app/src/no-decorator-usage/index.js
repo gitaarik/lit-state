@@ -1,12 +1,12 @@
 import { customElement, LitElement, property, html, css } from 'lit-element';
-import { DemoPage } from 'lit-element-demo-app-helpers';
-import 'lit-element-demo-app-helpers';
+import { LitDocsContent } from 'lit-docs';
+import 'lit-docs';
 import './no-deco-component-1';
 import './no-deco-component-2';
 
 
 @customElement('no-decorator-usage')
-export class NoDecoratorUsage extends DemoPage(LitElement) {
+export class NoDecoratorUsage extends LitDocsContent(LitElement) {
 
     render() {
 
@@ -17,13 +17,13 @@ export class NoDecoratorUsage extends DemoPage(LitElement) {
             <p>
                 In case you can't or don't want to use decorators, you can
                 define the stateVars with a static
-                <code-small>stateVars</code-small> getter method. Then you can
-                use the <code-small>constructor</code-small> to set the initial
+                <code>stateVars</code> getter method. Then you can
+                use the <code>constructor</code> to set the initial
                 values.
             </p>
 
             <p>
-                <code-big filename='demo-state.js' .code=${this.demoStateCode}></code-big>
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
             <p>The result it the same as when you would use decorators.</p>
