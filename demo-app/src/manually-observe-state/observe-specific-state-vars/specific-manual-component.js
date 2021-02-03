@@ -1,10 +1,11 @@
 import { customElement, LitElement, property, html } from 'lit-element';
-import { DemoComponent } from '@app/demo-component.js';
+import '@app/demo-component.js';
+import { demoComponentStyle } from '@app/demo-component.js';
 import { demoState } from './state';
 
 
 @customElement('specific-manual-component')
-export class SpecificManualComponent extends DemoComponent(LitElement) {
+export class SpecificManualComponent extends demoComponentStyle(LitElement) {
 
     @property({type: Boolean})
     observingCounter1 = false;
@@ -16,39 +17,43 @@ export class SpecificManualComponent extends DemoComponent(LitElement) {
 
         return html`
 
-            <h2>&lt;manual-component&gt;</h2>
+            <showcase-box>
 
-            <h3 class="value">Counter1: ${demoState.counter1}</h3>
+                <h2>&lt;manual-component&gt;</h2>
 
-            <button
-                @click=${this.handleObserveCounter1ButtonClick}
-                ?hidden=${this.observingCounter1}
-            >
-                observe
-            </button>
+                <h3 class="value">Counter1: ${demoState.counter1}</h3>
 
-            <button
-                @click=${this.handleUnobserveCounter1ButtonClick}
-                ?hidden=${!this.observingCounter1}
-            >
-                unobserve
-            </button>
+                <button
+                    @click=${this.handleObserveCounter1ButtonClick}
+                    ?hidden=${this.observingCounter1}
+                >
+                    observe
+                </button>
 
-            <h3 class="value">Counter2: ${demoState.counter2}</h3>
+                <button
+                    @click=${this.handleUnobserveCounter1ButtonClick}
+                    ?hidden=${!this.observingCounter1}
+                >
+                    unobserve
+                </button>
 
-            <button
-                @click=${this.handleObserveCounter2ButtonClick}
-                ?hidden=${this.observingCounter2}
-            >
-                observe
-            </button>
+                <h3 class="value">Counter2: ${demoState.counter2}</h3>
 
-            <button
-                @click=${this.handleUnobserveCounter2ButtonClick}
-                ?hidden=${!this.observingCounter2}
-            >
-                unobserve
-            </button>
+                <button
+                    @click=${this.handleObserveCounter2ButtonClick}
+                    ?hidden=${this.observingCounter2}
+                >
+                    observe
+                </button>
+
+                <button
+                    @click=${this.handleUnobserveCounter2ButtonClick}
+                    ?hidden=${!this.observingCounter2}
+                >
+                    unobserve
+                </button>
+
+            </showcase-box>
 
         `;
 

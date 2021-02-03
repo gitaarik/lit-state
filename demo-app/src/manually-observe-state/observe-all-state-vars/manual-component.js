@@ -1,35 +1,42 @@
 import { customElement, LitElement, property, html } from 'lit-element';
-import { DemoComponent } from '@app/demo-component.js';
+import '@app/demo-component.js';
+import { demoComponentStyle } from '@app/demo-component.js';
 import { demoState } from './state';
 
 
 @customElement('manual-component')
-export class ManualComponent extends DemoComponent(LitElement) {
+export class ManualComponent extends demoComponentStyle(LitElement) {
 
     @property({type: Boolean})
     observing = false;
 
     render() {
+
         return html`
 
-            <h2>&lt;manual-component&gt;</h2>
-            <h3 class="value">Counter: ${demoState.counter}</h3>
+            <showcase-box>
 
-            <button
-                @click=${this.handleObserveButtonClick}
-                ?hidden=${this.observing}
-            >
-                observe
-            </button>
+                <h2>&lt;manual-component&gt;</h2>
+                <h3 class="value">Counter: ${demoState.counter}</h3>
 
-            <button
-                @click=${this.handleUnobserveButtonClick}
-                ?hidden=${!this.observing}
-            >
-                unobserve
-            </button>
+                <button
+                    @click=${this.handleObserveButtonClick}
+                    ?hidden=${this.observing}
+                >
+                    observe
+                </button>
+
+                <button
+                    @click=${this.handleUnobserveButtonClick}
+                    ?hidden=${!this.observing}
+                >
+                    unobserve
+                </button>
+                    
+            </showcase-box>
 
         `;
+
     }
 
     handleObserveButtonClick() {

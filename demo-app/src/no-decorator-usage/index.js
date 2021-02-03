@@ -1,4 +1,4 @@
-import { customElement, LitElement, property, html, css } from 'lit-element';
+import { customElement, LitElement, property, html } from 'lit-element';
 import { LitDocsContent } from 'lit-docs';
 import 'lit-docs';
 import './no-deco-component-1';
@@ -15,28 +15,27 @@ export class NoDecoratorUsage extends LitDocsContent(LitElement) {
             <h1>Usage without decorator</h1>
 
             <p>
-                In case you can't or don't want to use decorators, you can
-                define the stateVars with a static
-                <code>stateVars</code> getter method. Then you can
-                use the <code>constructor</code> to set the initial
-                values.
+                In case you can't or don't want to use
+                <a target="_blank" href="https://babeljs.io/docs/en/babel-plugin-proposal-decorators">decorators</a>,
+                you can define the stateVars with a static
+                <code>stateVars</code> getter method. Then you can use the
+                <code>constructor</code> to set the initial values. It is
+                basically the same how you would define LitElement properties
+                without decorators.
             </p>
+
+            <h2>Example</h2>
 
             <p>
                 <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
-            <p>The result it the same as when you would use decorators.</p>
+            <h2>Output</h2>
 
             <div class="demoComponents">
                 <no-deco-component-1></no-deco-component-1>
                 <no-deco-component-2></no-deco-component-2>
             </div>
-
-            <p>
-                It is basically the same how you would define LitElement
-                properties without decorators.
-            </p>
 
         `;
 

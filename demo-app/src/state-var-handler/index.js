@@ -1,4 +1,4 @@
-import { customElement, LitElement, property, html, css } from 'lit-element';
+import { customElement, LitElement, property, html } from 'lit-element';
 import { LitDocsContent } from 'lit-docs';
 import 'lit-docs';
 import './custom-state-var-handler-component';

@@ -1,4 +1,4 @@
-import { customElement, LitElement, property, html, css } from 'lit-element';
+import { customElement, LitElement, property, html } from 'lit-element';
 import 'lit-docs';
 import './intro-page';
 import './basic-usage/index';
@@ -14,7 +14,7 @@ import './manually-observe-state/index';
 export class LitStateDemo extends LitElement {
 
     render() {
-        return html`<lit-docs-ui title="LitState" .pages=${this.pages}></lit-docs-ui>`;
+        return html`<lit-docs-ui docsTitle="LitState" .pages=${this.pages}></lit-docs-ui>`;
     }
 
 	get pages() {
@@ -27,7 +27,7 @@ export class LitStateDemo extends LitElement {
 			{
 				title: 'Basic usage',
 				path: 'basic-usage',
-				template: html`<basic-usage></basic-usage>`
+				template: html`<basic-usage></basic-usage>`,
                 submenu: [
                     {
                         title: 'Usage without decorators',

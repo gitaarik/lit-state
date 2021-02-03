@@ -1,4 +1,4 @@
-import { customElement, LitElement, property, html, css } from 'lit-element';
+import { customElement, LitElement, property, html } from 'lit-element';
 import { LitDocsContent } from 'lit-docs';
 import 'lit-docs';
 import './nested-state-component.js';
@@ -24,6 +24,15 @@ export class NestedStates extends LitDocsContent(LitElement) {
 
             <p>
                 <code-block filename='states.js' .code=${this.statesSourceCode}></code-block>
+            </p>
+
+            <p>
+                Note that there's only <strong>1</strong>
+                <code>ParentState</code> instance created, which is exported.
+                There are <strong>2</strong> <code>ChildState</code> instances
+                created, which are set on the <code>parentState</code>
+                instance. The component imports the <code>parentState</code>,
+                and accesses the child states from there.
             </p>
 
             <p>
@@ -67,7 +76,7 @@ parentState.childState2 = childState2;`;
 
     get nestedStateComponentSourceCode() {
 
-        return `import { customElement, LitElement, html, css } from 'lit-element';
+        return `import { customElement, LitElement, html } from 'lit-element';
 import { observeState } from 'lit-element-state';
 import { parentState } from './states.js';
 

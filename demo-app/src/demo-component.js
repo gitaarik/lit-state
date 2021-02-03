@@ -1,9 +1,22 @@
-import { LitDocsContent } from 'lit-docs';
+import { LitElement, css, html } from 'lit-element';
 import { litStyle } from 'lit-element-style';
+import { LitDocsContent } from 'lit-docs';
 import 'lit-docs';
 
 
-const demoComponentStyle = litStyle(css`
+export const demoComponentStyle = litStyle(css`
+
+    h2 {
+        margin-top: 0;
+        font-size: 20px;
+        color: green;
+    }
+
+    h3 {
+        margin: 20px 0;
+        font-weight: 600;
+        font-size: 16px;
+    }
 
     .status {
         color: blue;
@@ -24,12 +37,3 @@ const demoComponentStyle = litStyle(css`
     }
 
 `);
-
-
-export const DemoComponent = superclass => class extends demoComponentStyle(LitDocsContent(superclass)) {
-
-    render() {
-        return html`<showcase-box>${super.render()}</showcase-box>`;
-    }
-
-}
