@@ -1,4 +1,4 @@
-import { LitState, stateVar } from '@app/lit-state.js';
+import { LitState } from '@app/lit-state.js';
 
 
 class DemoState extends LitState {

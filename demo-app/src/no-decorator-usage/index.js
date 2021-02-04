@@ -44,7 +44,7 @@ export class NoDecoratorUsage extends LitDocsContent(LitElement) {
 
     get demoStateCode() {
 
-        return `import { LitState, stateVar } from 'lit-element-state';
+        return `import { LitState } from 'lit-element-state';
 
 class DemoState extends LitState {
 
