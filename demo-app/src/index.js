@@ -62,7 +62,6 @@ export class LitStateDemo extends LitElement {
             {
                 title: 'Advanced usage',
                 path: 'advanced-usage',
-                template: html`hi`,
                 submenu: [
                     {
                         title: 'StateVar handler',

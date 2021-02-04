@@ -12,7 +12,7 @@ export class NoDecoratorUsage extends LitDocsContent(LitElement) {
 
         return html`
 
-            <h1>Usage without decorator</h1>
+            <h1>Usage without decorators</h1>
 
             <p>
                 In case you can't or don't want to use
@@ -20,7 +20,8 @@ export class NoDecoratorUsage extends LitDocsContent(LitElement) {
                 you can define the stateVars with a static
                 <code>stateVars</code> getter method. Then you can use the
                 <code>constructor</code> to set the initial values. It is
-                basically the same how you would define LitElement properties
+                basically the same how you would define
+                <a target="_blank" href="https://lit-element.polymer-project.org/guide/properties#declare">LitElement properties</a>
                 without decorators.
             </p>
 

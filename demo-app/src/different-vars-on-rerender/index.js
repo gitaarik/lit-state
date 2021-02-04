@@ -28,7 +28,7 @@ export class DifferentVarsOnRerender extends LitDocsContent(LitElement) {
                 <code>stateVar</code> variables that are used by your
                 component. Therefore, LitState rescans the
                 <code>stateVar</code> variables that are used in your component
-                every time it renders.
+                every time it re-renders.
             </p>
 
             <h2>Demonstration</h2>
