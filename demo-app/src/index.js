@@ -4,6 +4,7 @@ import './intro-page';
 import './basic-usage/index';
 import './no-decorator-usage/index';
 import './different-vars-on-rerender/index';
+import './state-handling';
 import './computed-values/index';
 import './nested-states/index';
 import './state-var-handler/index';
@@ -37,9 +38,9 @@ export class LitStateDemo extends LitElement {
                 ]
 			},
             {
-                title: 'State class usage',
-                path: 'state-class-usage',
-                template: html`hi`,
+                title: 'State handling',
+                path: 'state-handling',
+                template: html`<state-handling></state-handling>`,
                 submenu: [
                     {
                         title: 'Computed values',

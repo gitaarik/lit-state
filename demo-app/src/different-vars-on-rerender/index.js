@@ -15,18 +15,30 @@ export class DifferentVarsOnRerender extends LitDocsContent(LitElement) {
             <h1>Different variables on re-render</h1>
 
             <p>
-                When your component renders, LitState records which
-                <code>stateVar</code> variables are accessed by
-                your component. Then it observes these variables and re-renders
-                itself when one of these variables change.
+                This might seem obvious, but it's worth noting. This is a
+                demonstration of a specific use case. And the way LitState is
+                covers that. Also it gives some insight into how LitState
+                works.
             </p>
 
             <p>
-                When a re-render renders different
-                <code>stateVar</code> variables than the previous
-                render, these new variables will again be recorded and
-                observed, so that the component also re-renders when these new
-                variables change:
+                The use case we are describing here is a component that could
+                render different <code>stateVar</code> variables at every
+                re-render. LitState needs to keep track of the
+                <code>stateVar</code> variables that are used by your
+                component. Therefore, LitState rescans the
+                <code>stateVar</code> variables that are used in your component
+                every time it renders.
+            </p>
+
+            <h2>Demonstration</h2>
+
+            <p>
+                In this example, <code>&lt;changing-component&gt;</code> only
+                shows 1 counter at a time, depending on the value of
+                <code>showCounter</code>.
+                <code>&lt;control-component&gt;</code> shows them both, and you
+                can modify them there.
             </p>
 
             <div class="demoComponents">
@@ -35,30 +47,11 @@ export class DifferentVarsOnRerender extends LitDocsContent(LitElement) {
             </div>
 
             <p>
-                In this example,
-                <code>&lt;changing-component&gt;</code> only shows
-                1 counter at a time.
-                <code>&lt;control-component&gt;</code> shows them
-                both, and you can modify them there. You can see that
-                <code>&lt;changing-component&gt;</code> keeps
-                re-rendering when any counter it shows changes. Even when a
-                re-render shows a different counter than the previous render:
-            </p>
-
-            <p>
-                <code-block filename='changing-component.js' .code=${this.changingComponentCode}></code-block>
-            </p>
-
-            <p>
                 <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
             <p>
-                You don't have to worry about which
-                <code>stateVar</code> you render at which time. As
-                long as your component uses the
-                <code>observeState</code> mixin, your component
-                will stay synchronized.
+                <code-block filename='changing-component.js' .code=${this.changingComponentCode}></code-block>
             </p>
 
         `;
@@ -74,6 +67,14 @@ import { demoState } from './demo-state.js';
 
 @customElement('changing-component')
 export class ChangingComponent extends observeState(LitElement) {
+
+    get counter() {
+        if (demoState.showCounter === 1) {
+            return demoState.counter1;
+        } else if (demoState.showCounter === 2) {
+            return demoState.counter2;
+        }
+    }
 
     render() {
 
@@ -111,14 +112,6 @@ export class ChangingComponent extends observeState(LitElement) {
 
     handleShowCounter2RadioClick() {
         demoState.showCounter = 2;
-    }
-
-    get counter() {
-        if (demoState.showCounter === 1) {
-            return demoState.counter1;
-        } else if (demoState.showCounter === 2) {
-            return demoState.counter2;
-        }
     }
 
 }`;
