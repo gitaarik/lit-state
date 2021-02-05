@@ -42,8 +42,6 @@ export const observeState = superclass => class extends superclass {
 
 export class LitState {
 
-    static stateVars = {};
-
     constructor() {
         this._observers = [];
         this._initStateVars();
@@ -58,6 +56,7 @@ export class LitState {
     }
 
     _initStateVars() {
+        if (!this.constructor.stateVars) return;
         for (let [key, options] of Object.entries(this.constructor.stateVars)) {
             this._initStateVar(key, options);
         }
@@ -159,6 +158,9 @@ export function stateVar(options = {}) {
             },
             finisher(litStateClass) {
                 options.element = element;
+                if (litStateClass.stateVars === undefined) {
+                    litStateClass.stateVars = {};
+                }
                 litStateClass.stateVars[element.key] = options;
             }
         };
