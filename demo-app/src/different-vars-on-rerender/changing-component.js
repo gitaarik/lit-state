@@ -1,8 +1,8 @@
 import { customElement, LitElement, html, css } from 'lit-element';
-import '@app/demo-component.js';
 import { demoComponentStyle } from '@app/demo-component.js';
 import { observeState } from '@app/lit-state.js';
 import { demoState } from './state.js';
+import 'lit-docs';
 
 
 @customElement('changing-component')

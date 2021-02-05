@@ -1,6 +1,5 @@
-import { LitElement, css, html } from 'lit-element';
+import { css } from 'lit-element';
 import { litStyle } from 'lit-element-style';
-import { LitDocsContent } from 'lit-docs';
 import 'lit-docs';
 
 

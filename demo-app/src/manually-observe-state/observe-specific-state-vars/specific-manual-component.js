@@ -1,7 +1,7 @@
 import { customElement, LitElement, property, html } from 'lit-element';
-import '@app/demo-component.js';
 import { demoComponentStyle } from '@app/demo-component.js';
 import { demoState } from './state';
+import 'lit-docs';
 
 
 @customElement('specific-manual-component')

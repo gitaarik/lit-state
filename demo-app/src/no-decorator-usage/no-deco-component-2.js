@@ -1,8 +1,8 @@
 import { customElement, LitElement, html } from 'lit-element';
-import '@app/demo-component.js';
 import { demoComponentStyle } from '@app/demo-component.js';
 import { observeState } from '@app/lit-state.js';
 import { demoState } from './state';
+import 'lit-docs';
 
 
 @customElement('no-deco-component-2')
