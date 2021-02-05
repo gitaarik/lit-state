@@ -69,6 +69,10 @@ export class LitState {
             options.handler = StateVar;
         }
 
+        if (options.element.kind === 'method') {
+            Object.assign(options, options.element.descriptor.value.call(this));
+        }
+
         const stateVar = new options.handler({
             options: options,
             recordRead: () => this._recordRead(key),
