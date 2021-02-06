@@ -73,6 +73,8 @@ export let StateVarHandler = _decorate([customElement('state-var-handler')], fun
                 <custom-state-var-handler-component></custom-state-var-handler-component>
             </div>
 
+            <h2>Default StateVar handler</h2>
+
             <p>
                 We implement this handler by creating a new class that extends
                 from the default handler class
@@ -84,12 +86,12 @@ export let StateVarHandler = _decorate([customElement('state-var-handler')], fun
                 <code-block filename='lit-state.js' .code=${this.litStateStateVarHandlerCode}></code-block>
             </p>
 
+            <h2>Custom StateVar handler</h2>
+
             <p>
-                You see that the constructor sets some default variables. These
-                can be used when defining the behavior of our handler. In our
-                extend of this class, we override the
-                <code>constructor()</code> and
-                <code>set()</code> methods:
+                We will extend this class and add some functionality. You see
+                that the constructor of the default handler sets some default
+                variables. We will use some of these in our custom handler.
             </p>
 
             <p>
@@ -106,6 +108,8 @@ export let StateVarHandler = _decorate([customElement('state-var-handler')], fun
                 <code>localStorageKey</code> is used as the key for
                 the <code>localStorage</code>.
             </p>
+
+            <h2>Usage in state class</h2>
 
             <p>
                 Now let's see how we use this custom
@@ -128,6 +132,8 @@ export let StateVarHandler = _decorate([customElement('state-var-handler')], fun
                 <code>localStorage</code>.
             </p>
 
+            <h3>Custom decorator</h3>
+
             <p>
                 If you use your custom <code>stateVar</code>
                 handler a lot, it could be useful to also make a custom
@@ -144,13 +150,25 @@ export let StateVarHandler = _decorate([customElement('state-var-handler')], fun
             </p>
 
             <p>
-                <code-block filename='demo-state.js' .code=${this.demoStateCustomDecoratorCode}></code-block>
+                <code-block .code=${this.customDecoratorCode}></code-block>
             </p>
 
             <p>
                 Custom <code>stateVar</code> handlers give you a
                 lot of power for customizing what happens when your
                 <code>stateVar</code> variables are being get/set.
+            </p>
+
+            <h3>Providing options from a method</h3>
+
+            <p>
+                To give you access to the <code>this</code> objects on your
+                state instance, you can additionally add options to your
+                handler through a method.
+            </p>
+
+            <p>
+                <code-block .code=${this.methodDecoratingCode}></code-block>
             </p>
 
         `;
@@ -245,8 +263,8 @@ class DemoState extends LitState {
       }
     }, {
       kind: "get",
-      key: "demoStateCustomDecoratorCode",
-      value: function demoStateCustomDecoratorCode() {
+      key: "customDecoratorCode",
+      value: function customDecoratorCode() {
         return `class DemoState extends LitState {
 
     @localStorageStateVar({
@@ -254,6 +272,23 @@ class DemoState extends LitState {
         initialValue: 0
     })
     counter;
+
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "methodDecoratingCode",
+      value: function methodDecoratingCode() {
+        return `class DemoState extends LitState {
+
+    @stateVar({ handler: MyCustomHandler })
+    myVar() {
+        // This object returned, will be added to the \`options\` that are
+        // given to the constructor of the \`handler\` class.
+        return {
+            callback: () => this.callback();
+        };
+    }
 
 }`;
       }

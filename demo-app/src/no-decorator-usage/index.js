@@ -16,7 +16,7 @@ export class NoDecoratorUsage extends LitDocsContent(LitElement) {
 
             <p>
                 In case you can't or don't want to use
-                <a target="_blank" href="https://babeljs.io/docs/en/babel-plugin-proposal-decorators">decorators</a>,
+                <a target="_blank" href="https://github.com/tc39/proposal-decorators">decorators</a>,
                 you can define the stateVars with a static
                 <code>stateVars</code> getter method. Then you can use the
                 <code>constructor</code> to set the initial values. It is

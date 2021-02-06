@@ -31,10 +31,10 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, LitElement, html } from '../../web_modules/lit-element.js';
-import '../demo-component.js';
 import { demoComponentStyle } from '../demo-component.js';
 import { observeState } from '../lit-state.js';
 import { demoState } from './state.js';
+import '../../web_modules/lit-docs.js';
 export let ComputedValueComponent = _decorate([customElement('computed-value-component')], function (_initialize, _observeState) {
   class ComputedValueComponent extends _observeState {
     constructor(...args) {

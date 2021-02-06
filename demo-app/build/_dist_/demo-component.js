@@ -1,6 +1,5 @@
-import { LitElement, css, html } from '../web_modules/lit-element.js';
+import { css } from '../web_modules/lit-element.js';
 import { litStyle } from '../web_modules/lit-element-style.js';
-import { LitDocsContent } from '../web_modules/lit-docs.js';
 import '../web_modules/lit-docs.js';
 export const demoComponentStyle = litStyle(css`
 

@@ -34,6 +34,7 @@ import { customElement, LitElement, html } from '../../web_modules/lit-element.j
 import { demoComponentStyle } from '../demo-component.js';
 import { observeState } from '../lit-state.js';
 import { demoState } from './state.js';
+import '../../web_modules/lit-docs.js';
 export let StateVarComponent1 = _decorate([customElement('state-var-component-2')], function (_initialize, _observeState) {
   class StateVarComponent1 extends _observeState {
     constructor(...args) {

@@ -1,5 +1,3 @@
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 export const observeState = superclass => class extends superclass {
   constructor() {
     super();
@@ -65,16 +63,15 @@ export class LitState {
   }
 
   _initStateVars() {
+    if (!this.constructor.stateVars) return;
+
     for (let [key, options] of Object.entries(this.constructor.stateVars)) {
       this._initStateVar(key, options);
     }
   }
 
   _initStateVar(key, options) {
-    if (!options.handler) {
-      options.handler = StateVar;
-    }
-
+    options = this._parseOptions(options);
     const stateVar = new options.handler({
       options: options,
       recordRead: () => this._recordRead(key),
@@ -96,6 +93,30 @@ export class LitState {
     });
   }
 
+  _parseOptions(options) {
+    if (!options.handler) {
+      options.handler = StateVar;
+    } else {
+      // In case of a custom `StateVar` handler is provided, we offer a
+      // second way of providing options to your custom handler class.
+      //
+      // You can decorate a *method* with `@stateVar()` instead of a
+      // variable. The method must return an object, and that object will
+      // be assigned to the `options` object.
+      //
+      // Within the method you have access to the `this` context. So you
+      // can access other properties and methods from your state class.
+      // And you can add arrow function callbacks where you can access
+      // `this`. This provides a lot of possibilities for a custom
+      // handler class.
+      if (options.propertyMethod && options.propertyMethod.kind === 'method') {
+        Object.assign(options, options.propertyMethod.descriptor.value.call(this));
+      }
+    }
+
+    return options;
+  }
+
   _recordRead(key) {
     stateRecorder.recordRead(this, key);
   }
@@ -111,9 +132,6 @@ export class LitState {
   }
 
 }
-
-_defineProperty(LitState, "stateVars", {});
-
 export class StateVar {
   constructor(args) {
     this.options = args.options; // The options given in the `stateVar` declaration
@@ -159,7 +177,14 @@ export function stateVar(options = {}) {
       },
 
       finisher(litStateClass) {
-        options.element = element;
+        if (element.kind === 'method') {
+          options.propertyMethod = element;
+        }
+
+        if (litStateClass.stateVars === undefined) {
+          litStateClass.stateVars = {};
+        }
+
         litStateClass.stateVars[element.key] = options;
       }
 

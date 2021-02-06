@@ -31,9 +31,9 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { customElement, LitElement, property, html } from '../../../web_modules/lit-element.js';
-import '../../demo-component.js';
 import { demoComponentStyle } from '../../demo-component.js';
 import { demoState } from './state.js';
+import '../../../web_modules/lit-docs.js';
 export let ManualComponent = _decorate([customElement('manual-component')], function (_initialize, _demoComponentStyle) {
   class ManualComponent extends _demoComponentStyle {
     constructor(...args) {

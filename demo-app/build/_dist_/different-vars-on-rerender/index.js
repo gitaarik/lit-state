@@ -69,7 +69,7 @@ export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on
                 <code>stateVar</code> variables that are used by your
                 component. Therefore, LitState rescans the
                 <code>stateVar</code> variables that are used in your component
-                every time it re-  renders.
+                every time it re-renders.
             </p>
 
             <h2>Demonstration</h2>

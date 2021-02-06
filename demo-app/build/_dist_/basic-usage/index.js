@@ -53,7 +53,7 @@ export let BasicUsage = _decorate([customElement('basic-usage')], function (_ini
       value: function render() {
         return html`
 
-            <h1>LitState demo</h1>
+            <h1>Basic usage</h1>
 
             <p>
                 Below are 2 components with a shared state
@@ -76,6 +76,12 @@ export let BasicUsage = _decorate([customElement('basic-usage')], function (_ini
 
             <p>
                 <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
+            </p>
+
+            <p>
+                <lit-docs-link href="basic-usage/no-decorator-usage/">Look here</lit-docs-link>
+                for usage without
+                <a target="_blank" href="https://github.com/tc39/proposal-decorators">decorators</a>.
             </p>
 
             <p>

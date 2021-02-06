@@ -4260,6 +4260,40 @@ class LitDocsUI extends observeState(LitDocsStyle(LitElement)) {
 
 customElements.define('lit-docs-ui', LitDocsUI);
 
+class LitDocsLink extends LitDocsStyle(LitElement) {
+
+    static get properties() {
+        return {
+            href: {type: String}
+        };
+    }
+
+    constructor() {
+        super();
+        this.href = '';
+    }
+
+    render() {
+        // Don't leave no spaces in the template, because the host is an inline
+        // element.
+        return html`<a href=${this.href}
+            @click=${event => litDocsUiState.handlePageLinkClick(event)}
+        ><slot></slot></a>`;
+    }
+
+    static get styles() {
+        return css`
+            :host {
+                display: inline;
+            }
+        `;
+    }
+
+}
+
+
+customElements.define('lit-docs-link', LitDocsLink);
+
 class ShowcaseBox extends LitElement {
 
     render() {
