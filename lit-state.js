@@ -64,13 +64,7 @@ export class LitState {
 
     _initStateVar(key, options) {
 
-        if (!options.handler) {
-            options.handler = StateVar;
-        }
-
-        if (options.element.kind === 'method') {
-            Object.assign(options, options.element.descriptor.value.call(this));
-        }
+        options = this._parseOptions(options);
 
         const stateVar = new options.handler({
             options: options,
@@ -94,6 +88,34 @@ export class LitState {
                 enumerable: true
             }
         );
+
+    }
+
+    _parseOptions(options) {
+
+        if (!options.handler) {
+            options.handler = StateVar;
+        } else {
+
+            // In case of a custom `StateVar` handler is provided, we offer a
+            // second way of providing options to your custom handler class.
+            //
+            // You can decorate a *method* with `@stateVar()` instead of a
+            // variable. The method must return an object, and that object will
+            // be assigned to the `options` object.
+            //
+            // Within the method you have access to the `this` context. So you
+            // can access other properties and methods from your state class.
+            // And you can add arrow function callbacks where you can access
+            // `this`. This provides a lot of possibilities for a custom
+            // handler class.
+            if (options.propertyMethod && options.propertyMethod.kind === 'method') {
+                Object.assign(options, options.propertyMethod.descriptor.value.call(this));
+            }
+
+        }
+
+        return options;
 
     }
 
@@ -157,11 +179,17 @@ export function stateVar(options = {}) {
                 }
             },
             finisher(litStateClass) {
-                options.element = element;
+
+                if (element.kind === 'method') {
+                    options.propertyMethod = element;
+                }
+
                 if (litStateClass.stateVars === undefined) {
                     litStateClass.stateVars = {};
                 }
+
                 litStateClass.stateVars[element.key] = options;
+
             }
         };
 
