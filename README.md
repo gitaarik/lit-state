@@ -3,12 +3,10 @@
 ### Simple shared app state management for LitElement.
 
 LitState automatically re-renders your LitElement components, when a shared app
-state variable they use changes.
+state variable they use changes. It's like LitElement's properties, but then
+shared over multiple components.
 
-LitState is like [MobX](https://mobx.js.org/) or
-[Redux](https://redux.js.org/), but then for
-[LitElement](https://lit-element.polymer-project.org/). The difference is that
-it is tiny, simple but still powerful, like LitElement and
+It's tiny, simple but still powerful, just like LitElement and
 [lit-html](https://lit-html.polymer-project.org/).
 
 
@@ -39,11 +37,14 @@ whenever a `stateVar` they use changes.
 import { LitState, stateVar } from 'lit-element-state';
 
 class MyState extends LitState {
-    counter = stateVar(0); // `0` is the default value
+    @stateVar() counter = 0;
 }
 
 export const myState = new MyState();
 ```
+
+For usage without decorators, see the
+[docs](https://gitaarik.github.io/lit-state/demo-app/build/basic-usage/no-decorator-usage/).
 
 ### 2. Make your component aware of your state:
 
@@ -118,14 +119,6 @@ changed or not. And it will only re-render the HTML elements that have changes.
 
 ## Notes
 
-### You always need to use `stateVar` inside a `LitState` derived class.
-
-The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-object to track sets and gets of the class variables. The `stateVar()` function
-makes it clear to `LitState` that this is a state containing variable, and it
-makes it observable. When it changes, the components that are observing these
-variables will get notified, so that they can re-render themselves.
-
 ### You can create and use multiple `LitState` classes at the same time.
 
 It is even encouraged to keep things separate. You can of course have one big
@@ -143,8 +136,8 @@ this won't:
 
 ```javascript
 MyState extends LitState {
-    myObj = stateVar({myKey: 'myValue'});
-    myArray = stateVar(['one', 'two', 'three']);
+    @stateVar() myObj = {myKey: 'myValue'};
+    @stateVar() myArray = ['one', 'two', 'three'];
 }
 
 myState = new MyState();
@@ -170,12 +163,12 @@ kind of thing, check out
 
 ### Custom `stateVar` variables
 
-You can easily extend LitState with custom `stateVar` variables. An example of
+You can easily extend LitState with a custom `stateVar` handler. An example of
 this is the [asyncStateVar](https://github.com/gitaarik/lit-state-async-state-var),
 which is a `stateVar` variation that makes handling with asynchronous data
 easy. To make a custom `stateVar` yourself, create a class that extends from
-`BaseStateVar`. More documentation will follow, but for now you can check the
-source of LitState and `asyncStateVar`.
+`StateVar`, exported by LitState.
+[Check out the documentation on this.](https://gitaarik.github.io/lit-state/demo-app/build/advanced-usage/state-var-handler/)
 
 
 ## FAQ
@@ -204,7 +197,7 @@ sub-components. They all might need to share some common internal state.
 LitState is created for these use cases, and is meant to make it as simple as
 possible for the developer.
 
-### Why not use Redux or MobX in the first place? Any benefits by using this?
+### Why not use Redux or MobX? Any benefits by using this?
 
 To use [Redux](https://github.com/reduxjs/redux) (or something similar, like
 [unistore](https://github.com/developit/unistore)) you need a lot of of boiler
@@ -253,10 +246,10 @@ I want to keep LitState small and simple, just like LitElement. So I don't
 expect to add a lot of features. Only things that are a very common patterns
 for shared app state management would be suitable to include.
 
-In any case, I will add more documentation and update the demo app to make the
-library more accessible. Also I would like to add unit tests, to automatically
-test the library. I don't have much experience with unit testing in JavaScript,
-so I need to dive into that.
+In any case, I will keep expanding the documentation to make the library more
+accessible. Also I would like to add unit tests, to automatically test the
+library. I don't have much experience with unit testing in JavaScript, so I
+need to dive into that.
 
 If you have comments, suggestions, questions, any kind of feedback, or you want
 to contribute, I would be pleased to hear from you. Feel free to open an issue.
@@ -266,3 +259,4 @@ to contribute, I would be pleased to hear from you. Feel free to open an issue.
 
 - [asyncStateVar](https://github.com/gitaarik/lit-state-async-state-var) - asyncStateVar for LitState, easy handing of async data 
 - [LitStyle](https://github.com/gitaarik/lit-style) - Shared component styles for LitElement 
+- [LitDocs](https://github.com/gitaarik/lit-docs) - Utilities to create documentation for LitElement related projects

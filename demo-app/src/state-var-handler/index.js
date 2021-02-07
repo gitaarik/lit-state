@@ -14,18 +14,25 @@ export class StateVarHandler extends LitDocsContent(LitElement) {
             <h1><code>stateVar</code> handler</h1>
 
             <p>
-                You can also define your own <code>stateVar</code>
-                handler class. This allows you to have custom functionality
-                when you read/write your stateVars. For example, a
-                <code>LocalStorageHandler</code> that saves your
-                <code>stateVar</code> values to
-                <code>localStorage</code>. So that your state is
-                retained when you refresh your page.
+                You can also define your own <code>stateVar</code> handler
+                class. This allows you to have custom functionality when you
+                read/write your stateVars. An example of a custom state var is
+                <a target="_blank" href="https://github.com/gitaarik/lit-state-async-state-var">asyncStateVar</a>.
+                This is a type of stateVar that makes it easy to deal with
+                asynchronous data, and the state of the data (loading,
+                updating, loaded, updated, etc).
             </p>
 
             <p>
-                The following component uses such a handler. To try it out,
-                change the value and refresh the page.
+                On this page we'll make a custom stateVar handler ourselves.
+                We'll create a <code>LocalStorageHandler</code> that saves your
+                <code>stateVar</code> values to <code>localStorage</code>. So
+                that your state is retained when you refresh your page.
+            </p>
+
+            <p>
+                Here is the component already. Later we'll explain how it is
+                made. To try it out, change the value and refresh the page.
             </p>
 
             <div class="demoComponents">
