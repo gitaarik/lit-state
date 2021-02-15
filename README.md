@@ -44,7 +44,7 @@ export const myState = new MyState();
 ```
 
 For usage without decorators, see the
-[docs](https://gitaarik.github.io/lit-state/demo-app/build/basic-usage/no-decorator-usage/).
+[docs](https://gitaarik.github.io/lit-state/docs/build/basic-usage/no-decorator-usage/).
 
 ### 2. Make your component aware of your state:
 
@@ -80,7 +80,7 @@ A component using the `observeState()` mixin will re-render when any
 ## Demo app
 
 To see it working, check out the
-[demo app](https://gitaarik.github.io/lit-state/demo-app/build/).
+[demo app](https://gitaarik.github.io/lit-state/docs/build/).
 
 
 ## How does this work?
@@ -168,7 +168,7 @@ this is the [asyncStateVar](https://github.com/gitaarik/lit-state-async-state-va
 which is a `stateVar` variation that makes handling with asynchronous data
 easy. To make a custom `stateVar` yourself, create a class that extends from
 `StateVar`, exported by LitState.
-[Check out the documentation on this.](https://gitaarik.github.io/lit-state/demo-app/build/advanced-usage/state-var-handler/)
+[Check out the documentation on this.](https://gitaarik.github.io/lit-state/docs/build/advanced-usage/state-var-handler/)
 
 
 ## FAQ
