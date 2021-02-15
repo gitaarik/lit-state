@@ -41,8 +41,8 @@ import './computed-values/index.js';
 import './nested-states/index.js';
 import './state-var-handler/index.js';
 import './manually-observe-state/index.js';
-export let LitStateDemo = _decorate([customElement('lit-state-demo')], function (_initialize, _LitElement) {
-  class LitStateDemo extends _LitElement {
+export let LitStateDocs = _decorate([customElement('lit-state-docs')], function (_initialize, _LitElement) {
+  class LitStateDocs extends _LitElement {
     constructor(...args) {
       super(...args);
 
@@ -52,7 +52,7 @@ export let LitStateDemo = _decorate([customElement('lit-state-demo')], function 
   }
 
   return {
-    F: LitStateDemo,
+    F: LitStateDocs,
     d: [{
       kind: "method",
       key: "render",

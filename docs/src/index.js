@@ -11,8 +11,8 @@ import './state-var-handler/index';
 import './manually-observe-state/index';
 
 
-@customElement('lit-state-demo')
-export class LitStateDemo extends LitElement {
+@customElement('lit-state-docs')
+export class LitStateDocs extends LitElement {
 
     render() {
         return html`<lit-docs-ui docsTitle="LitState" .pages=${this.pages}></lit-docs-ui>`;
