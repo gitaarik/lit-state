@@ -1,6 +1,14 @@
 # LitState Changelog
 
 
+### 1.6.0 - Added JavaScript decorator support
+
+- Now you can use decorators to specify your stateVars, use `@stateVar() myVar
+  = 'initial value';` in your state class.
+- Updated LitDocs and documentation content.
+- Overall refactors.
+
+
 ### 1.5.0 - Moved `asyncStateVar` to separate repository
 
 - The `asyncStateVar` is now available [here](https://github.com/gitaarik/lit-state-async-state-var)

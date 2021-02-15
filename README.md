@@ -20,6 +20,11 @@ npm install lit-element-state
 slightly awkward package name.*
 
 
+### Current version: v1.6.0
+
+[See the changelog](CHANGELOG.md)
+
+
 ## Basic idea
 
 You keep your shared state in a `LitState` derived class. This class contains
