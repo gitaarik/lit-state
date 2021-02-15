@@ -3754,7 +3754,6 @@ class LitDocsUiState extends LitState {
     constructor() {
         super();
         this.pages = stateVar();
-        this.path = stateVar();
         this.page = stateVar();
         this.showMenu = stateVar();
         this.useHash = stateVar(true);
@@ -3771,19 +3770,19 @@ class LitDocsUiState extends LitState {
 
     initPageByPath(path) {
 
-        path = path.slice(); // make a copy
-
-        if (path === '/' || path === '' || path === '#') {
+        if (!path || path === '/' || path === '' || path === '#') {
             this.page = this.pages[0];
             return;
         }
+
+        path = path.slice(); // make a copy
 
         if (path[0] === '/') {
             path = path.substr(1);
         }
 
-        if (this.useHash && path[0] === '#') {
-            path = path.substr(1);
+        if (this.useHash && path.split('#').length > 1) {
+            path = path.split('#')[1];
         }
 
         this._setPageByPath(path, this.pages);
@@ -3796,29 +3795,33 @@ class LitDocsUiState extends LitState {
 
     navToPath(path, addToHistory = true) {
 
-        if (!path) {
-            path = '/';
-        }
+        path = path.slice(); // make a copy
 
-        if (
-            path.substr(0, 7) === 'http://'
-            || path.substr(0, 8) === 'https://'
-        ) {
-            path = path.split('/').slice(3).join('/');
-        }
+        if (this.useHash) {
+            path = path.split('#')[1] || '';
+        } else {
 
-        if (path === this.path) {
-            return;
-        }
+            if (!path) {
+                path = '/';
+            }
 
-        if (this.useHash && path[0] !== '#') {
-            path = '#' + path;
+            if (
+                path.substr(0, 7) === 'http://'
+                || path.substr(0, 8) === 'https://'
+            ) {
+                path = path.split('/').slice(3).join('/');
+            }
+
         }
 
         this.initPageByPath(path);
 
         if (addToHistory) {
-            history.pushState({}, this.page.title, path);
+            history.pushState(
+                {},
+                this.page.title,
+                (this.useHash ? window.location.pathname + '#' : '') + path
+            );
         }
 
         this.showMenu = false;
@@ -4010,7 +4013,7 @@ class LitDocsUI extends observeState(LitDocsStyle(LitElement)) {
                     const href = (() => {
 
                         if (litDocsUiState.useHash) {
-                            return '#' + path;
+                            return window.location.pathname + '#' + path;
                         }
 
                         return path;
@@ -4059,23 +4062,6 @@ class LitDocsUI extends observeState(LitDocsStyle(LitElement)) {
             `;
 
         });
-
-    }
-
-    handleTitleClick(event) {
-        this.handleMenuItemClick(event, this.pages[0], '/');
-    }
-
-    handleMenuItemClick(event, page, path) {
-
-        if (event.ctrlKey || event.shiftKey) {
-            // Ctrl/shift click opens a `<a>` link in new tab/window, so when
-            // one of these keys are pressed, don't override normal behavior.
-            return
-        }
-
-        event.preventDefault();
-        litDocsUiState.navToPath(path);
 
     }
 
