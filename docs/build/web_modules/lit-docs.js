@@ -3835,7 +3835,7 @@ class LitDocsUiState extends LitState {
 
         let path = this.path;
 
-        if (path === '/' || path === '') {
+        if (path === '/' || path === '' || path === '#') {
             this.page = this.pages[0];
             return;
         }
@@ -4002,11 +4002,21 @@ class LitDocsUI extends observeState(LitDocsStyle(LitElement)) {
 
                 if (page.template) {
 
+                    const href = (() => {
+
+                        if (litDocsUiState.useHash) {
+                            return '#' + path;
+                        }
+
+                        return path;
+
+                    })();
+
                     return html`
                         <a
                             class="menuItem menuItemLink"
                             nav-level=${level}
-                            href=${path}
+                            href=${href}
                             @click=${event => litDocsUiState.handlePageLinkClick(event)}
                             ?active=${page === litDocsUiState.page}
                         >
