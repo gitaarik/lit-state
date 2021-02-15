@@ -3,8 +3,12 @@
 
 ### 1.6.0 - Added JavaScript decorator support
 
+- The way `stateVar` variables are defined has changed. You have to update this
+  coming from 1.5.0.
 - Now you can use decorators to specify your stateVars, use `@stateVar() myVar
   = 'initial value';` in your state class.
+- You can also still define `stateVar` variables without decorators. It is done
+  in a similar way LitElement does. Check the docs for this.
 - Updated LitDocs and documentation content.
 - Overall refactors.
 
