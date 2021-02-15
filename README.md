@@ -22,7 +22,7 @@ slightly awkward package name.*
 
 ### Current version: v1.6.0
 
-[See the changelog](CHANGELOG.md)
+For more information and update instructions, [See the changelog](CHANGELOG.md).
 
 
 ## Basic idea

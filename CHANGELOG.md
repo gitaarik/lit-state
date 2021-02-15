@@ -12,6 +12,18 @@
 - Updated LitDocs and documentation content.
 - Overall refactors.
 
+#### To upgrade from 1.5.0
+
+Update the `stateVar` definitions, instead of:
+
+    `myData = stateVar('value');`
+
+Do this:
+
+    @stateVar() myData = 'value';
+
+For no-decorator usage, [look in the docs](https://gitaarik.github.io/lit-state/build/#basic-usage/no-decorator-usage/).
+
 
 ### 1.5.0 - Moved `asyncStateVar` to separate repository
 
