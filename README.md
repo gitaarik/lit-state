@@ -82,10 +82,10 @@ A component using the `observeState()` mixin will re-render when any
 `stateVar` - which it read in the last render cycle - changes.
 
 
-## Demo app
+## Docs
 
-To see it working, check out the
-[demo app](https://gitaarik.github.io/lit-state/build/).
+For more information about how to use LitState, check the
+[docs](https://gitaarik.github.io/lit-state/build/).
 
 
 ## How does this work?
@@ -93,14 +93,14 @@ To see it working, check out the
 
 ### Basics
 
-The `LitState` class uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-to detect whenever a `stateVar` is get or set. When using the `observeState()`
-mixin, during the render of the component, there is a recorder active that
+When you define a `stateVar` variable, LitState will observe those variables
+whenever they're get or set. When using the `observeState()` mixin on a
+component, during the render of that component, there is a recorder active that
 records any `stateVar` that is accessed during the render of that component. At
 the end of the render, the recorded `stateVar` variables are collected and
-observers are added to them. Whenever one of them changes, the component
-re-renders itself. If the re-render uses different `stateVar` variables, they
-are again recorded and observed.
+whenever one of them changes, the component will be re-rendered. If the
+re-render uses different `stateVar` variables, they are again recorded and
+observed for possible rerenders.
 
 
 ### Implementation details
