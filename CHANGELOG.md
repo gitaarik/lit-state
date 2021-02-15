@@ -16,11 +16,15 @@
 
 Update the `stateVar` definitions, instead of:
 
-    `myData = stateVar('value');`
+```javascript
+myData = stateVar('value');
+```
 
 Do this:
 
-    @stateVar() myData = 'value';
+```javascript
+@stateVar() myData = 'value';
+```
 
 For no-decorator usage, [look in the docs](https://gitaarik.github.io/lit-state/build/#basic-usage/no-decorator-usage/).
 
