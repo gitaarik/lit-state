@@ -3757,6 +3757,7 @@ class LitDocsUiState extends LitState {
         this.path = stateVar();
         this.page = stateVar();
         this.showMenu = stateVar();
+        this.useHash = stateVar(true);
     }
 
     /*static get stateVars() {
@@ -3789,6 +3790,10 @@ class LitDocsUiState extends LitState {
 
         if (path === this.path) {
             return;
+        }
+
+        if (this.useHash && path[0] !== '#') {
+            path = '#' + path;
         }
 
         this.setPath(path);
@@ -3836,6 +3841,10 @@ class LitDocsUiState extends LitState {
         }
 
         if (path[0] === '/') {
+            path = path.substr(1);
+        }
+
+        if (this.useHash && path[0] === '#') {
             path = path.substr(1);
         }
 
@@ -3908,7 +3917,7 @@ class LitDocsUI extends observeState(LitDocsStyle(LitElement)) {
 
     _initState() {
         litDocsUiState.pages = this.pages;
-        litDocsUiState.setPath(window.location.pathname);
+        litDocsUiState.setPath(window.location.pathname + window.location.hash);
     }
 
     _fixMenuWidth() {
@@ -4276,9 +4285,19 @@ class LitDocsLink extends LitDocsStyle(LitElement) {
     render() {
         // Don't leave no spaces in the template, because the host is an inline
         // element.
-        return html`<a href=${this.href}
+        return html`<a href=${this._href}
             @click=${event => litDocsUiState.handlePageLinkClick(event)}
         ><slot></slot></a>`;
+    }
+
+    get _href() {
+
+        if (litDocsUiState.useHash) {
+            return '#' + this.href;
+        }
+
+        return this.href;
+
     }
 
     static get styles() {
@@ -4425,7 +4444,7 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
 
     _addHashChangeListener() {
         this.hashChangeCallback = event => {
-            goToAnchor(event.newURL.split('#')[1]);
+            goToAnchor(event.newURL.split('#').slice(-1)[0]);
             this._renderAnchors();
         };
         window.addEventListener('hashchange', this.hashChangeCallback);
@@ -4436,7 +4455,9 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
     }
 
     _loadInitialAnchor() {
-        goToAnchor(window.location.hash.substr(1));
+        const hashes = window.location.hash.split('#');
+        const lastHash = hashes.pop();
+        goToAnchor(lastHash);
     }
 
     _addAnchors() {
@@ -4496,7 +4517,7 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
             <span>${anchor.elementText}</span>
             <a
                 class="headingAnchor"
-                href=${window.location.pathname + '#' + anchor.anchorName}
+                href=${window.location.pathname + this._baseHash + '#' + anchor.anchorName}
                 ?active=${active}
                 @click=${() => goToAnchor(anchor.anchorName)}
             >
@@ -4506,6 +4527,23 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
 
         render(template, anchor.element);
         anchor.element.id = anchor.anchorName;
+
+    }
+
+    get _baseHash() {
+
+        if (!litDocsUiState.useHash || window.location.hash[0] !== '#') {
+            return '';
+        }
+
+        const hashValue = window.location.hash.substr(1);
+        const hashes = hashValue.split('#');
+
+        if (hashes.length > 1) {
+            return '#' + hashes.slice(0, -1).join('#');
+        } else {
+            return '#' + hashes[0];
+        }
 
     }
 
