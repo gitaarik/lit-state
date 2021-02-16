@@ -6,7 +6,8 @@ LitState automatically re-renders your LitElement components, when a shared app
 state variable they use changes. It's like LitElement's properties, but then
 shared over multiple components.
 
-It's tiny, simple but still powerful, just like LitElement and
+It's tiny, simple but still powerful, just like
+[LitElement](https://lit-element.polymer-project.org/) and
 [lit-html](https://lit-html.polymer-project.org/).
 
 
