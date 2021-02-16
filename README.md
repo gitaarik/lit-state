@@ -49,8 +49,8 @@ class MyState extends LitState {
 export const myState = new MyState();
 ```
 
-For usage without decorators, see the
-[docs](https://gitaarik.github.io/lit-state/build/#basic-usage/no-decorator-usage/).
+*For usage without decorators, see the
+[docs](https://gitaarik.github.io/lit-state/build/#basic-usage/no-decorator-usage/).*
 
 ### 2. Make your component aware of your state:
 

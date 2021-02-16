@@ -38,9 +38,11 @@ export class BasicUsage extends LitDocsContent(LitElement) {
             </p>
 
             <p>
-                <lit-docs-link href="basic-usage/no-decorator-usage/">Look here</lit-docs-link>
-                for usage without
-                <a target="_blank" href="https://github.com/tc39/proposal-decorators">decorators</a>.
+                <em>
+                    <lit-docs-link href="basic-usage/no-decorator-usage/">Look here</lit-docs-link>
+                    for usage without
+                    <a target="_blank" href="https://github.com/tc39/proposal-decorators">decorators</a>.
+                </em>
             </p>
 
             <p>
