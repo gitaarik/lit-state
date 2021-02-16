@@ -264,4 +264,5 @@ to contribute, I would be pleased to hear from you. Feel free to open an issue.
 
 - [asyncStateVar](https://github.com/gitaarik/lit-state-async-state-var) - asyncStateVar for LitState, easy handing of async data 
 - [LitStyle](https://github.com/gitaarik/lit-style) - Shared component styles for LitElement 
+- [LitDocumentEvent](https://github.com/gitaarik/lit-document-event) - Easily add listeners to the document object
 - [LitDocs](https://github.com/gitaarik/lit-docs) - Utilities to create documentation for LitElement related projects
