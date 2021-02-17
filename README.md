@@ -134,6 +134,16 @@ is probably cleaner if you categorize it into multiple smaller `LitState`
 derived classes. For example, you can put each state class in a separate file,
 collected in a `state/` folder, and import them at the places you need.
 
+
+### You can nest state classes
+
+If your state requires more hierarchy, you can also nest states. It doesn't
+matter to your components how your state is structured, as long as it uses the
+correct references to your `stateVar` variables. Refer to the
+[docs](https://gitaarik.github.io/lit-state/build/#state-handling/nested-states/)
+for more information about nesting states.
+
+
 ### Only new assigns trigger a re-render. Updating a object/array won't trigger a re-render.
 
 Just like LitElement's
