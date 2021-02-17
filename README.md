@@ -135,7 +135,7 @@ derived classes. For example, you can put each state class in a separate file,
 collected in a `state/` folder, and import them at the places you need.
 
 
-### You can nest state classes
+### You can nest states
 
 If your state requires more hierarchy, you can also nest states. It doesn't
 matter to your components how your state is structured, as long as it uses the
