@@ -147,23 +147,26 @@ for more information about nesting states.
 ### Only new assigns trigger a re-render. Updating a object/array won't trigger a re-render.
 
 Just like LitElement's
-[properties](https://lit-element.polymer-project.org/guide/properties),
-only a new assign of the `stateVar` triggers a re-render. Doing something like
-this won't:
+[properties](https://lit-element.polymer-project.org/guide/properties), only a
+new assign of the `stateVar` triggers a re-render. For example if you have a
+state like this:
 
 ```javascript
 MyState extends LitState {
     @stateVar() myObj = {myKey: 'myValue'};
     @stateVar() myArray = ['one', 'two', 'three'];
 }
+```
 
+Then this won't trigger a re-render:
+
+```javascript
 myState = new MyState();
 myState.myObj.mykey = 'newValue';
 myState.myArray.push('four');
 ```
 
-Above code won't notify the observers of `MyState`. You'll instead need to
-assign a new object to the `stateVar`:
+You'll instead need to assign a new object to the `stateVar`:
 
 ```javascript
 myState.myObj = {...myState.myObj, myKey: 'newValue'};
