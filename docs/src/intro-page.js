@@ -17,8 +17,9 @@ export class IntroPage extends LitDocsContent(LitElement) {
             <p>
                 LitState automatically re-renders your LitElement
                 components, when a shared app state variable they use
-                changes. It's like LitElement's properties, but then shared
-                over multiple components.
+                changes. It's like LitElement's
+                <a target="_blank" href="https://lit-element.polymer-project.org/guide/properties">properties</a>,
+                but then shared over multiple components.
             </p>
 
             <h2>Installation</h2>

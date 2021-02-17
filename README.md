@@ -3,8 +3,9 @@
 ### Simple shared app state management for LitElement.
 
 LitState automatically re-renders your LitElement components, when a shared app
-state variable they use changes. It's like LitElement's properties, but then
-shared over multiple components.
+state variable they use changes. It's like LitElement's
+[properties](https://lit-element.polymer-project.org/guide/properties), but
+then shared over multiple components.
 
 It's tiny, simple but still powerful, just like
 [LitElement](https://lit-element.polymer-project.org/) and
