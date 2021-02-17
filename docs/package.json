@@ -7,7 +7,7 @@
     "lint": "prettier --check \"src/**/*.js\""
   },
   "dependencies": {
-    "lit-docs": "^0.0.24",
+    "lit-docs": "^0.0.25",
     "lit-element": "^2.3.1",
     "lit-html": "^1.2.1"
   },
