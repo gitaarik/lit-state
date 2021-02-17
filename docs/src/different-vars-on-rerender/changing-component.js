@@ -71,6 +71,14 @@ export class ChangingComponent extends observeState(demoComponentStyle(LitElemen
                 cursor: pointer;
             }
 
+            @media (prefers-color-scheme: dark) {
+
+                label {
+                    background: #555;
+                }
+
+            }
+
             label input {
                 margin: 0 5px 0;
             }

@@ -119,6 +119,14 @@ export let ChangingComponent = _decorate([customElement('changing-component')], 
                 cursor: pointer;
             }
 
+            @media (prefers-color-scheme: dark) {
+
+                label {
+                    background: #555;
+                }
+
+            }
+
             label input {
                 margin: 0 5px 0;
             }
