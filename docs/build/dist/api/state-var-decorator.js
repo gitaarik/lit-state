@@ -30,24 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html } from '../web_modules/lit-element.js';
-import '../web_modules/lit-docs.js';
-import './intro-page.js';
-import './basic-usage/index.js';
-import './no-decorator-usage/index.js';
-import './different-vars-on-rerender/index.js';
-import './state-handling.js';
-import './computed-values/index.js';
-import './nested-states/index.js';
-import './state-var-handler/index.js';
-import './manually-observe-state/index.js';
-import './api/lit-state.js';
-import './api/state-var-handler.js';
-import './api/observe-state-mixin.js';
-import './api/state-var-decorator.js';
-import './api/state-recorder.js';
-export let LitStateDocs = _decorate([customElement('lit-state-docs')], function (_initialize, _LitElement) {
-  class LitStateDocs extends _LitElement {
+import { customElement, LitElement, property, html } from '../../web_modules/lit-element.js';
+import { LitDocsContent } from '../../web_modules/lit-docs.js';
+import '../../web_modules/lit-docs.js';
+export let ApiStateVarDecorator = _decorate([customElement('api-state-var-decorator')], function (_initialize, _LitDocsContent) {
+  class ApiStateVarDecorator extends _LitDocsContent {
     constructor(...args) {
       super(...args);
 
@@ -57,85 +44,54 @@ export let LitStateDocs = _decorate([customElement('lit-state-docs')], function 
   }
 
   return {
-    F: LitStateDocs,
+    F: ApiStateVarDecorator,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
-        return html`<lit-docs-ui docsTitle="LitState" .pages=${this.pages}></lit-docs-ui>`;
+        return html`
+
+            <h1><code>@stateVar()</code> decorator</h1>
+
+            <p>
+                This decorator function is used to define <code>stateVar</code>
+                variables on a <code>LitState</code> derived class. When these
+                variables are set or get from the <code>LitState</code> class,
+                for example <code>myState.myStateVar = 'value'</code>, the
+                observers of the <code>LitState</code> class will be notified.
+            </p>
+
+            <h2><code>@stateVar(options)</code></h2>
+
+            <h3><code>options</code></h3>
+
+            <p>
+                Optional parameter that should be a object containing the
+                options for the <code>StateVar</code> handler class. The
+                default <code>StateVar</code> handler class doesn't take any
+                options. You can use the option <code>handler</code> to specify
+                a <lit-docs-link path="advanced-usage/state-var-handler/">custom
+                <code>StateVar</code> handler class</lit-docs-link>. Other
+                options you specify will be passed on to this custom
+                <code>StateVar</code> handler class.
+            </p>
+
+            <p>
+                <code-block .code=${this.stateVarOptionsCode}></code-block>
+            </p>
+
+        `;
       }
     }, {
       kind: "get",
-      key: "pages",
-      value: function pages() {
-        return [{
-          title: 'Introduction',
-          path: 'intro-page',
-          template: html`<intro-page></intro-page>`
-        }, {
-          title: 'Basic usage',
-          path: 'basic-usage',
-          template: html`<basic-usage></basic-usage>`,
-          submenu: [{
-            title: 'Usage without decorators',
-            path: 'no-decorator-usage',
-            template: html`<no-decorator-usage></no-decorator-usage>`
-          }]
-        }, {
-          title: 'State handling',
-          path: 'state-handling',
-          template: html`<state-handling></state-handling>`,
-          submenu: [{
-            title: 'Computed values',
-            path: 'computed-values',
-            template: html`<computed-values></computed-values>`
-          }, {
-            title: 'Nested states',
-            path: 'nested-states',
-            template: html`<nested-states></nested-states>`
-          }, {
-            title: 'Different vars on re-render',
-            path: 'different-vars-on-rerender',
-            template: html`<different-vars-on-rerender></different-vars-on-rerender>`
-          }]
-        }, {
-          title: 'Advanced usage',
-          path: 'advanced-usage',
-          submenu: [{
-            title: 'StateVar handler',
-            path: 'state-var-handler',
-            template: html`<state-var-handler></state-var-handler>`
-          }, {
-            title: 'Manually observe state',
-            path: 'manually-observe-state',
-            template: html`<manually-observe-state></manually-observe-state>`
-          }]
-        }, {
-          title: 'API reference',
-          path: 'api-reference',
-          submenu: [{
-            title: 'LitState class',
-            path: 'lit-state',
-            template: html`<api-lit-state></api-lit-state>`
-          }, {
-            title: '@stateVar() decorator',
-            path: 'state-var-decorator',
-            template: html`<api-state-var-decorator></api-state-var-decorator>`
-          }, {
-            title: 'observeState() mixin',
-            path: 'observe-state-mixin',
-            template: html`<api-observe-state-mixin></api-observe-state-mixin>`
-          }, {
-            title: 'StateVar handler class',
-            path: 'state-var-handler',
-            template: html`<api-state-var-handler></api-state-var-handler>`
-          }, {
-            title: 'stateRecorder object',
-            path: 'state-recorder',
-            template: html`<api-state-recorder></api-state-recorder>`
-          }]
-        }];
+      key: "stateVarOptionsCode",
+      value: function stateVarOptionsCode() {
+        return `@stateVar({
+    handler: MyStateVarHandler,
+    myOption: 'value'
+})
+myStateVar = 'value';`;
       }
     }]
   };
-}, LitElement);
+}, LitDocsContent(LitElement));

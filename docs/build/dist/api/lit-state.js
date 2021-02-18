@@ -30,24 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html } from '../web_modules/lit-element.js';
-import '../web_modules/lit-docs.js';
-import './intro-page.js';
-import './basic-usage/index.js';
-import './no-decorator-usage/index.js';
-import './different-vars-on-rerender/index.js';
-import './state-handling.js';
-import './computed-values/index.js';
-import './nested-states/index.js';
-import './state-var-handler/index.js';
-import './manually-observe-state/index.js';
-import './api/lit-state.js';
-import './api/state-var-handler.js';
-import './api/observe-state-mixin.js';
-import './api/state-var-decorator.js';
-import './api/state-recorder.js';
-export let LitStateDocs = _decorate([customElement('lit-state-docs')], function (_initialize, _LitElement) {
-  class LitStateDocs extends _LitElement {
+import { customElement, LitElement, property, html } from '../../web_modules/lit-element.js';
+import { LitDocsContent } from '../../web_modules/lit-docs.js';
+import '../../web_modules/lit-docs.js';
+export let ApiLitState = _decorate([customElement('api-lit-state')], function (_initialize, _LitDocsContent) {
+  class ApiLitState extends _LitDocsContent {
     constructor(...args) {
       super(...args);
 
@@ -57,85 +44,143 @@ export let LitStateDocs = _decorate([customElement('lit-state-docs')], function 
   }
 
   return {
-    F: LitStateDocs,
+    F: ApiLitState,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
-        return html`<lit-docs-ui docsTitle="LitState" .pages=${this.pages}></lit-docs-ui>`;
+        return html`
+
+            <h1><code>LitState</code></h1>
+
+            <p>
+                This is the API reference for advanced usage. See
+                <lit-docs-link path="basic-usage/">Basic usage</lit-docs-link>
+                on how to use this class.
+            </p>
+
+            <h2>class LitState</h2>
+
+            <h3>
+                Property <code>stateVars</code>
+            </h3>
+
+            <p>
+                Contains the <code>stateVar</code> variables that have been
+                defined (either through decorators or not). It's an object with
+                the name in the key and the options in the value:
+            </p>
+
+            <p>
+                <code-block .code=${this.stateVarFormat}></code-block>
+            </p>
+
+            <p>
+                The default <code>stateVar</code> handler doesn't require any
+                options. But the options can be used to specify a
+                <lit-docs-link path="advanced-usage/state-var-handler/">custom
+                <code>stateVar</code> handler</lit-docs-link>.
+                A custom handler might also accept extra options:
+            </p>
+
+            <p>
+                <code-block .code=${this.stateVarFormatWithCustomHandler}></code-block>
+            </p>
+
+            <h3>Method <code>addObserver(observer, keys)</code></h3>
+
+            <p>
+                Add a observer to this state class. This is for when you need
+                to observe the state outside of a LitElement component, see
+                <lit-docs-link path="advanced-usage/manually-observe-state/">Manually observe state</lit-docs-link>.
+                For usage with LitElement, use the 
+                <lit-docs-link path="basic-usage/#usage-in-component"><code>observeState()</code> mixin</lit-docs-link>.
+            </p>
+
+            <h4><code>observer</code></h4>
+
+            <p>
+                Function that will be called when the state changes. This
+                function will get as a first argument the name of the
+                <code>stateVar</code> that has been changed.
+            </p>
+
+            <h4><code>keys</code></h4>
+
+            <p>
+                An Array of names of <code>stateVar</code> variables to
+                observe. Only if those <code>stateVar</code> variables change,
+                the <code>observer</code> will be called. If not provided, the
+                <code>observer</code> will be called when any
+                <code>stateVar</code> variable changes.
+            </p>
+
+            <p>
+                <code-block .code=${this.addObserverCode}></code-block>
+            </p>
+
+            <h3>Method <code>removeObserver(observer)</code></h3>
+
+            <p>
+                Removes a previously added observer. The <code>observer</code>
+                argument should be the same as the <code>observer</code>
+                argument given to <code>addObserver()</code>:
+            </p>
+
+            <p>
+                <code-block .code=${this.removeObserverCode}></code-block>
+            </p>
+
+        `;
       }
     }, {
       kind: "get",
-      key: "pages",
-      value: function pages() {
-        return [{
-          title: 'Introduction',
-          path: 'intro-page',
-          template: html`<intro-page></intro-page>`
-        }, {
-          title: 'Basic usage',
-          path: 'basic-usage',
-          template: html`<basic-usage></basic-usage>`,
-          submenu: [{
-            title: 'Usage without decorators',
-            path: 'no-decorator-usage',
-            template: html`<no-decorator-usage></no-decorator-usage>`
-          }]
-        }, {
-          title: 'State handling',
-          path: 'state-handling',
-          template: html`<state-handling></state-handling>`,
-          submenu: [{
-            title: 'Computed values',
-            path: 'computed-values',
-            template: html`<computed-values></computed-values>`
-          }, {
-            title: 'Nested states',
-            path: 'nested-states',
-            template: html`<nested-states></nested-states>`
-          }, {
-            title: 'Different vars on re-render',
-            path: 'different-vars-on-rerender',
-            template: html`<different-vars-on-rerender></different-vars-on-rerender>`
-          }]
-        }, {
-          title: 'Advanced usage',
-          path: 'advanced-usage',
-          submenu: [{
-            title: 'StateVar handler',
-            path: 'state-var-handler',
-            template: html`<state-var-handler></state-var-handler>`
-          }, {
-            title: 'Manually observe state',
-            path: 'manually-observe-state',
-            template: html`<manually-observe-state></manually-observe-state>`
-          }]
-        }, {
-          title: 'API reference',
-          path: 'api-reference',
-          submenu: [{
-            title: 'LitState class',
-            path: 'lit-state',
-            template: html`<api-lit-state></api-lit-state>`
-          }, {
-            title: '@stateVar() decorator',
-            path: 'state-var-decorator',
-            template: html`<api-state-var-decorator></api-state-var-decorator>`
-          }, {
-            title: 'observeState() mixin',
-            path: 'observe-state-mixin',
-            template: html`<api-observe-state-mixin></api-observe-state-mixin>`
-          }, {
-            title: 'StateVar handler class',
-            path: 'state-var-handler',
-            template: html`<api-state-var-handler></api-state-var-handler>`
-          }, {
-            title: 'stateRecorder object',
-            path: 'state-recorder',
-            template: html`<api-state-recorder></api-state-recorder>`
-          }]
-        }];
+      key: "stateVarFormat",
+      value: function stateVarFormat() {
+        return `{
+    myStateVar1: {},
+    myStateVar2: {}
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "stateVarFormatWithCustomHandler",
+      value: function stateVarFormatWithCustomHandler() {
+        return `{
+    myStateVar1: {},
+    myStateVar2: {},
+    customStateVar: {
+        handler: CustomStateVarHandler,
+        extraOption: 'value'
+    }
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "addObserverCode",
+      value: function addObserverCode() {
+        return `const myObserver = function(name) {
+    console.log('stateVar', name, 'changed!');
+}
+
+// Observe any \`stateVar\` variable:
+myState.addObserver(myObserver);
+
+// Or only observe specific \`stateVar\` variables:
+myState.addObserver(myObserver, ['myStateVar1', 'myStateVar2']);`;
+      }
+    }, {
+      kind: "get",
+      key: "removeObserverCode",
+      value: function removeObserverCode() {
+        return `const myObserver = function(changedKey) { /* ... */ }
+
+// Add the observer:
+myState.addObserver(myObserver);
+
+// ... later on remove the observer again:
+myState.removeObserver(myObserver);`;
       }
     }]
   };
-}, LitElement);
+}, LitDocsContent(LitElement));

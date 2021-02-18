@@ -26,6 +26,8 @@ export class BasicUsage extends LitDocsContent(LitElement) {
                 <state-var-component-2></state-var-component-2>
             </div>
 
+            <h2>The state class</h2>
+
             <p>
                 The shared state <code>demoState</code> contains a
                 <code>stateVar</code> called
@@ -39,11 +41,13 @@ export class BasicUsage extends LitDocsContent(LitElement) {
 
             <p>
                 <em>
-                    <lit-docs-link href="basic-usage/no-decorator-usage/">Look here</lit-docs-link>
+                    <lit-docs-link path="basic-usage/no-decorator-usage/">Look here</lit-docs-link>
                     for usage without
                     <a target="_blank" href="https://github.com/tc39/proposal-decorators">decorators</a>.
                 </em>
             </p>
+
+            <h2>Usage in component</h2>
 
             <p>
                 The components that use the state use the mixin

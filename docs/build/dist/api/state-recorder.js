@@ -30,24 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html } from '../web_modules/lit-element.js';
-import '../web_modules/lit-docs.js';
-import './intro-page.js';
-import './basic-usage/index.js';
-import './no-decorator-usage/index.js';
-import './different-vars-on-rerender/index.js';
-import './state-handling.js';
-import './computed-values/index.js';
-import './nested-states/index.js';
-import './state-var-handler/index.js';
-import './manually-observe-state/index.js';
-import './api/lit-state.js';
-import './api/state-var-handler.js';
-import './api/observe-state-mixin.js';
-import './api/state-var-decorator.js';
-import './api/state-recorder.js';
-export let LitStateDocs = _decorate([customElement('lit-state-docs')], function (_initialize, _LitElement) {
-  class LitStateDocs extends _LitElement {
+import { customElement, LitElement, property, html } from '../../web_modules/lit-element.js';
+import { LitDocsContent } from '../../web_modules/lit-docs.js';
+import '../../web_modules/lit-docs.js';
+export let ApiStateRecorder = _decorate([customElement('api-state-recorder')], function (_initialize, _LitDocsContent) {
+  class ApiStateRecorder extends _LitDocsContent {
     constructor(...args) {
       super(...args);
 
@@ -57,85 +44,68 @@ export let LitStateDocs = _decorate([customElement('lit-state-docs')], function 
   }
 
   return {
-    F: LitStateDocs,
+    F: ApiStateRecorder,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
-        return html`<lit-docs-ui docsTitle="LitState" .pages=${this.pages}></lit-docs-ui>`;
-      }
-    }, {
-      kind: "get",
-      key: "pages",
-      value: function pages() {
-        return [{
-          title: 'Introduction',
-          path: 'intro-page',
-          template: html`<intro-page></intro-page>`
-        }, {
-          title: 'Basic usage',
-          path: 'basic-usage',
-          template: html`<basic-usage></basic-usage>`,
-          submenu: [{
-            title: 'Usage without decorators',
-            path: 'no-decorator-usage',
-            template: html`<no-decorator-usage></no-decorator-usage>`
-          }]
-        }, {
-          title: 'State handling',
-          path: 'state-handling',
-          template: html`<state-handling></state-handling>`,
-          submenu: [{
-            title: 'Computed values',
-            path: 'computed-values',
-            template: html`<computed-values></computed-values>`
-          }, {
-            title: 'Nested states',
-            path: 'nested-states',
-            template: html`<nested-states></nested-states>`
-          }, {
-            title: 'Different vars on re-render',
-            path: 'different-vars-on-rerender',
-            template: html`<different-vars-on-rerender></different-vars-on-rerender>`
-          }]
-        }, {
-          title: 'Advanced usage',
-          path: 'advanced-usage',
-          submenu: [{
-            title: 'StateVar handler',
-            path: 'state-var-handler',
-            template: html`<state-var-handler></state-var-handler>`
-          }, {
-            title: 'Manually observe state',
-            path: 'manually-observe-state',
-            template: html`<manually-observe-state></manually-observe-state>`
-          }]
-        }, {
-          title: 'API reference',
-          path: 'api-reference',
-          submenu: [{
-            title: 'LitState class',
-            path: 'lit-state',
-            template: html`<api-lit-state></api-lit-state>`
-          }, {
-            title: '@stateVar() decorator',
-            path: 'state-var-decorator',
-            template: html`<api-state-var-decorator></api-state-var-decorator>`
-          }, {
-            title: 'observeState() mixin',
-            path: 'observe-state-mixin',
-            template: html`<api-observe-state-mixin></api-observe-state-mixin>`
-          }, {
-            title: 'StateVar handler class',
-            path: 'state-var-handler',
-            template: html`<api-state-var-handler></api-state-var-handler>`
-          }, {
-            title: 'stateRecorder object',
-            path: 'state-recorder',
-            template: html`<api-state-recorder></api-state-recorder>`
-          }]
-        }];
+        return html`
+
+            <h1><code>stateRecorder</code> object</h1>
+
+            <p>
+                This object is used by the
+                <lit-docs-link path="api-reference/observe-state-mixin/"><code>observeState()</code> mixin</lit-docs-link>,
+                to get the <code>stateVar</code> variabes that have been
+                accesed during a render cycle.
+            </p>
+
+            <h2>Methods</h2>
+
+            <h3><code>start()</code></h3>
+
+            <p>
+                Starts the recorder. After calling this, every
+                <code>stateVar</code> variable that is being read, will be
+                recorded, until <code>finish()</code> is called.
+            </p>
+
+            <h3><code>recordRead(stateObj, key)</code></h3>
+
+            <p>
+                If there is a recorder started (by <code>start()</code>) and
+                hasn't finished yet (by <code>finish()</code>); records that a
+                <code>stateVar</code> has been read.
+            </p>
+
+            <table>
+                <tr>
+                    <th>stateObj</th>
+                    <td>
+                        The instance of the <code>LitState</code> derived
+                        class, on which the accessed <code>stateVar</code> has
+                        been defined.
+                    </rd>
+                </tr>
+                <tr>
+                    <th>key</th>
+                    <td>
+                        The varname of the <code>stateVar</code> variable as
+                        defined on the <code>LitState</code> class.
+                    </rd>
+                </tr>
+            </table>
+
+            <h3><code>finish()</code></h3>
+
+            <p>
+                Stops recording <code>stateVar</code> variables, started by the
+                <code>start()</code> method, and returns the recorded
+                <code>stateVar</code> variables in a <code>Map()</code> object.
+            </p>
+
+        `;
       }
     }]
   };
-}, LitElement);
+}, LitDocsContent(LitElement));

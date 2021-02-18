@@ -30,24 +30,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html } from '../web_modules/lit-element.js';
-import '../web_modules/lit-docs.js';
-import './intro-page.js';
-import './basic-usage/index.js';
-import './no-decorator-usage/index.js';
-import './different-vars-on-rerender/index.js';
-import './state-handling.js';
-import './computed-values/index.js';
-import './nested-states/index.js';
-import './state-var-handler/index.js';
-import './manually-observe-state/index.js';
-import './api/lit-state.js';
-import './api/state-var-handler.js';
-import './api/observe-state-mixin.js';
-import './api/state-var-decorator.js';
-import './api/state-recorder.js';
-export let LitStateDocs = _decorate([customElement('lit-state-docs')], function (_initialize, _LitElement) {
-  class LitStateDocs extends _LitElement {
+import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
+import { LitDocsContent } from '../../web_modules/lit-docs.js';
+import '../../web_modules/lit-docs.js';
+export let ApiObserveStateMixin = _decorate([customElement('api-observe-state-mixin')], function (_initialize, _LitDocsContent) {
+  class ApiObserveStateMixin extends _LitDocsContent {
     constructor(...args) {
       super(...args);
 
@@ -57,85 +44,42 @@ export let LitStateDocs = _decorate([customElement('lit-state-docs')], function 
   }
 
   return {
-    F: LitStateDocs,
+    F: ApiObserveStateMixin,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
-        return html`<lit-docs-ui docsTitle="LitState" .pages=${this.pages}></lit-docs-ui>`;
-      }
-    }, {
-      kind: "get",
-      key: "pages",
-      value: function pages() {
-        return [{
-          title: 'Introduction',
-          path: 'intro-page',
-          template: html`<intro-page></intro-page>`
-        }, {
-          title: 'Basic usage',
-          path: 'basic-usage',
-          template: html`<basic-usage></basic-usage>`,
-          submenu: [{
-            title: 'Usage without decorators',
-            path: 'no-decorator-usage',
-            template: html`<no-decorator-usage></no-decorator-usage>`
-          }]
-        }, {
-          title: 'State handling',
-          path: 'state-handling',
-          template: html`<state-handling></state-handling>`,
-          submenu: [{
-            title: 'Computed values',
-            path: 'computed-values',
-            template: html`<computed-values></computed-values>`
-          }, {
-            title: 'Nested states',
-            path: 'nested-states',
-            template: html`<nested-states></nested-states>`
-          }, {
-            title: 'Different vars on re-render',
-            path: 'different-vars-on-rerender',
-            template: html`<different-vars-on-rerender></different-vars-on-rerender>`
-          }]
-        }, {
-          title: 'Advanced usage',
-          path: 'advanced-usage',
-          submenu: [{
-            title: 'StateVar handler',
-            path: 'state-var-handler',
-            template: html`<state-var-handler></state-var-handler>`
-          }, {
-            title: 'Manually observe state',
-            path: 'manually-observe-state',
-            template: html`<manually-observe-state></manually-observe-state>`
-          }]
-        }, {
-          title: 'API reference',
-          path: 'api-reference',
-          submenu: [{
-            title: 'LitState class',
-            path: 'lit-state',
-            template: html`<api-lit-state></api-lit-state>`
-          }, {
-            title: '@stateVar() decorator',
-            path: 'state-var-decorator',
-            template: html`<api-state-var-decorator></api-state-var-decorator>`
-          }, {
-            title: 'observeState() mixin',
-            path: 'observe-state-mixin',
-            template: html`<api-observe-state-mixin></api-observe-state-mixin>`
-          }, {
-            title: 'StateVar handler class',
-            path: 'state-var-handler',
-            template: html`<api-state-var-handler></api-state-var-handler>`
-          }, {
-            title: 'stateRecorder object',
-            path: 'state-recorder',
-            template: html`<api-state-recorder></api-state-recorder>`
-          }]
-        }];
+        return html`
+
+            <h1><code>observeState()</code> mixin</h1>
+
+            <p>
+                This mixin is meant to be used on your components that extend
+                from <code>LitElement</code>. You apply the mixin by wrapping
+                the <code>LitElement</code> class with this mixin function:
+                <code>observeState(LitElement)</code>.
+            </p>
+
+            <p>
+                This makes your <code>LitElement</code> component aware of any
+                <code>stateVar</code> variables. When <code>stateVar</code>
+                variables are being read by the component during render, it
+                will record this. Then when any of the recorded
+                <code>stateVar</code> variables are being changed, the
+                component re-renders itself.
+            </p>
+
+            <h2><code>observeState(litElementClass)</code></h2>
+
+            <p>
+                Add "<code>stateVar</code> awareness" to the given
+                <code>litElementClass</code>, which should be a class
+                definition of, or an extend from, LitElement's
+                <code>LitElement</code> class.
+            </p>
+
+        `;
       }
     }]
   };
-}, LitElement);
+}, LitDocsContent(LitElement));

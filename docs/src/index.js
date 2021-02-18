@@ -7,8 +7,13 @@ import './different-vars-on-rerender/index';
 import './state-handling';
 import './computed-values/index';
 import './nested-states/index';
-import './state-var-handler/index';
-import './manually-observe-state/index';
+import './advanced-usage/state-var-handler/index';
+import './advanced-usage/manually-observe-state/index';
+import './api/lit-state';
+import './api/state-var-handler';
+import './api/observe-state-mixin';
+import './api/state-var-decorator';
+import './api/state-recorder';
 
 
 @customElement('lit-state-docs')
@@ -72,6 +77,37 @@ export class LitStateDocs extends LitElement {
                         title: 'Manually observe state',
                         path: 'manually-observe-state',
                         template: html`<manually-observe-state></manually-observe-state>`
+                    }
+                ]
+            },
+            {
+                title: 'API reference',
+                path: 'api-reference',
+                submenu: [
+                    {
+                        title: 'LitState class',
+                        path: 'lit-state',
+                        template: html`<api-lit-state></api-lit-state>`
+                    },
+                    {
+                        title: '@stateVar() decorator',
+                        path: 'state-var-decorator',
+                        template: html`<api-state-var-decorator></api-state-var-decorator>`
+                    },
+                    {
+                        title: 'observeState() mixin',
+                        path: 'observe-state-mixin',
+                        template: html`<api-observe-state-mixin></api-observe-state-mixin>`
+                    },
+                    {
+                        title: 'StateVar handler class',
+                        path: 'state-var-handler',
+                        template: html`<api-state-var-handler></api-state-var-handler>`
+                    },
+                    {
+                        title: 'stateRecorder object',
+                        path: 'state-recorder',
+                        template: html`<api-state-recorder></api-state-recorder>`
                     }
                 ]
             }
