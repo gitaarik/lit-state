@@ -9,6 +9,7 @@ import './computed-values/index';
 import './nested-states/index';
 import './advanced-usage/state-var-handler/index';
 import './advanced-usage/manually-observe-state/index';
+import './advanced-usage/state-recorder-usage';
 import './api/lit-state';
 import './api/state-var-handler';
 import './api/observe-state-mixin';
@@ -77,6 +78,11 @@ export class LitStateDocs extends LitElement {
                         title: 'Manually observe state',
                         path: 'manually-observe-state',
                         template: html`<manually-observe-state></manually-observe-state>`
+                    },
+                    {
+                        title: 'stateRecorder',
+                        path: 'state-recorder-usage',
+                        template: html`<state-recorder-usage></state-recorder-usage>`
                     }
                 ]
             },
