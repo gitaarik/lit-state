@@ -125,6 +125,14 @@ export class StateVarHandler extends LitDocsContent(LitElement) {
                 <code>stateVar</code> variables are being get/set.
             </p>
 
+            <h3>No-decorator usage</h3>
+
+            <p>Without decorators, you could implement it like this:</p>
+
+            <p>
+                <code-block .code=${this.customStatevarNoDecoratorUsageCode}></code-block>
+            </p>
+
             <h3>Providing options from a method</h3>
 
             <p>
@@ -238,6 +246,30 @@ class DemoState extends LitState {
         initialValue: 0
     })
     counter;
+
+}`;
+
+    }
+
+    get customStatevarNoDecoratorUsageCode() {
+
+        return`function localStorageStateVar(options) {
+    return Object.assign({
+        {handler: LocalStorageHandler},
+        options
+    });
+}
+
+class DemoState extends LitState {
+
+    static get stateVars() {
+        return {
+            myVar: localStorageStateVar({
+                localStorageKey: 'counter',
+                initialValue: 0
+            })
+        }
+    }
 
 }`;
 

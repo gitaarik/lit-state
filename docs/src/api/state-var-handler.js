@@ -33,7 +33,9 @@ export class ApiStateVarHandler extends LitDocsContent(LitElement) {
                 need to call it yourself.
             </p>
 
-            <h2>class <code>StateVar</code></h2>
+            <h1>class <code>StateVar</code></h1>
+
+            <h2>Methods</h2>
 
             <h3><code>constructor(args)</code></h3>
 
@@ -61,7 +63,7 @@ export class ApiStateVarHandler extends LitDocsContent(LitElement) {
                 </tr>
             </table>
 
-            <h3>method <code>get()</code></h3>
+            <h3><code>get()</code></h3>
 
             <p>
                 Called when the <code>stateVar</code> on the
@@ -73,7 +75,7 @@ export class ApiStateVarHandler extends LitDocsContent(LitElement) {
                 <code>stateVar</code> is being read.
             </p>
 
-            <h3>method <code>shouldSetValue(value)</code></h3>
+            <h3><code>shouldSetValue(value)</code></h3>
 
             <p>
                 Called before the <code>set()</code> method is called. If this
@@ -82,7 +84,7 @@ export class ApiStateVarHandler extends LitDocsContent(LitElement) {
                 optimization.
             </p>
 
-            <h3>method <code>set(value)</code></h3>
+            <h3><code>set(value)</code></h3>
 
             <p>
                 Called when the <code>stateVar</code> on the
@@ -96,28 +98,6 @@ export class ApiStateVarHandler extends LitDocsContent(LitElement) {
                 callback, set in the <code>constructor()</code>, to indicate
                 the observers that the <code>stateVar</code> has changed.
             </p>
-
-        `;
-
-    }
-
-    static get styles() {
-
-        return css`
-
-            table {
-                border-collapse: collapse;
-            }
-
-            table tr th,
-            table tr td {
-                border: 1px var(--border-color) solid;
-                padding: 10px;
-            }
-
-            table tr th {
-                text-align: left;
-            }
 
         `;
 
