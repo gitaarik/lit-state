@@ -1,5 +1,5 @@
-import { L as LitElement, h as html, c as css, r as render } from './common/lit-element-6b065c14.js';
-import { l as litStyle } from './common/lit-style-71574fc9.js';
+import { L as LitElement, h as html, c as css, u as unsafeCSS, d as directive, N as NodePart, i as isPrimitive, r as render } from './common/lit-element-336867a2.js';
+import { l as litStyle } from './common/lit-style-ca615be5.js';
 
 function deepFreeze(obj) {
     if (obj instanceof Map) {
@@ -3372,8 +3372,6 @@ class CodeBlock extends LitElement {
                 margin: 0;
                 padding: 7px 10px;
                 border-radius: 5px 5px 0 0;
-                background: #555;
-                color: #FFF;
                 font-weight: bold;
             }
 
@@ -3386,20 +3384,119 @@ class CodeBlock extends LitElement {
                 white-space: pre-wrap;
                 border-radius: 5px;
                 overflow-x: auto;
-                color: #ffffff;
-                background: #1c1b1b;
             }
 
             .hljs[has-filename] {
                 border-radius: 0 0 5px 5px;
             }
 
+            @media (prefers-color-scheme: light) {
+                ${unsafeCSS(this.lightThemeCSS)}
+            }
+
             @media (prefers-color-scheme: dark) {
+                ${unsafeCSS(this.darkThemeCSS)}
+            }
 
-                .hljs {
-                    background: rgb(51, 55, 58);
-                }
+        `;
 
+    }
+
+    static get lightThemeCSS() {
+
+        return css`
+
+            .fileName {
+                background: #c2beb9;
+            }
+
+			.hljs {
+			  display: block;
+			  overflow-x: auto;
+			  padding: 0.5em;
+			  color: #2f3337;
+			  background: #dad7d2;
+			}
+
+			.hljs-comment {
+			  color: #656e77;
+			}
+
+			.hljs-keyword,
+			.hljs-selector-tag,
+			.hljs-meta-keyword,
+			.hljs-doctag,
+			.hljs-section,
+			.hljs-selector-class,
+			.hljs-meta,
+			.hljs-selector-pseudo,
+			.hljs-attr {
+			  color: #015692;
+			}
+
+			.hljs-attribute {
+			  color: #803378;
+			}
+
+			.hljs-name,
+			.hljs-type,
+			.hljs-number,
+			.hljs-selector-id,
+			.hljs-quote,
+			.hljs-template-tag,
+			.hljs-built_in,
+			.hljs-title,
+			.hljs-literal {
+			  color: #b75501;
+			}
+
+			.hljs-string,
+			.hljs-regexp,
+			.hljs-symbol,
+			.hljs-variable,
+			.hljs-template-variable,
+			.hljs-link,
+			.hljs-selector-attr,
+			.hljs-meta-string {
+			  color: #54790d;
+			}
+
+			.hljs-bullet,
+			.hljs-code {
+			  color: #535a60;
+			}
+
+			.hljs-deletion {
+			  color: #c02d2e;
+			}
+
+			.hljs-addition {
+			  color: #2f6f44;
+			}
+
+			.hljs-emphasis {
+			  font-style: italic;
+			}
+
+			.hljs-strong {
+			  font-weight: bold;
+			}
+
+        `;
+
+    }
+
+    static get darkThemeCSS() {
+
+        return css`
+
+            .fileName {
+                background: #2d2d2d;
+            }
+
+            .hljs {
+                color: #ffffff;
+                background: #1c1b1b;
             }
 
             .hljs-comment {
@@ -3730,14 +3827,36 @@ const LitDocsStyle = litStyle(css`
         color: var(--text-color);
     }
 
+    table {
+        border-collapse: collapse;
+    }
+
+    table tr th,
+    table tr td {
+        border: 1px var(--border-color) solid;
+        padding: 10px;
+    }
+
+    table tr th {
+        text-align: left;
+    }
+
     code {
         display: inline-block;
         padding: 2px 6px;
         margin: 1px;
-        background: #444;
         border-radius: 5px;
-        color: white;
+        background: #dad7d2;
         white-space: pre;
+    }
+
+    @media (prefers-color-scheme: dark) {
+
+        code {
+            background: #444;
+            color: white;
+        }
+
     }
 
     .demoComponents {
@@ -3840,7 +3959,7 @@ class LitDocsUiState extends LitState {
 
     initPageByPath(path) {
 
-        if (!path || path === '/' || path === '' || path === '#') {
+        if (!path || path === '/') {
             this.page = this.pages[0];
             return;
         }
@@ -3849,10 +3968,6 @@ class LitDocsUiState extends LitState {
 
         if (path[0] === '/') {
             path = path.substr(1);
-        }
-
-        if (this.useHash && path.split('#').length > 1) {
-            path = path.split('#')[1];
         }
 
         this._setPageByPath(path, this.pages);
@@ -3868,7 +3983,7 @@ class LitDocsUiState extends LitState {
         path = path.slice(); // make a copy
 
         if (this.useHash) {
-            path = path.split('#')[1] || '';
+            path = path.split('#').slice(1).join('#');
         } else {
 
             if (!path) {
@@ -3927,13 +4042,13 @@ class LitDocsUiState extends LitState {
         if (this.useHash) {
             this.navToPath(window.location.hash, false);
         } else {
-            this.navToPath(window.location.pathname, false);
+            this.navToPath(window.location.pathname + window.location.hash, false);
         }
     }
 
     _setPageByPath(path, pages) {
 
-        const firstPathPart = path.split('/')[0];
+        const firstPathPart = path.split('#')[0].split('/')[0];
 
         if (!firstPathPart) {
             return;
@@ -3994,9 +4109,16 @@ class LitDocsUI extends observeState(LitDocsStyle(LitElement)) {
     }
 
     _initState() {
+
         litDocsUiState.useHash = this.useHash;
         litDocsUiState.pages = this.pages;
-        litDocsUiState.initPageByPath(window.location.pathname + window.location.hash);
+
+        if (this.useHash) {
+            litDocsUiState.initPageByPath(window.location.hash.substr(1));
+        } else {
+            litDocsUiState.initPageByPath(window.location.pathname + window.location.hash);
+        }
+
     }
 
     _initBaseStyle() {
@@ -4392,13 +4514,13 @@ class LitDocsLink extends LitDocsStyle(LitElement) {
 
     static get properties() {
         return {
-            href: {type: String}
+            path: {type: String}
         };
     }
 
     constructor() {
         super();
-        this.href = '';
+        this.path = '';
     }
 
     render() {
@@ -4412,10 +4534,10 @@ class LitDocsLink extends LitDocsStyle(LitElement) {
     get _href() {
 
         if (litDocsUiState.useHash) {
-            return '#' + this.href;
+            return '#' + this.path;
         }
 
-        return this.href;
+        return this.path;
 
     }
 
@@ -4466,6 +4588,48 @@ class ShowcaseBox extends LitElement {
 
 customElements.define('showcase-box', ShowcaseBox);
 
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+// For each part, remember the value that was last rendered to the part by the
+// unsafeHTML directive, and the DocumentFragment that was last set as a value.
+// The DocumentFragment is used as a unique key to check if the last value
+// rendered to the part was with unsafeHTML. If not, we'll always re-render the
+// value passed to unsafeHTML.
+const previousValues = new WeakMap();
+/**
+ * Renders the result as HTML, rather than text.
+ *
+ * Note, this is unsafe to use with any user-provided input that hasn't been
+ * sanitized or escaped, as it may lead to cross-site-scripting
+ * vulnerabilities.
+ */
+const unsafeHTML = directive((value) => (part) => {
+    if (!(part instanceof NodePart)) {
+        throw new Error('unsafeHTML can only be used in text bindings');
+    }
+    const previousValue = previousValues.get(part);
+    if (previousValue !== undefined && isPrimitive(value) &&
+        value === previousValue.value && part.value === previousValue.fragment) {
+        return;
+    }
+    const template = document.createElement('template');
+    template.innerHTML = value; // innerHTML casts to string internally
+    const fragment = document.importNode(template.content, true);
+    part.setValue(fragment);
+    previousValues.set(part, { value, fragment });
+});
+
 // Global container of all the anchors on the page. This is global so that the
 // `goToAnchor()` function can be used from any component.
 let ANCHORS = [];
@@ -4507,9 +4671,12 @@ function goToAnchor(anchorName) {
 
     if (!anchorName) return;
 
-    scrollToAnchor(anchorName);
+    // `setTimeout` is used to queue the task at the end of the execution
+    // stack, so that any page change rendering has finished.
+    window.setTimeout(() => scrollToAnchor(anchorName));
 
-    // Do it another time when the full document has loaded
+    // Execute `scrollToAnchor()` again when the page has fully loaded. Because
+    // when other components load, it could change the scroll offset.
     window.addEventListener('load', event => {
         scrollToAnchor(anchorName);
     });
@@ -4573,8 +4740,7 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
 
     _addHashChangeListener() {
         this.hashChangeCallback = event => {
-            goToAnchor(event.newURL.split('#').slice(-1)[0]);
-            this._renderAnchors();
+            this.loadAnchorFromUrl(event.newURL);
         };
         window.addEventListener('hashchange', this.hashChangeCallback);
     }
@@ -4584,9 +4750,17 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
     }
 
     _loadInitialAnchor() {
-        const hashes = window.location.hash.split('#');
-        const lastHash = hashes.pop();
-        goToAnchor(lastHash);
+        this.loadAnchorFromUrl(window.location.href);
+    }
+
+    loadAnchorFromUrl(url) {
+
+        if (litDocsUiState.useHash && url.split('#').length < 3) {
+            return;
+        }
+
+        goToAnchor(url.split('#').slice(-1)[0]);
+
     }
 
     _addAnchors() {
@@ -4617,13 +4791,9 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
 
     _addAnchor(element) {
 
-        const elementText = element.textContent;
-        const anchorName = this._getAnchorName(elementText);
-
         const anchorData = {
-            anchorName,
-            element,
-            elementText
+            anchorName: this._getAnchorName(element),
+            element
         };
 
         ANCHORS.push(anchorData);
@@ -4633,7 +4803,7 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
     }
 
     _renderAnchors() {
-        for (let anchor of ANCHORS) {
+        for (let anchor of this._addedAnchors) {
             this._renderAnchor(anchor);
         }
     }
@@ -4643,7 +4813,7 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
         const active = window.location.hash.substr(1) === anchor.anchorName;
 
         const template = html`
-            <span>${anchor.elementText}</span>
+            <span>${unsafeHTML(anchor.element.innerHTML)}</span>
             <a
                 class="headingAnchor"
                 href=${window.location.pathname + this._baseHash + '#' + anchor.anchorName}
@@ -4676,9 +4846,9 @@ const LitDocsAnchors = superclass => class extends litDocsAnchorsStyles(supercla
 
     }
 
-    _getAnchorName(elementText) {
+    _getAnchorName(element) {
 
-        const baseAnchorName = elementText.replace(/ /g, '-').replace(/[^\w-_\.]/gi, '').toLowerCase();
+        const baseAnchorName = element.textContent.replace(/ /g, '-').replace(/[^\w-_\.]/gi, '').toLowerCase();
         let anchorName = baseAnchorName;
         let alreadyExistingAnchor = getAnchorData(anchorName);
         let counter = 1;

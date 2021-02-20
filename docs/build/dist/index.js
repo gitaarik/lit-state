@@ -39,8 +39,9 @@ import './different-vars-on-rerender/index.js';
 import './state-handling.js';
 import './computed-values/index.js';
 import './nested-states/index.js';
-import './state-var-handler/index.js';
-import './manually-observe-state/index.js';
+import './advanced-usage/state-var-handler/index.js';
+import './advanced-usage/manually-observe-state/index.js';
+import './advanced-usage/state-recorder-usage.js';
 import './api/lit-state.js';
 import './api/state-var-handler.js';
 import './api/observe-state-mixin.js';
@@ -109,6 +110,10 @@ export let LitStateDocs = _decorate([customElement('lit-state-docs')], function 
             title: 'Manually observe state',
             path: 'manually-observe-state',
             template: html`<manually-observe-state></manually-observe-state>`
+          }, {
+            title: 'stateRecorder',
+            path: 'state-recorder-usage',
+            template: html`<state-recorder-usage></state-recorder-usage>`
           }]
         }, {
           title: 'API reference',

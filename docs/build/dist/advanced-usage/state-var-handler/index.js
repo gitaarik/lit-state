@@ -30,11 +30,12 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-import { customElement, LitElement, property, html, css } from '../../web_modules/lit-element.js';
-import { LitDocsContent } from '../../web_modules/lit-docs.js';
-import '../../web_modules/lit-docs.js';
-export let ApiStateVarHandler = _decorate([customElement('api-state-var-handler')], function (_initialize, _LitDocsContent) {
-  class ApiStateVarHandler extends _LitDocsContent {
+import { customElement, LitElement, property, html } from '../../../web_modules/lit-element.js';
+import { LitDocsContent } from '../../../web_modules/lit-docs.js';
+import '../../../web_modules/lit-docs.js';
+import './custom-state-var-handler-component.js';
+export let StateVarHandler = _decorate([customElement('state-var-handler')], function (_initialize, _LitDocsContent) {
+  class StateVarHandler extends _LitDocsContent {
     constructor(...args) {
       super(...args);
 
@@ -44,111 +45,290 @@ export let ApiStateVarHandler = _decorate([customElement('api-state-var-handler'
   }
 
   return {
-    F: ApiStateVarHandler,
+    F: StateVarHandler,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h1><code>StateVar</code> handler</h1>
+            <h1><code>stateVar</code> handler</h1>
 
             <p>
-                This is the default handler class for the <code>stateVar</code>
-                variables. When you define a <code>stateVar</code> and you
-                don't specify a custom handler class, this class will be used.
+                You can also define your own <code>stateVar</code> handler
+                class. This allows you to have custom functionality when you
+                read/write your stateVars. An example of a custom state var is
+                <a target="_blank" href="https://github.com/gitaarik/lit-state-async-state-var">asyncStateVar</a>.
+                This is a type of stateVar that makes it easy to deal with
+                asynchronous data, and the state of the data (loading,
+                updating, loaded, updated, etc).
             </p>
 
             <p>
-                A handler class controls what happens when a
-                <code>stateVar</code> is being set or get. For more information
-                on how to create a custom <code>stateVar</code> handler class,
-                see <lit-docs-link path="advanced-usage/state-var-handler/">stateVar handler</lit-docs-link>.
+                On this page we'll make a custom stateVar handler ourselves.
+                We'll create a <code>LocalStorageHandler</code> that saves your
+                <code>stateVar</code> values to <code>localStorage</code>. So
+                that your state is retained when you refresh your page.
             </p>
 
             <p>
-                You shouldn't use a <code>StateVar</code> handler class
-                directly as a user. You only need to know about it when
-                defining a custom <code>StateVar</code> handler class. The
-                handler class is called by LitState internally, so you don't
-                need to call it yourself.
+                Here is the component already. Later we'll explain how it is
+                made. To try it out, change the value and refresh the page.
             </p>
 
-            <h1>class <code>StateVar</code></h1>
+            <div class="demoComponents">
+                <custom-state-var-handler-component></custom-state-var-handler-component>
+            </div>
 
-            <h2>Methods</h2>
-
-            <h3><code>constructor(args)</code></h3>
-
-            <p>
-                The constructor takes a single argument <code>args</code> which
-                is an object containing the following properties:
-            </p>
-
-            <table>
-                <tr>
-                    <th><code>options</code></th>
-                    <td>The options given in the <code>stateVar</code> declaration.</td>
-                </tr>
-                <tr>
-                    <th><code>recordRead</code></th>
-                    <td>Callback to indicate the <code>stateVar</code> is read.</td>
-                </tr>
-                <tr>
-                    <th><code>notifyChange</code></th>
-                    <td>Callback to indicate the <code>stateVar</code> value has changed.</td>
-                </tr>
-                <tr>
-                    <th><code>value</code></th>
-                    <td>The initial value.</td>
-                </tr>
-            </table>
-
-            <h3><code>get()</code></h3>
+            <h2>Default StateVar handler</h2>
 
             <p>
-                Called when the <code>stateVar</code> on the
-                <code>LitState</code> class is read (for example:
-                <code>myState.myStateVar</code>). Should return the value of
-                the <code>stateVar</code>. Typically, this method should call
-                the <code>recordRead()</code> callback, set in the
-                <code>constructor()</code>, to indicate the observers that the
-                <code>stateVar</code> is being read.
-            </p>
-
-            <h3><code>shouldSetValue(value)</code></h3>
-
-            <p>
-                Called before the <code>set()</code> method is called. If this
-                method returns <code>false</code>, the <code>set()</code>
-                method won't be called. This can be used for validation and/or
-                optimization.
-            </p>
-
-            <h3><code>set(value)</code></h3>
-
-            <p>
-                Called when the <code>stateVar</code> on the
-                <code>LitState</code> class is set (for example:
-                <code>myState.myStateVar = 'value'</code>.
+                We implement this handler by creating a new class that extends
+                from the default handler class
+                <code>StateVar</code>. This default handler class
+                looks like this:
             </p>
 
             <p>
-                Should set the value of the <code>stateVar</code>. Typically,
-                this method would call the <code>notifyChange()</code>
-                callback, set in the <code>constructor()</code>, to indicate
-                the observers that the <code>stateVar</code> has changed.
+                <code-block filename='lit-state.js' .code=${this.litStateStateVarHandlerCode}></code-block>
+            </p>
+
+            <h2>Custom StateVar handler</h2>
+
+            <p>
+                We will extend this class and add some functionality. You see
+                that the constructor of the default handler sets some default
+                variables. We will use some of these in our custom handler.
+            </p>
+
+            <p>
+                <code-block filename='local-storage-handler.js' .code=${this.localStorageHandlerCode}></code-block>
+            </p>
+
+            <p>
+                Like this, when the <code>stateVar</code> is
+                created, the initial value is set to any previously set
+                <code>localStorage</code> value, or else to
+                <code>options.initialValue</code>. And whenever a
+                new value is set, it is saved to
+                <code>localStorage</code>. The option
+                <code>localStorageKey</code> is used as the key for
+                the <code>localStorage</code>.
+            </p>
+
+            <h2>Usage in state class</h2>
+
+            <p>
+                Now let's see how we use this custom
+                <code>stateVar</code> handler in our
+                <code>demoState</code> class:
+            </p>
+
+            <p>
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
+            </p>
+
+            <p>
+                You see that we tell LitState to use a different handler by
+                specifying the <code>handler</code> option. The
+                other options are options of our own custom handler. The
+                <code>initialValue</code> should be set through an
+                option. It can't be set like <code>counter = 0</code>,
+                because that would be seen as a regular assignment, and would
+                override any previously value in
+                <code>localStorage</code>.
+            </p>
+
+            <h3>Custom decorator</h3>
+
+            <p>
+                If you use your custom <code>stateVar</code>
+                handler a lot, it could be useful to also make a custom
+                decorator function:
+            </p>
+
+            <p>
+                <code-block .code=${this.localStorageHandlerDecoratorCode}></code-block>
+            </p>
+
+            <p>
+                This allows you to define the <code>stateVar</code>
+                like this:
+            </p>
+
+            <p>
+                <code-block .code=${this.customDecoratorCode}></code-block>
+            </p>
+
+            <p>
+                Custom <code>stateVar</code> handlers give you a
+                lot of power for customizing what happens when your
+                <code>stateVar</code> variables are being get/set.
+            </p>
+
+            <h3>No-decorator usage</h3>
+
+            <p>Without decorators, you could implement it like this:</p>
+
+            <p>
+                <code-block .code=${this.customStatevarNoDecoratorUsageCode}></code-block>
+            </p>
+
+            <h3>Providing options from a method</h3>
+
+            <p>
+                To give you access to the <code>this</code> objects on your
+                state instance, you can additionally add options to your
+                handler through a method.
+            </p>
+
+            <p>
+                <code-block .code=${this.methodDecoratingCode}></code-block>
             </p>
 
         `;
       }
     }, {
       kind: "get",
-      key: "defaultStateVarHandlerGet",
-      value: function defaultStateVarHandlerGet() {
-        return `get() {
-    this.recordRead();
-    return this.value;
+      key: "litStateStateVarHandlerCode",
+      value: function litStateStateVarHandlerCode() {
+        return `// ...
+        
+export class StateVar {
+
+    constructor(args) {
+        this.options = args.options; // The options given in the \`stateVar\` declaration
+        this.recordRead = args.recordRead; // Callback to indicate the \`stateVar\` is read
+        this.notifyChange = args.notifyChange; // Callback to indicate the \`stateVar\` value has changed
+        this.value = undefined; // The initial value
+    }
+
+    // Called when the \`stateVar\` on the \`State\` class is read.
+    get() {
+        this.recordRead();
+        return this.value;
+    }
+
+    // Returns whether the given \`value\` should be passed on to the \`set()\`
+    // method. Can be used for validation and/or optimization.
+    shouldSetValue(value) {
+        return this.value !== value;
+    }
+
+    // Called when the \`stateVar\` on the \`State\` class is set.
+    set(value) {
+        this.value = value;
+        this.notifyChange()
+    }
+
+}
+
+// ...`;
+      }
+    }, {
+      kind: "get",
+      key: "localStorageHandlerCode",
+      value: function localStorageHandlerCode() {
+        return `import { StateVar } from 'lit-element-state';
+        
+export class LocalStorageHandler extends StateVar {
+
+    constructor(args) {
+        super(args);
+        this.value = (
+            localStorage.getItem(this.options.localStorageKey)
+            || this.options.initialValue
+        );
+    }
+
+    set(value) {
+        super.set(value);
+        localStorage.setItem(this.options.localStorageKey, value);
+    }
+
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "demoStateCode",
+      value: function demoStateCode() {
+        return `import { LitState, stateVar } from 'lit-element-state';
+
+class DemoState extends LitState {
+
+    @stateVar({
+        handler: LocalStorageHandler,
+        localStorageKey: 'counter',
+        initialValue: 0
+    })
+    counter;
+
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "localStorageHandlerDecoratorCode",
+      value: function localStorageHandlerDecoratorCode() {
+        return `function localStorageStateVar(options) {
+    return stateVar(Object.assign(
+        {handler: LocalStorageHandler},
+        options
+    ));
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "customDecoratorCode",
+      value: function customDecoratorCode() {
+        return `class DemoState extends LitState {
+
+    @localStorageStateVar({
+        localStorageKey: 'counter',
+        initialValue: 0
+    })
+    counter;
+
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "customStatevarNoDecoratorUsageCode",
+      value: function customStatevarNoDecoratorUsageCode() {
+        return `function localStorageStateVar(options) {
+    return Object.assign({
+        {handler: LocalStorageHandler},
+        options
+    });
+}
+
+class DemoState extends LitState {
+
+    static get stateVars() {
+        return {
+            myVar: localStorageStateVar({
+                localStorageKey: 'counter',
+                initialValue: 0
+            })
+        }
+    }
+
+}`;
+      }
+    }, {
+      kind: "get",
+      key: "methodDecoratingCode",
+      value: function methodDecoratingCode() {
+        return `class DemoState extends LitState {
+
+    @stateVar({ handler: MyCustomHandler })
+    myVar() {
+        // This object returned, will be added to the \`options\` that are
+        // given to the constructor of the \`handler\` class.
+        return {
+            callback: () => this.callback();
+        };
+    }
+
 }`;
       }
     }]

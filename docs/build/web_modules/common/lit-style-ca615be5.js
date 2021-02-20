@@ -1,4 +1,4 @@
-import './lit-element-6b065c14.js';
+import './lit-element-336867a2.js';
 
 function litStyle(myStyles) {
 
