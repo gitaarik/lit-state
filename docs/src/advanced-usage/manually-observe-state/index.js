@@ -188,7 +188,7 @@ export class SpecificManualComponent extends LitElement {
 
     handleObserveCounter1ButtonClick() {
         this.counter1Observer = () => this.requestUpdate();
-        demoState.addObserver(this.counter1Observer, 'counter1');
+        demoState.addObserver(this.counter1Observer, ['counter1']);
         this.observingCounter1 = true;
     }
 
@@ -199,7 +199,7 @@ export class SpecificManualComponent extends LitElement {
 
     handleObserveCounter2ButtonClick() {
         this.counter2Observer = () => this.requestUpdate();
-        demoState.addObserver(this.counter2Observer, 'counter2');
+        demoState.addObserver(this.counter2Observer, ['counter2']);
         this.observingCounter2 = true;
     }
 

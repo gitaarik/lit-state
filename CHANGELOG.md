@@ -1,6 +1,16 @@
 # LitState Changelog
 
 
+### 1.6.1 - Support reconnecting components
+
+- When a component gets dynamically removed from the DOM and then added again,
+  call `this.requestUpdate()` so that the observers get-readded again. Fixes
+  [issue #5](https://github.com/gitaarik/lit-state/issues/5).
+- Added a docs page for this use case.
+- Reordered docs menu.
+- Added some comments in the code.
+
+
 ### 1.6.0 - Added JavaScript decorator support
 
 - The way `stateVar` variables are defined has changed. You have to update this

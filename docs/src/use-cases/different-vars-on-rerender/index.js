@@ -14,21 +14,20 @@ export class DifferentVarsOnRerender extends LitDocsContent(LitElement) {
 
             <h1>Different variables on re-render</h1>
 
-            <p>
-                This might seem obvious, but it's worth noting. This is a
-                demonstration of a specific use case. And the way LitState is
-                covers that. Also it gives some insight into how LitState
-                works.
-            </p>
+            <h2>Use case</h2>
 
             <p>
-                The use case we are describing here is a component that could
-                render different <code>stateVar</code> variables at every
-                re-render. LitState needs to keep track of the
-                <code>stateVar</code> variables that are used by your
-                component. Therefore, LitState rescans the
-                <code>stateVar</code> variables that are used in your component
-                every time it re-renders.
+                A component could render different <code>stateVar</code>
+                variables at every re-render. Possible new
+                <code>stateVar</code> variables should be observed so that the
+                component re-renders when they change.
+            </p>
+            
+            <h2>Execution</h2>
+            
+            <p>
+                LitState records the <code>stateVar</code> variables that are
+                used in the component every time it re-renders.
             </p>
 
             <h2>Demonstration</h2>

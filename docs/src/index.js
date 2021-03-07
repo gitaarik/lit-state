@@ -2,11 +2,10 @@ import { customElement, LitElement, property, html } from 'lit-element';
 import 'lit-docs';
 import './intro-page';
 import './basic-usage/index';
-import './no-decorator-usage/index';
-import './different-vars-on-rerender/index';
-import './state-handling';
-import './computed-values/index';
-import './nested-states/index';
+import './basic-usage/no-decorator-usage/index';
+import './state-handling/index';
+import './state-handling/computed-values/index';
+import './state-handling/nested-states/index';
 import './advanced-usage/state-var-handler/index';
 import './advanced-usage/manually-observe-state/index';
 import './advanced-usage/state-recorder-usage';
@@ -15,6 +14,9 @@ import './api/state-var-handler';
 import './api/observe-state-mixin';
 import './api/state-var-decorator';
 import './api/state-recorder';
+import './use-cases/index';
+import './use-cases/different-vars-on-rerender/index';
+import './use-cases/reconnected-components/index';
 
 
 @customElement('lit-state-docs')
@@ -57,11 +59,6 @@ export class LitStateDocs extends LitElement {
                         title: 'Nested states',
                         path: 'nested-states',
                         template: html`<nested-states></nested-states>`
-                    },
-                    {
-                        title: 'Different vars on re-render',
-                        path: 'different-vars-on-rerender',
-                        template: html`<different-vars-on-rerender></different-vars-on-rerender>`
                     }
                 ]
             },
@@ -114,6 +111,23 @@ export class LitStateDocs extends LitElement {
                         title: 'stateRecorder object',
                         path: 'state-recorder',
                         template: html`<api-state-recorder></api-state-recorder>`
+                    }
+                ]
+            },
+            {
+                title: 'Use case coverage',
+                path: 'test-cases',
+                template: html`<use-cases></use-cases>`,
+                submenu: [
+                    {
+                        title: 'Different vars on re-render',
+                        path: 'different-vars-on-rerender',
+                        template: html`<different-vars-on-rerender></different-vars-on-rerender>`
+                    },
+                    {
+                        title: 'Reconnected components',
+                        path: 'reconnected-components',
+                        template: html`<reconnected-components></reconnected-components>`
                     }
                 ]
             }

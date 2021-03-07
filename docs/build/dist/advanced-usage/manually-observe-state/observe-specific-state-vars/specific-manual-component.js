@@ -120,7 +120,7 @@ export let SpecificManualComponent = _decorate([customElement('specific-manual-c
       value: function handleObserveCounter1ButtonClick() {
         this.counter1Observer = () => this.requestUpdate();
 
-        demoState.addObserver(this.counter1Observer, 'counter1');
+        demoState.addObserver(this.counter1Observer, ['counter1']);
         this.observingCounter1 = true;
       }
     }, {
@@ -136,7 +136,7 @@ export let SpecificManualComponent = _decorate([customElement('specific-manual-c
       value: function handleObserveCounter2ButtonClick() {
         this.counter2Observer = () => this.requestUpdate();
 
-        demoState.addObserver(this.counter2Observer, 'counter2');
+        demoState.addObserver(this.counter2Observer, ['counter2']);
         this.observingCounter2 = true;
       }
     }, {

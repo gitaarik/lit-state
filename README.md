@@ -22,7 +22,7 @@ npm install lit-element-state
 slightly awkward package name.*
 
 
-### Current version: v1.6.0
+### Current version: v1.6.1
 
 For more information and update instructions, [See the changelog](CHANGELOG.md).
 

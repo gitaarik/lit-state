@@ -33,12 +33,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 import { customElement, LitElement, property, html } from '../../../web_modules/lit-element.js';
 import { LitDocsContent } from '../../../web_modules/lit-docs.js';
 import '../../../web_modules/lit-docs.js';
-import './observe-all-state-vars/automatic-component.js';
-import './observe-all-state-vars/manual-component.js';
-import './observe-specific-state-vars/specific-automatic-component.js';
-import './observe-specific-state-vars/specific-manual-component.js';
-export let ManuallyObserveState = _decorate([customElement('manually-observe-state')], function (_initialize, _LitDocsContent) {
-  class ManuallyObserveState extends _LitDocsContent {
+import './no-deco-component-1.js';
+import './no-deco-component-2.js';
+export let NoDecoratorUsage = _decorate([customElement('no-decorator-usage')], function (_initialize, _LitDocsContent) {
+  class NoDecoratorUsage extends _LitDocsContent {
     constructor(...args) {
       super(...args);
 
@@ -48,208 +46,63 @@ export let ManuallyObserveState = _decorate([customElement('manually-observe-sta
   }
 
   return {
-    F: ManuallyObserveState,
+    F: NoDecoratorUsage,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h1>Manually observe the state</h1>
+            <h1>Usage without decorators</h1>
 
             <p>
-                When you use the <code>observeState()</code> mixin,
-                your LitState Element automatically observes the states you use
-                in that component, and re-renders when the state changes. You
-                can also manually add more observers that will be notified when
-                your state changes. This can be handy if you have other parts
-                of your app (different from your LitElement components) that
-                need to know when a state has changed.
+                In case you can't or don't want to use
+                <a target="_blank" href="https://github.com/tc39/proposal-decorators">decorators</a>,
+                you can define the stateVars with a static
+                <code>stateVars</code> getter method. Then you can use the
+                <code>constructor</code> to set the initial values. It is
+                basically the same how you would define
+                <a target="_blank" href="https://lit-element.polymer-project.org/guide/properties#declare">LitElement properties</a>
+                without decorators.
             </p>
+
+            <h2>Example</h2>
+
+            <p>
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
+            </p>
+
+            <h2>Output</h2>
 
             <div class="demoComponents">
-                <automatic-component></automatic-component>
-                <manual-component></manual-component>
+                <no-deco-component-1></no-deco-component-1>
+                <no-deco-component-2></no-deco-component-2>
             </div>
-
-            <p>
-                To add observers to a certain state instance, you just call
-                <code>myState.addObserver(myCallback)</code>. The
-                callback will be called any time a
-                <code>stateVar</code> changes. The callback will
-                get as a first argument the name of the
-                <code>stateVar</code> that changed. To stop
-                observing, call
-                <code>myState.removeObserver(myCallback)</code>. It
-                is similar to the way
-                <code>document.addEventListener()</code> and
-                <code>document.removeEventListener()</code> work.
-            </p>
-
-            <p>
-                To keep the example simple, we still use a LitElement
-                component. We just don't use the
-                <code>observeState()</code> mixin. There are
-                buttons to manually add and remove the observer:
-
-            <p>
-                <code-block filename='manual-component.js' .code=${this.manuallyObserveStateCode}></code-block>
-            </p>
-
-            <h2>Observe specific stateVars</h2>
-
-            <p>
-                As an optional second argument to
-                <code>addObserver()</code>, you can provide an
-                array with <code>stateVar</code> names that you
-                want to observe. The callback will then only be called when any
-                of those <code>stateVar</code> variables change.
-            </p>
-
-            <div class="demoComponents">
-                <specific-automatic-component></specific-automatic-component>
-                <specific-manual-component></specific-manual-component>
-            </div>
-
-            <p>
-                <code-block filename='manual-component.js' .code=${this.manuallyObserveSpecificStateCode}></code-block>
-            </p>
 
         `;
       }
     }, {
       kind: "get",
-      key: "manuallyObserveStateCode",
-      value: function manuallyObserveStateCode() {
-        return `import { customElement, LitElement, property, html } from 'lit-element';
-import { demoState } from './demo-state.js';
+      key: "demoStateCode",
+      value: function demoStateCode() {
+        return `import { LitState } from 'lit-element-state';
 
+class DemoState extends LitState {
 
-@customElement('manual-component')
-export class ManualComponent extends LitElement {
-
-    @property({type: Boolean})
-    observing = false;
-
-    render() {
-
-        return html\`
-
-            <h2>&lt;manual-component&gt;</h2>
-            <h3>Counter: \${demoState.counter}</h3>
-
-            <button
-                @click=\${this.handleObserveButtonClick}
-                ?hidden=\${this.observing}
-            >
-                observe
-            </button>
-
-            <button
-                @click=\${this.handleUnobserveButtonClick}
-                ?hidden=\${!this.observing}
-            >
-                unobserve
-            </button>
-
-        \`;
-
+    static get stateVars() {
+        return {
+            counter: {}
+        };
     }
 
-    handleObserveButtonClick() {
-        this.stateObserver = () => this.requestUpdate();
-        demoState.addObserver(this.stateObserver);
-        this.observing = true;
+    constructor() {
+        super();
+        this.counter = 0;
     }
 
-    handleUnobserveButtonClick() {
-        demoState.removeObserver(this.stateObserver);
-        this.observing = false;
-    }
+}
 
-}`;
-      }
-    }, {
-      kind: "get",
-      key: "manuallyObserveSpecificStateCode",
-      value: function manuallyObserveSpecificStateCode() {
-        return `import { customElement, LitElement, property, html } from 'lit-element';
-import { demoState } from './demo-state.js';
-
-
-@customElement('specific-manual-component')
-export class SpecificManualComponent extends LitElement {
-
-    @property({type: Boolean})
-    observingCounter1 = false;
-
-    @property({type: Boolean})
-    observingCounter2 = false;
-
-    render() {
-        return html\`
-
-            <h2>&lt;manual-component&gt;</h2>
-
-            <h3 class="value">Counter1: \${demoState.counter1}</h3>
-
-            <button
-                @click=\${this.handleObserveCounter1ButtonClick}
-                ?hidden=\${this.observingCounter1}
-            >
-                observe
-            </button>
-
-            <button
-                @click=\${this.handleUnobserveCounter1ButtonClick}
-                ?hidden=\${!this.observingCounter1}
-            >
-                unobserve
-            </button>
-
-            <h3 class="value">Counter2: \${demoState.counter2}</h3>
-
-            <button
-                @click=\${this.handleObserveCounter2ButtonClick}
-                ?hidden=\${this.observingCounter2}
-            >
-                observe
-            </button>
-
-            <button
-                @click=\${this.handleUnobserveCounter2ButtonClick}
-                ?hidden=\${!this.observingCounter2}
-            >
-                unobserve
-            </button>
-
-        \`;
-
-    }
-
-    handleObserveCounter1ButtonClick() {
-        this.counter1Observer = () => this.requestUpdate();
-        demoState.addObserver(this.counter1Observer, ['counter1']);
-        this.observingCounter1 = true;
-    }
-
-    handleUnobserveCounter1ButtonClick() {
-        demoState.removeObserver(this.counter1Observer);
-        this.observingCounter1 = false;
-    }
-
-    handleObserveCounter2ButtonClick() {
-        this.counter2Observer = () => this.requestUpdate();
-        demoState.addObserver(this.counter2Observer, ['counter2']);
-        this.observingCounter2 = true;
-    }
-
-    handleUnobserveCounter2ButtonClick() {
-        demoState.removeObserver(this.counter2Observer);
-        this.observingCounter2 = false;
-    }
-
-}`;
+export const demoState = new DemoState();`;
       }
     }]
   };

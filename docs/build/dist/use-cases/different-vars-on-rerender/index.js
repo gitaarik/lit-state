@@ -33,12 +33,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 import { customElement, LitElement, property, html } from '../../../web_modules/lit-element.js';
 import { LitDocsContent } from '../../../web_modules/lit-docs.js';
 import '../../../web_modules/lit-docs.js';
-import './observe-all-state-vars/automatic-component.js';
-import './observe-all-state-vars/manual-component.js';
-import './observe-specific-state-vars/specific-automatic-component.js';
-import './observe-specific-state-vars/specific-manual-component.js';
-export let ManuallyObserveState = _decorate([customElement('manually-observe-state')], function (_initialize, _LitDocsContent) {
-  class ManuallyObserveState extends _LitDocsContent {
+import './changing-component.js';
+import './control-component.js';
+export let DifferentVarsOnRerender = _decorate([customElement('different-vars-on-rerender')], function (_initialize, _LitDocsContent) {
+  class DifferentVarsOnRerender extends _LitDocsContent {
     constructor(...args) {
       super(...args);
 
@@ -48,208 +46,132 @@ export let ManuallyObserveState = _decorate([customElement('manually-observe-sta
   }
 
   return {
-    F: ManuallyObserveState,
+    F: DifferentVarsOnRerender,
     d: [{
       kind: "method",
       key: "render",
       value: function render() {
         return html`
 
-            <h1>Manually observe the state</h1>
+            <h1>Different variables on re-render</h1>
+
+            <h2>Use case</h2>
 
             <p>
-                When you use the <code>observeState()</code> mixin,
-                your LitState Element automatically observes the states you use
-                in that component, and re-renders when the state changes. You
-                can also manually add more observers that will be notified when
-                your state changes. This can be handy if you have other parts
-                of your app (different from your LitElement components) that
-                need to know when a state has changed.
+                A component could render different <code>stateVar</code>
+                variables at every re-render. Possible new
+                <code>stateVar</code> variables should be observed so that the
+                component re-renders when they change.
+            </p>
+            
+            <h2>Execution</h2>
+            
+            <p>
+                LitState records the <code>stateVar</code> variables that are
+                used in the component every time it re-renders.
+            </p>
+
+            <h2>Demonstration</h2>
+
+            <p>
+                In this example, <code>&lt;changing-component&gt;</code> only
+                shows 1 counter at a time, depending on the value of
+                <code>showCounter</code>.
+                <code>&lt;control-component&gt;</code> shows them both, and you
+                can modify them there.
             </p>
 
             <div class="demoComponents">
-                <automatic-component></automatic-component>
-                <manual-component></manual-component>
+                <changing-component></changing-component>
+                <control-component></control-component>
             </div>
 
             <p>
-                To add observers to a certain state instance, you just call
-                <code>myState.addObserver(myCallback)</code>. The
-                callback will be called any time a
-                <code>stateVar</code> changes. The callback will
-                get as a first argument the name of the
-                <code>stateVar</code> that changed. To stop
-                observing, call
-                <code>myState.removeObserver(myCallback)</code>. It
-                is similar to the way
-                <code>document.addEventListener()</code> and
-                <code>document.removeEventListener()</code> work.
+                <code-block filename='demo-state.js' .code=${this.demoStateCode}></code-block>
             </p>
 
             <p>
-                To keep the example simple, we still use a LitElement
-                component. We just don't use the
-                <code>observeState()</code> mixin. There are
-                buttons to manually add and remove the observer:
-
-            <p>
-                <code-block filename='manual-component.js' .code=${this.manuallyObserveStateCode}></code-block>
-            </p>
-
-            <h2>Observe specific stateVars</h2>
-
-            <p>
-                As an optional second argument to
-                <code>addObserver()</code>, you can provide an
-                array with <code>stateVar</code> names that you
-                want to observe. The callback will then only be called when any
-                of those <code>stateVar</code> variables change.
-            </p>
-
-            <div class="demoComponents">
-                <specific-automatic-component></specific-automatic-component>
-                <specific-manual-component></specific-manual-component>
-            </div>
-
-            <p>
-                <code-block filename='manual-component.js' .code=${this.manuallyObserveSpecificStateCode}></code-block>
+                <code-block filename='changing-component.js' .code=${this.changingComponentCode}></code-block>
             </p>
 
         `;
       }
     }, {
       kind: "get",
-      key: "manuallyObserveStateCode",
-      value: function manuallyObserveStateCode() {
-        return `import { customElement, LitElement, property, html } from 'lit-element';
+      key: "changingComponentCode",
+      value: function changingComponentCode() {
+        return `import { customElement, LitElement, html } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { demoState } from './demo-state.js';
 
 
-@customElement('manual-component')
-export class ManualComponent extends LitElement {
+@customElement('changing-component')
+export class ChangingComponent extends observeState(LitElement) {
 
-    @property({type: Boolean})
-    observing = false;
+    get counter() {
+        if (demoState.showCounter === 1) {
+            return demoState.counter1;
+        } else if (demoState.showCounter === 2) {
+            return demoState.counter2;
+        }
+    }
 
     render() {
 
         return html\`
 
-            <h2>&lt;manual-component&gt;</h2>
-            <h3>Counter: \${demoState.counter}</h3>
+            <h2>&lt;changing-component&gt;</h2>
 
-            <button
-                @click=\${this.handleObserveButtonClick}
-                ?hidden=\${this.observing}
-            >
-                observe
-            </button>
+            <label>
+                <input
+                    type="radio"
+                    @click=\${this.handleShowCounter1RadioClick}
+                    .checked=\${demoState.showCounter === 1}
+                />
+                <code>counter1</code>
+            </label>
 
-            <button
-                @click=\${this.handleUnobserveButtonClick}
-                ?hidden=\${!this.observing}
-            >
-                unobserve
-            </button>
+            <label>
+                <input
+                    type="radio"
+                    @click=\${this.handleShowCounter2RadioClick}
+                    .checked=\${demoState.showCounter === 2}
+                />
+                <code>counter2</code>
+            </label>
+
+            <h3>Counter: \${this.counter}</h3>
 
         \`;
 
     }
 
-    handleObserveButtonClick() {
-        this.stateObserver = () => this.requestUpdate();
-        demoState.addObserver(this.stateObserver);
-        this.observing = true;
+    handleShowCounter1RadioClick() {
+        demoState.showCounter = 1;
     }
 
-    handleUnobserveButtonClick() {
-        demoState.removeObserver(this.stateObserver);
-        this.observing = false;
+    handleShowCounter2RadioClick() {
+        demoState.showCounter = 2;
     }
 
 }`;
       }
     }, {
       kind: "get",
-      key: "manuallyObserveSpecificStateCode",
-      value: function manuallyObserveSpecificStateCode() {
-        return `import { customElement, LitElement, property, html } from 'lit-element';
-import { demoState } from './demo-state.js';
+      key: "demoStateCode",
+      value: function demoStateCode() {
+        return `import { LitState, stateVar } from 'lit-element-state';
+import { currentTime } from './utils.js'
 
 
-@customElement('specific-manual-component')
-export class SpecificManualComponent extends LitElement {
+class DemoState extends LitState {
+    @stateVar() showCounter = 1;
+    @stateVar() counter1 = 0;
+    @stateVar() counter2 = 0;
+}
 
-    @property({type: Boolean})
-    observingCounter1 = false;
 
-    @property({type: Boolean})
-    observingCounter2 = false;
-
-    render() {
-        return html\`
-
-            <h2>&lt;manual-component&gt;</h2>
-
-            <h3 class="value">Counter1: \${demoState.counter1}</h3>
-
-            <button
-                @click=\${this.handleObserveCounter1ButtonClick}
-                ?hidden=\${this.observingCounter1}
-            >
-                observe
-            </button>
-
-            <button
-                @click=\${this.handleUnobserveCounter1ButtonClick}
-                ?hidden=\${!this.observingCounter1}
-            >
-                unobserve
-            </button>
-
-            <h3 class="value">Counter2: \${demoState.counter2}</h3>
-
-            <button
-                @click=\${this.handleObserveCounter2ButtonClick}
-                ?hidden=\${this.observingCounter2}
-            >
-                observe
-            </button>
-
-            <button
-                @click=\${this.handleUnobserveCounter2ButtonClick}
-                ?hidden=\${!this.observingCounter2}
-            >
-                unobserve
-            </button>
-
-        \`;
-
-    }
-
-    handleObserveCounter1ButtonClick() {
-        this.counter1Observer = () => this.requestUpdate();
-        demoState.addObserver(this.counter1Observer, ['counter1']);
-        this.observingCounter1 = true;
-    }
-
-    handleUnobserveCounter1ButtonClick() {
-        demoState.removeObserver(this.counter1Observer);
-        this.observingCounter1 = false;
-    }
-
-    handleObserveCounter2ButtonClick() {
-        this.counter2Observer = () => this.requestUpdate();
-        demoState.addObserver(this.counter2Observer, ['counter2']);
-        this.observingCounter2 = true;
-    }
-
-    handleUnobserveCounter2ButtonClick() {
-        demoState.removeObserver(this.counter2Observer);
-        this.observingCounter2 = false;
-    }
-
-}`;
+export const demoState = new DemoState();`;
       }
     }]
   };

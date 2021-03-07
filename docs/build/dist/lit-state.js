@@ -11,8 +11,18 @@ export const observeState = superclass => class extends superclass {
     this._initStateObservers();
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    if (this._wasConnected) {
+      this.requestUpdate();
+      delete this._wasConnected;
+    }
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
+    this._wasConnected = true;
 
     this._clearStateObservers();
   }
@@ -181,6 +191,11 @@ export function stateVar(options = {}) {
 
       finisher(litStateClass) {
         if (element.kind === 'method') {
+          // You can decorate a *method* with `@stateVar()` instead
+          // of a variable. When the state class is constructed, this
+          // method will be called, and it's return value must be an
+          // object that will be added to the options the stateVar
+          // handler will receive.
           options.propertyMethod = element;
         }
 

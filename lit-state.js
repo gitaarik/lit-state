@@ -13,11 +13,10 @@ export const observeState = superclass => class extends superclass {
 
     connectedCallback() {
         super.connectedCallback();
-        if(this._wasConnected) {
+        if (this._wasConnected) {
             this.requestUpdate();
             delete this._wasConnected;
         }
-        
     }
 
     disconnectedCallback() {
@@ -153,22 +152,25 @@ export class StateVar {
         this.value = undefined; // The initial value
     }
 
-    // Called when the `stateVar` on the `State` class is read.
+    // Called when the `stateVar` on the `LitState` class is read (for example:
+    // `myState.myStateVar`). Should return the value of the `stateVar`.
     get() {
         this.recordRead();
         return this.value;
     }
 
-    // Returns whether the given `value` should be passed on to the `set()`
-    // method. Can be used for validation and/or optimization.
+    // Called before the `set()` method is called. If this method returns
+    // `false`, the `set()` method won't be called. This can be used for
+    // validation and/or optimization.
     shouldSetValue(value) {
         return this.value !== value;
     }
 
-    // Called when the `stateVar` on the `State` class is set.
+    // Called when the `stateVar` on the `LitState` class is set (for example:
+    // `myState.myStateVar = 'value'`.
     set(value) {
         this.value = value;
-        this.notifyChange()
+        this.notifyChange();
     }
 
 }
@@ -191,6 +193,11 @@ export function stateVar(options = {}) {
             finisher(litStateClass) {
 
                 if (element.kind === 'method') {
+                    // You can decorate a *method* with `@stateVar()` instead
+                    // of a variable. When the state class is constructed, this
+                    // method will be called, and it's return value must be an
+                    // object that will be added to the options the stateVar
+                    // handler will receive.
                     options.propertyMethod = element;
                 }
 

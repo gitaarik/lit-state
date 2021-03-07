@@ -34,11 +34,10 @@ import { customElement, LitElement, property, html } from '../web_modules/lit-el
 import '../web_modules/lit-docs.js';
 import './intro-page.js';
 import './basic-usage/index.js';
-import './no-decorator-usage/index.js';
-import './different-vars-on-rerender/index.js';
-import './state-handling.js';
-import './computed-values/index.js';
-import './nested-states/index.js';
+import './basic-usage/no-decorator-usage/index.js';
+import './state-handling/index.js';
+import './state-handling/computed-values/index.js';
+import './state-handling/nested-states/index.js';
 import './advanced-usage/state-var-handler/index.js';
 import './advanced-usage/manually-observe-state/index.js';
 import './advanced-usage/state-recorder-usage.js';
@@ -47,6 +46,9 @@ import './api/state-var-handler.js';
 import './api/observe-state-mixin.js';
 import './api/state-var-decorator.js';
 import './api/state-recorder.js';
+import './use-cases/index.js';
+import './use-cases/different-vars-on-rerender/index.js';
+import './use-cases/reconnected-components/index.js';
 export let LitStateDocs = _decorate([customElement('lit-state-docs')], function (_initialize, _LitElement) {
   class LitStateDocs extends _LitElement {
     constructor(...args) {
@@ -94,10 +96,6 @@ export let LitStateDocs = _decorate([customElement('lit-state-docs')], function 
             title: 'Nested states',
             path: 'nested-states',
             template: html`<nested-states></nested-states>`
-          }, {
-            title: 'Different vars on re-render',
-            path: 'different-vars-on-rerender',
-            template: html`<different-vars-on-rerender></different-vars-on-rerender>`
           }]
         }, {
           title: 'Advanced usage',
@@ -138,6 +136,19 @@ export let LitStateDocs = _decorate([customElement('lit-state-docs')], function 
             title: 'stateRecorder object',
             path: 'state-recorder',
             template: html`<api-state-recorder></api-state-recorder>`
+          }]
+        }, {
+          title: 'Use case coverage',
+          path: 'test-cases',
+          template: html`<use-cases></use-cases>`,
+          submenu: [{
+            title: 'Different vars on re-render',
+            path: 'different-vars-on-rerender',
+            template: html`<different-vars-on-rerender></different-vars-on-rerender>`
+          }, {
+            title: 'Reconnected components',
+            path: 'reconnected-components',
+            template: html`<reconnected-components></reconnected-components>`
           }]
         }];
       }
