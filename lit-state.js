@@ -11,8 +11,18 @@ export const observeState = superclass => class extends superclass {
         this._initStateObservers();
     }
 
+    connectedCallback() {
+        super.connectedCallback();
+        if(this._wasConnected) {
+            this.requestUpdate();
+            delete this._wasConnected;
+        }
+        
+    }
+
     disconnectedCallback() {
         super.disconnectedCallback();
+        this._wasConnected = true;
         this._clearStateObservers();
     }
 
