@@ -168,7 +168,10 @@ export let StateVarHandler = _decorate([customElement('state-var-handler')], fun
 
             <h3>No-decorator usage</h3>
 
-            <p>Without decorators, you could implement it like this:</p>
+            <p>
+                Without decorators, use the static <code>stateVarOptions()</code>
+                getter method to specify the options:
+            </p>
 
             <p>
                 <code-block .code=${this.customStatevarNoDecoratorUsageCode}></code-block>
@@ -303,7 +306,7 @@ class DemoState extends LitState {
 
 class DemoState extends LitState {
 
-    static get stateVars() {
+    static get stateVarOptions() {
         return {
             myVar: localStorageStateVar({
                 localStorageKey: 'counter',

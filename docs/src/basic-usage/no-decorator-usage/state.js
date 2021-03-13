@@ -5,13 +5,8 @@ class DemoState extends LitState {
 
     static get stateVars() {
         return {
-            counter: {}
+            counter: 0
         };
-    }
-
-    constructor() {
-        super();
-        this.counter = 0;
     }
 
 }

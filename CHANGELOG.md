@@ -1,6 +1,64 @@
 # LitState Changelog
 
 
+### 1.7.0 - Non-decorator usage simplified
+
+- The static `stateVars()` getter method should now return an object with in
+  the keys the name of the rtateVar and in the values the initial value of the
+  stateVar.
+- The stateVar options were previously set with the static `stateVars()` getter
+  method, but should now be specified with the static `stateVarOptions()`
+  getter method.
+- Docs updated accordingly.
+- Added some more descriptive comments in the code.
+
+#### To upgrade from 1.6.x
+
+For non-decorator usage, update the static `stateVar()` getter methods.
+
+Change this:
+
+```javascript
+class MyState extends LitState {
+
+    static get stateVars() {
+        return {
+            myStateVar: { option: 'value' }
+        };
+    }
+
+    constructor() {
+        super();
+        this.myStateVar = 'initial value';
+    }
+
+}
+```
+
+To this:
+
+```javascript
+class MyState extends LitState {
+
+    static get stateVars() {
+        return {
+            myStateVar: 'initial value'
+        };
+    }
+
+    static get stateVarOptions() {
+        return {
+            myStateVar: { option: 'value' }
+        };
+    }
+
+}
+```
+
+If the options object is empty, you don't need to specify the static
+`stateVarOptions()` getter method.
+
+
 ### 1.6.1 - Support reconnecting components
 
 - When a component gets dynamically removed from the DOM and then added again,
@@ -22,7 +80,7 @@
 - Updated LitDocs and documentation content.
 - Overall refactors.
 
-#### To upgrade from 1.5.0
+#### To upgrade from 1.5.x
 
 Update the `stateVar` definitions, instead of:
 

@@ -65,13 +65,28 @@ export class LitState {
     }
 
     _initStateVars() {
-        if (!this.constructor.stateVars) return;
-        for (let [key, options] of Object.entries(this.constructor.stateVars)) {
-            this._initStateVar(key, options);
+
+        if (this.constructor.stateVarOptions) {
+            for (let [key, options] of Object.entries(this.constructor.stateVarOptions)) {
+                this._initStateVar(key, options);
+            }
         }
+
+        if (this.constructor.stateVars) {
+            for (let [key, value] of Object.entries(this.constructor.stateVars)) {
+                this._initStateVar(key, {});
+                this[key] = value;
+            }
+        }
+
     }
 
     _initStateVar(key, options) {
+
+        if (this.hasOwnProperty(key)) {
+            // Property already defined, so don't re-define.
+            return;
+        }
 
         options = this._parseOptions(options);
 
@@ -201,11 +216,11 @@ export function stateVar(options = {}) {
                     options.propertyMethod = element;
                 }
 
-                if (litStateClass.stateVars === undefined) {
-                    litStateClass.stateVars = {};
+                if (litStateClass.stateVarOptions === undefined) {
+                    litStateClass.stateVarOptions = {};
                 }
 
-                litStateClass.stateVars[element.key] = options;
+                litStateClass.stateVarOptions[element.key] = options;
 
             }
         };

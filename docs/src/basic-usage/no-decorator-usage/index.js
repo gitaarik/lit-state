@@ -18,11 +18,10 @@ export class NoDecoratorUsage extends LitDocsContent(LitElement) {
                 In case you can't or don't want to use
                 <a target="_blank" href="https://github.com/tc39/proposal-decorators">decorators</a>,
                 you can define the stateVars with a static
-                <code>stateVars</code> getter method. Then you can use the
-                <code>constructor</code> to set the initial values. It is
-                basically the same how you would define
-                <a target="_blank" href="https://lit-element.polymer-project.org/guide/properties#declare">LitElement properties</a>
-                without decorators.
+                <code>stateVars</code> getter method. This method should return
+                an object with in the keys the name of the
+                <code>stateVar</code> and in the value the initial value for
+                it.
             </p>
 
             <h2>Example</h2>
@@ -50,13 +49,8 @@ class DemoState extends LitState {
 
     static get stateVars() {
         return {
-            counter: {}
+            counter: 0
         };
-    }
-
-    constructor() {
-        super();
-        this.counter = 0;
     }
 
 }
