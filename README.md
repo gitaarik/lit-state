@@ -50,8 +50,21 @@ class MyState extends LitState {
 export const myState = new MyState();
 ```
 
-*For usage without [decorators](https://github.com/tc39/proposal-decorators), see the
-[docs](https://gitaarik.github.io/lit-state/build/#basic-usage/no-decorator-usage/).*
+#### Or without [javascript decorators](https://github.com/tc39/proposal-decorators):
+
+```javascript
+import { LitState, stateVar } from 'lit-element-state';
+
+class MyState extends LitState {
+    static get stateVars() {
+        return {
+            counter: 0
+        };
+    }
+}
+
+export const myState = new MyState();
+```
 
 ### 2. Make your component aware of your state:
 
