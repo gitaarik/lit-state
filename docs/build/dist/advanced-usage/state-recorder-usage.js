@@ -100,7 +100,7 @@ export let StateRecorderUsage = _decorate([customElement('state-recorder-usage')
                 create a <code>observeState()</code> variation for React. That
                 would re-render a React component when a <code>stateVar</code>
                 that is used inside the component changes. See the
-                <lit-docs-link path="advanced-usage/state-recorder-usage/">API reference</lit-docs-link>
+                <lit-docs-link path="api-reference/state-recorder/">API reference</lit-docs-link>
                 for more information on how to use <code>stateRecorder</code>.
             </p>
 
