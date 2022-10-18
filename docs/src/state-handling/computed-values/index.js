@@ -34,7 +34,7 @@ export class ComputedValues extends LitDocsContent(LitElement) {
             </p>
 
             <p>
-                Out component makes use of these helper methods, so that it
+                Our component makes use of these helper methods, so that it
                 doesn't have to do this work itself.
             </p>
 
