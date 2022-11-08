@@ -4,7 +4,7 @@
 ### 1.7.0 - Non-decorator usage simplified
 
 - The static `stateVars()` getter method should now return an object with in
-  the keys the name of the rtateVar and in the values the initial value of the
+  the keys the name of the stateVar and in the values the initial value of the
   stateVar.
 - The stateVar options were previously set with the static `stateVars()` getter
   method, but should now be specified with the static `stateVarOptions()`
