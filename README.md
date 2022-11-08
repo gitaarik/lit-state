@@ -157,7 +157,7 @@ correct references to your `stateVar` variables. Refer to the
 for more information about nesting states.
 
 
-### Only new assigns trigger a re-render. Updating a object/array won't trigger a re-render.
+### Only new assigns trigger a re-render. Updating an object/array won't trigger a re-render.
 
 Just like LitElement's
 [properties](https://lit-element.polymer-project.org/guide/properties), only a
