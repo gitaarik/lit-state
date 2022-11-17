@@ -63,7 +63,10 @@ export let StateHandling = _decorate([customElement('state-handling')], function
                 <code-block filename='state.js' .code=${this.stateCode}></code-block>
             </p>
 
-            <p>Then you import the state in the components that need it:</p>
+            <p>
+                Then you import the state in the component file where you need
+                it. And use <code>observeState()</code> to decorate your components:
+            </p>
 
             <p>
                 <code-block filename='component.js' .code=${this.componentCode}></code-block>
@@ -94,9 +97,10 @@ export const myState = new MyState();`;
       key: "componentCode",
       value: function componentCode() {
         return `import { LitElement, html } from 'lit-element';
+import { observeState } from 'lit-element-state';
 import { myState } from './state.js';
 
-class MyComponent extends LitElement {
+class MyComponent extends observeState(LitElement) {
     // ..
 }`;
       }
