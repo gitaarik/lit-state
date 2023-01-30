@@ -74,7 +74,7 @@ using the `stateVar` variables in your render method:
 ```javascript
 import { LitElement, html } from 'lit-element';
 import { observeState } from 'lit-element-state';
-import { myState } form './my-state.js';
+import { myState } from './my-state.js';
 
 class MyComponent extends observeState(LitElement) {
 
